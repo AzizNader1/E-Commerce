@@ -1,6 +1,6 @@
 ﻿namespace E_Commerce.API.Services
 {
-    public class ProductServices
+    public interface IOrderService
     {
     }
 }

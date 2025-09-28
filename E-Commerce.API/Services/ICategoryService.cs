@@ -1,6 +1,6 @@
 ﻿namespace E_Commerce.API.Services
 {
-    public class UserServices
+    public interface ICategoryService
     {
     }
 }
