@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ZeeZo\\Desktop\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj": {}
+    "P:\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ZeeZo\\Desktop\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj": {
+    "P:\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ZeeZo\\Desktop\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj",
+        "projectUniqueName": "P:\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj",
         "projectName": "E-Commerce.API",
-        "projectPath": "C:\\Users\\ZeeZo\\Desktop\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj",
+        "projectPath": "P:\\My Projects\\E-Commerce\\E-Commerce.API\\E-Commerce.API.csproj",
         "packagesPath": "C:\\Users\\ZeeZo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ZeeZo\\Desktop\\My Projects\\E-Commerce\\E-Commerce.API\\obj\\",
+        "outputPath": "P:\\My Projects\\E-Commerce\\E-Commerce.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
