@@ -8,10 +8,10 @@ namespace E_Commerce.API.Models
         public int OrderItemId { get; set; }
 
         [Required]
-        public int OrderId { get; set; } // Foreign Key to Order
+        public int OrderId { get; set; } 
 
         [Required]
-        public int ProductId { get; set; } // Foreign Key to Product
+        public int ProductId { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]
@@ -19,9 +19,8 @@ namespace E_Commerce.API.Models
 
         [Required]
         [Range(0.01, double.MaxValue)]
-        public decimal UnitPrice { get; set; } // Price at the time of order
+        public decimal UnitPrice { get; set; } 
 
-        // Relationships
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
     }

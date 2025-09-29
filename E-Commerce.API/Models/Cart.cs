@@ -8,10 +8,10 @@ namespace E_Commerce.API.Models
         public int CartId { get; set; }
 
         [Required]
-        public int UserId { get; set; } // Foreign Key to User
+        public int UserId { get; set; } 
 
-        // Relationships
+       
         public virtual User User { get; set; }
-        public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>(); // One-to-Many
+        public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>(); 
     }
 }

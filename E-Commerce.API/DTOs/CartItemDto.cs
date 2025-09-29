@@ -1,6 +1,15 @@
-﻿namespace E_Commerce.API.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace E_Commerce.API.DTOs
 {
     public class CartItemDto
     {
+        public int CartItemId { get; set; }
+
+        public int CartId { get; set; }
+
+        public int ProductId { get; set; }
+
+        public int Quantity { get; set; }
     }
 }

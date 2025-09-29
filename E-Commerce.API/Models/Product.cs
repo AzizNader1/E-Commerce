@@ -22,11 +22,10 @@ namespace E_Commerce.API.Models
         [Range(0, int.MaxValue)]
         public int StockQuantity { get; set; }
 
-        public int CategoryId { get; set; } // Foreign Key to Category 
+        public int CategoryId { get; set; } 
 
-        // Relationships
         public virtual Category Category { get; set; }
-        public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>(); // One-to-Many
-        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>(); // One-to-Many
+        public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>(); 
     }
 }

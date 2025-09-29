@@ -26,8 +26,8 @@ namespace E_Commerce.API.Models
         [Required]
         public string PhoneNumber { get; set; }
 
-        // Relationships
-        public virtual Cart? Cart { get; set; } // One-to-One (optional for User)
-        public virtual ICollection<Order> Orders { get; set; } = new List<Order>(); // One-to-Many
+
+        public virtual Cart? Cart { get; set; }
+        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

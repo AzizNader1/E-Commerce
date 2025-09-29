@@ -15,7 +15,7 @@ namespace E_Commerce.API.Models
         public int OrderId { get; set; }
 
         [Required]
-        public int UserId { get; set; } // Foreign Key to User
+        public int UserId { get; set; } 
 
         [Required]
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
@@ -28,8 +28,8 @@ namespace E_Commerce.API.Models
         [Range(0.01, double.MaxValue)]
         public decimal TotalAmount { get; set; }
 
-        // Relationships
+       
         public virtual User User { get; set; }
-        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>(); // One-to-Many
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }
