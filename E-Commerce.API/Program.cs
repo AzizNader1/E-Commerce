@@ -1,5 +1,6 @@
-
+using E_Commerce.API.Repositories;
 using E_Commerce.API.Data;
+using E_Commerce.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.API
