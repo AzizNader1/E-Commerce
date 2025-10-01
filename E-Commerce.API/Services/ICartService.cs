@@ -1,13 +1,15 @@
-﻿using E_Commerce.API.DTOs;
+﻿using E_Commerce.API.DTOs.CartDTOs;
 
 namespace E_Commerce.API.Services
 {
     public interface ICartService
     {
-        List<CartDto> GetAllAsync();
-        CartDto GetByIdAsync(int id);
-        void AddAsync(CartDto cartDto);
-        void UpdateAsync(CartDto cartDto);
-        void DeleteAsync(int id);
+        List<CartDto> GetAllCartsAsync();
+        CartDto GetCartByIdAsync(int cartId);
+        List<CartDto> GetAllCartsByUserIdAsync(int userId);
+        List<CartDto> GetAllCartsByUserNameAsync(string userName);
+        void AddCartAsync(CreateCartDto ceateCartDto);
+        void UpdateCartAsync(CartDto cartDto);
+        void DeleteCartAsync(int cartId);
     }
 }

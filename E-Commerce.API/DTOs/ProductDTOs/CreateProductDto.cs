@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.API.DTOs
+﻿namespace E_Commerce.API.DTOs.ProductDTOs
 {
-    public class ProductDto
+    public class CreateProductDto
     {
-        public int ProductId { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }

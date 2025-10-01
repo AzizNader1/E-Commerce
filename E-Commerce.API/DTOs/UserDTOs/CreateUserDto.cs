@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.API.DTOs
+﻿namespace E_Commerce.API.DTOs.UserDTOs
 {
-    public class UserDto
+    public class CreateUserDto
     {
-        public int UserId { get; set; }
-
         public string Username { get; set; }
 
         public string Email { get; set; }

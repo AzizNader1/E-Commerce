@@ -2,6 +2,7 @@ using E_Commerce.API.Repositories;
 using E_Commerce.API.Data;
 using E_Commerce.API.Models;
 using Microsoft.EntityFrameworkCore;
+using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API
 {
@@ -19,6 +20,8 @@ namespace E_Commerce.API
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
+            builder.Services.AddScoped<UOW>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

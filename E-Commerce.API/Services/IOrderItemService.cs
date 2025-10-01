@@ -1,13 +1,14 @@
-﻿using E_Commerce.API.DTOs;
+﻿using E_Commerce.API.DTOs.OrderItemDTOs;
 
 namespace E_Commerce.API.Services
 {
     public interface IOrderItemService
     {
-        List<OrderItemDto> GetAllAsync();
-        OrderItemDto GetByIdAsync(int id);
-        void AddAsync(OrderItemDto orderItemDto);
-        void UpdateAsync(OrderItemDto orderItemDto);
-        void DeleteAsync(int id);
+        List<OrderItemDto> GetAllOrderItemsAsync();
+        OrderItemDto GetOrderItemByIdAsync(int orderItemId);
+        List<OrderItemDto> GetOrderItemsByOrderIdAsync(int orderId);
+        void AddOrderItemAsync(CreateOrderItemDto createOrderItemDto);
+        void UpdateOrderItemAsync(OrderItemDto orderItemDto);
+        void DeleteOrderItemAsync(int orderItemId);
     }
 }

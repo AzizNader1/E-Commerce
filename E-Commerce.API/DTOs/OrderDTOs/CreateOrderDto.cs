@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.API.DTOs
+﻿namespace E_Commerce.API.DTOs.OrderDTOs
 {
-    public class OrderDto
+    public class CreateOrderDto
     {
-        public int OrderId { get; set; }
-
         public int UserId { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;

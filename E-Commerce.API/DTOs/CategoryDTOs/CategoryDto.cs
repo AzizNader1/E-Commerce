@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace E_Commerce.API.DTOs
+namespace E_Commerce.API.DTOs.CategoryDTOs
 {
     public class CategoryDto
     {

@@ -1,13 +1,13 @@
-﻿using E_Commerce.API.DTOs;
+﻿using E_Commerce.API.DTOs.CategoryDTOs;
 
 namespace E_Commerce.API.Services
 {
     public interface ICategoryService
     {
-        List<CategoryDto> GetAllAsync();
-        CategoryDto GetByIdAsync(int id);
-        void AddAsync(CategoryDto categoryDto);
-        void UpdateAsync(CategoryDto categoryDto);
-        void DeleteAsync(int id);
+        List<CategoryDto> GetAllCategoriesAsync();
+        CategoryDto GetCategoryByIdAsync(int categoryId);
+        void AddCategoryAsync(CreateCategoryDto createCategoryDto);
+        void UpdateCategoryAsync(CategoryDto categoryDto);
+        void DeleteCategoryAsync(int categoryId);
     }
 }

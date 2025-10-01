@@ -1,13 +1,15 @@
-﻿using E_Commerce.API.DTOs;
+﻿using E_Commerce.API.DTOs.ProductDTOs;
 
 namespace E_Commerce.API.Services
 {
     public interface IProductService
     {
-        List<ProductDto> GetAllAsync();
-        ProductDto GetByIdAsync(int id);
-        void AddAsync(ProductDto productDto);
-        void UpdateAsync(ProductDto productDto);
-        void DeleteAsync(int id);
+        List<ProductDto> GetAllProductsAsync();
+        ProductDto GetProductByIdAsync(int productId);
+        List<ProductDto> GetAllProductsByCategoryId(int categoryId);
+        List<ProductDto> GetAllProductsByCategoryName(string categoryName);
+        void AddProductAsync(CreateProductDto createProductDto);
+        void UpdateProductAsync(ProductDto productDto);
+        void DeleteProductAsync(int productId);
     }
 }
