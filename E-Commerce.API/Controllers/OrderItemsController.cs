@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class OrderItemsController : ControllerBase
     {
@@ -78,6 +78,20 @@ namespace E_Commerce.API.Controllers
             {
                 orderItemService.DeleteOrderItemAsync(id);
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{orderId}")]
+        public IActionResult GetOrderItemsByOrderIdAsync(int orderId)
+        {
+            try
+            {
+                var orderItems = orderItemService.GetOrderItemsByOrderIdAsync(orderId);
+                return Ok(orderItems);
             }
             catch (Exception e)
             {

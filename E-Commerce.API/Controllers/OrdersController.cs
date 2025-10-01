@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -83,6 +83,35 @@ namespace E_Commerce.API.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpGet("{userId}")]
+        public IActionResult GetAllOrdersByUserId(int userId)
+        {
+            try
+            {
+                var orders = orderService.GetAllOrdersByUserId(userId);
+                return Ok(orders);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{userName}")]
+        public IActionResult GetAllOrdersByUserName(string userName)
+        {
+            try
+            {
+                var orders = orderService.GetAllOrdersByUserName(userName);
+                return Ok(orders);
+            }
+            catch (Exception e)
+            { 
+                return BadRequest(e.Message);
+            }
+
         }
     }
 }

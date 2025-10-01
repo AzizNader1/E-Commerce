@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CartsController : ControllerBase
     {
@@ -78,6 +78,34 @@ namespace E_Commerce.API.Controllers
             {
                 cartService.DeleteCartAsync(id);
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{userId}")]
+        public IActionResult GetAllCartsByUserIdAsync(int userId)
+        {
+            try
+            {
+                var carts = cartService.GetAllCartsByUserIdAsync(userId);
+                return Ok(carts);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{userName}")]
+        public IActionResult GetAllCartsByUserNameAsync(string userName)
+        {
+            try
+            {
+                var carts = cartService.GetAllCartsByUserNameAsync(userName);
+                return Ok(carts);
             }
             catch (Exception e)
             {
