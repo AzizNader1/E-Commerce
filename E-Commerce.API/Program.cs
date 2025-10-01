@@ -3,6 +3,7 @@ using E_Commerce.API.Data;
 using E_Commerce.API.Models;
 using Microsoft.EntityFrameworkCore;
 using E_Commerce.API.UnitOfWork;
+using E_Commerce.API.Services;
 
 namespace E_Commerce.API
 {
@@ -21,6 +22,14 @@ namespace E_Commerce.API
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
             builder.Services.AddScoped<UOW>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICartItemService, CartItemService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+
 
             var app = builder.Build();
 

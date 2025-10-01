@@ -34,7 +34,7 @@ namespace E_Commerce.API.Repositories
 
         public void UpdateAsync(T entity)
         {
-            _context.Set<T>().Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _context.Set<T>().Update(entity);
             _context.SaveChanges();
         }
     }
