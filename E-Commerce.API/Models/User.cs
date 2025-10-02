@@ -16,6 +16,10 @@ namespace E_Commerce.API.Models
         [StringLength(100)]
         public string Email { get; set; }
 
+        [Required]
+        [StringLength(100)]
+        public string Password { get; set; }
+
         [StringLength(100)]
         public string? FullName { get; set; }
 

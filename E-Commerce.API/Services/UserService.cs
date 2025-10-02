@@ -24,7 +24,8 @@ namespace E_Commerce.API.Services
                 Email = createUserDto.Email,
                 Address = createUserDto.Address,
                 PhoneNumber = createUserDto.PhoneNumber,
-                Username = createUserDto.Username                
+                Username = createUserDto.Username,
+                Password = createUserDto.Password,
             });
         }
 
@@ -57,7 +58,8 @@ namespace E_Commerce.API.Services
                     Email = user.Email,
                     Address = user.Address,
                     PhoneNumber = user.PhoneNumber,
-                    Username = user.Username
+                    Username = user.Username,
+                    Password = user.Password
                 });
            }
            return userDtos;
@@ -79,7 +81,8 @@ namespace E_Commerce.API.Services
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
                 UserId = user.UserId,
-                Username = user.Username
+                Username = user.Username,
+                Password = user.Password
             };
         }
 
@@ -98,7 +101,8 @@ namespace E_Commerce.API.Services
                 Email = userDto.Email,
                 Address = userDto.Address,
                 PhoneNumber = userDto.PhoneNumber,
-                Username = userDto.Username
+                Username = userDto.Username,
+                Password= userDto.Password
             });
         }
     }

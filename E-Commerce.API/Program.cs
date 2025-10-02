@@ -1,9 +1,11 @@
-using E_Commerce.API.Repositories;
 using E_Commerce.API.Data;
 using E_Commerce.API.Models;
-using Microsoft.EntityFrameworkCore;
-using E_Commerce.API.UnitOfWork;
+using E_Commerce.API.Repositories;
 using E_Commerce.API.Services;
+using E_Commerce.API.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace E_Commerce.API
 {
@@ -29,6 +31,22 @@ namespace E_Commerce.API
             builder.Services.AddScoped<ICartItemService, CartItemService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+
+            builder.Services
+                .AddAuthentication(opt => opt.DefaultAuthenticateScheme = "name")
+                .AddJwtBearer("name",
+                option =>
+                {
+                    string secretKey = "welcome to my programming world while you can convert your dreams into reality";
+                    var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+                    option.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = key,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
 
             var app = builder.Build();
