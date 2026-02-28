@@ -1,6 +1,3 @@
-using E_Commerce.MVC.Data;
-using Microsoft.EntityFrameworkCore;
-
 namespace E_Commerce.MVC
 {
     public class Program
@@ -11,9 +8,13 @@ namespace E_Commerce.MVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<ApplicationDBContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
+            builder.Services.AddHttpClient("ECommerceApi", client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]!);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
 
+            builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor for accessing HttpContext and dealing with cookies in services
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

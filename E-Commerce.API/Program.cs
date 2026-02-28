@@ -48,6 +48,15 @@ namespace E_Commerce.API
                     };
                 });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
 
             var app = builder.Build();
 
@@ -59,10 +68,10 @@ namespace E_Commerce.API
             }
 
             app.UseHttpsRedirection();
-
+            
+            app.UseAuthentication();
             app.UseAuthorization();
-
-
+            app.UseCors();
             app.MapControllers();
 
             app.Run();

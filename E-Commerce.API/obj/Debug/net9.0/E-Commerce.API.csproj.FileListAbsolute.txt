@@ -334,3 +334,4 @@ P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\refint\E-Commerce.API.
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-Commerce.API.pdb
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-Commerce.API.genruntimeconfig.cache
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\ref\E-Commerce.API.dll
+P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\swae.build.ex.cache
