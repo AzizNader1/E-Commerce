@@ -8,8 +8,8 @@ namespace E_Commerce.API.Services
         ProductDto GetProductByIdAsync(int productId);
         List<ProductDto> GetAllProductsByCategoryId(int categoryId);
         List<ProductDto> GetAllProductsByCategoryName(string categoryName);
-        void AddProductAsync(CreateProductDto createProductDto);
-        void UpdateProductAsync(ProductDto productDto);
+        ProductDto AddProductAsync(CreateProductDto createProductDto, IFormFile productImage);
+        ProductDto UpdateProductAsync(UpdateProductDto updateProductDto, IFormFile productImage);
         void DeleteProductAsync(int productId);
     }
 }

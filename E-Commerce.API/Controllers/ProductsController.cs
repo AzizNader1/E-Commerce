@@ -44,12 +44,12 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProduct([FromBody] CreateProductDto createProductDto)
+        public IActionResult AddProduct([FromForm] CreateProductDto createProductDto, IFormFile productImage)
         {
             try
             {
-                productService.AddProductAsync(createProductDto);
-                return Created();
+                var createdProduct = productService.AddProductAsync(createProductDto, productImage);
+                return Ok(createdProduct);
             }
             catch (Exception e)
             {
@@ -58,12 +58,12 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateProduct([FromBody] ProductDto productDto)
+        public IActionResult UpdateProduct([FromForm] UpdateProductDto updateProductDto, IFormFile productImage)
         {
             try
             {
-                productService.UpdateProductAsync(productDto);
-                return NoContent();
+                var updatedProduct = productService.UpdateProductAsync(updateProductDto, productImage);
+                return Ok(updatedProduct);
             }
             catch (Exception e)
             {

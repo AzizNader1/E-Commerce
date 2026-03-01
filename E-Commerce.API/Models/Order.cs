@@ -28,7 +28,6 @@ namespace E_Commerce.API.Models
         [Range(0.01, double.MaxValue)]
         public decimal TotalAmount { get; set; }
 
-       
         public virtual User User { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }

@@ -9,7 +9,6 @@ namespace E_Commerce.API.Models
 
         [Required]
         public int UserId { get; set; } 
-
        
         public virtual User User { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>(); 

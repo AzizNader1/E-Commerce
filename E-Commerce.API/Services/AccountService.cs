@@ -22,7 +22,7 @@ namespace E_Commerce.API.Services
             if (loginUserDto == null)
                 throw new ArgumentNullException(nameof(loginUserDto),"the data can not be null");
 
-            List<User> users = _uow.UserRepository.GetAllAsync();
+            var users = _uow.UserRepository.GetAllAsync();
             if (users.Count == 0)
                 throw new ArgumentNullException(nameof(users), "there is no users in the database");
 
@@ -30,7 +30,7 @@ namespace E_Commerce.API.Services
             if (wantedUser == null)
                 throw new ArgumentNullException(nameof(wantedUser), "there is no data exists for these credentails");
 
-            List<Claim> userClaims = new List<Claim>();
+            var userClaims = new List<Claim>();
             userClaims.Add(new Claim("UserName",loginUserDto.UserName.ToString()));
             userClaims.Add(new Claim("UserEmail",loginUserDto.Email.ToString()));
             userClaims.Add(new Claim("UserPassword",loginUserDto.Password.ToString()));

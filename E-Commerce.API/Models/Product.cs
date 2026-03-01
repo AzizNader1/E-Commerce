@@ -19,8 +19,11 @@ namespace E_Commerce.API.Models
         public decimal Price { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue)]
+        [Range(1, int.MaxValue)]
         public int StockQuantity { get; set; }
+
+        public byte[]? ImageData { get; set; }
+        public string? ImageContentType { get; set; }
 
         public int CategoryId { get; set; } 
 
