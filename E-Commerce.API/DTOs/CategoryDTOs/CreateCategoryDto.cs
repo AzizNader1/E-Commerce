@@ -1,8 +1,15 @@
-﻿namespace E_Commerce.API.DTOs.CategoryDTOs
+﻿using E_Commerce.API.Models;
+using System.ComponentModel.DataAnnotations;
+
+namespace E_Commerce.API.DTOs.CategoryDTOs
 {
     public class CreateCategoryDto
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        [Required(ErrorMessage = "Category Name Is Required Field And You Can Not Left It Empty")]
+        public CategoriesCollections? CategoryName { get; set; }
+
+        [StringLength(500, MinimumLength = 10,
+            ErrorMessage = "Category Description Must Be Between 10 And 500 Characters If Provided")]
+        public string CategoryDescription { get; set; } = string.Empty;
     }
 }

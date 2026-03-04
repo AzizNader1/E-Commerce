@@ -19,8 +19,8 @@ namespace E_Commerce.API.Services
                 throw new ArgumentNullException(nameof(createCategoryDto),"the data of the category can not be empty");
             
             _uow.CategoryRepository.AddAsync(new Category { 
-                Name = createCategoryDto.Name,
-                Description = createCategoryDto.Description
+                CategoryName = createCategoryDto.CategoryName,
+                CategoryDescription = createCategoryDto.CategoryDescription
             });
         }
 
@@ -49,8 +49,8 @@ namespace E_Commerce.API.Services
                 categoryDtos.Add(new CategoryDto
                 {
                     CategoryId = category.CategoryId,
-                    Name = category.Name,
-                    Description = category.Description
+                    CategoryName = category.CategoryName,
+                    CategoryDescription = category.CategoryDescription
                 });
             }
             return categoryDtos;
@@ -68,8 +68,8 @@ namespace E_Commerce.API.Services
             return new CategoryDto
             {
                 CategoryId = selectedCategory.CategoryId,
-                Name = selectedCategory.Name,
-                Description = selectedCategory.Description
+                CategoryName = selectedCategory.CategoryName,
+                CategoryDescription = selectedCategory.CategoryDescription
             };
         }
 
@@ -84,8 +84,8 @@ namespace E_Commerce.API.Services
 
             _uow.CategoryRepository.UpdateAsync(new Category
             {
-                Name = categoryDto.Name,
-                Description = categoryDto.Description
+                CategoryName = categoryDto.CategoryName,
+                CategoryDescription = categoryDto.CategoryDescription
             });
         }
     }

@@ -2,7 +2,7 @@
   {
     "ContainingType": "E_Commerce.API.Controllers.AccountsController",
     "Method": "Login",
-    "RelativePath": "api/Accounts",
+    "RelativePath": "api/Accounts/Login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -10,6 +10,22 @@
       {
         "Name": "loginUserDto",
         "Type": "E_Commerce.API.DTOs.UserDTOs.LoginUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "E_Commerce.API.Controllers.AccountsController",
+    "Method": "Register",
+    "RelativePath": "api/Accounts/Register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "registerUserDto",
+        "Type": "E_Commerce.API.DTOs.UserDTOs.RegisterUserDto",
         "IsRequired": true
       }
     ],
@@ -490,22 +506,22 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Name",
+        "Name": "ProductName",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Description",
+        "Name": "ProductDescription",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Price",
+        "Name": "ProductPrice",
         "Type": "System.Decimal",
         "IsRequired": false
       },
       {
-        "Name": "StockQuantity",
+        "Name": "ProductStockQuantity",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -610,22 +626,22 @@
         "IsRequired": false
       },
       {
-        "Name": "Name",
+        "Name": "ProductName",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Description",
+        "Name": "ProductDescription",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Price",
+        "Name": "ProductPrice",
         "Type": "System.Decimal",
         "IsRequired": false
       },
       {
-        "Name": "StockQuantity",
+        "Name": "ProductStockQuantity",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -657,7 +673,7 @@
     "Parameters": [
       {
         "Name": "createUserDto",
-        "Type": "E_Commerce.API.DTOs.UserDTOs.CreateUserDto",
+        "Type": "E_Commerce.API.DTOs.UserDTOs.RegisterUserDto",
         "IsRequired": true
       }
     ],

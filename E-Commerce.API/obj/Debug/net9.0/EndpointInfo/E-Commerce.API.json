@@ -1,11 +1,42 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "E-Commerce.API",
-    "version": "1.0"
+    "title": "Api_Assignment",
+    "version": "v1"
   },
   "paths": {
-    "/api/Accounts": {
+    "/api/Accounts/Register": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Accounts/Login": {
       "post": {
         "tags": [
           "Accounts"
@@ -818,34 +849,37 @@
               "schema": {
                 "required": [
                   "CategoryId",
-                  "Name",
-                  "Price",
-                  "StockQuantity"
+                  "ProductName",
+                  "ProductPrice",
+                  "ProductStockQuantity"
                 ],
                 "type": "object",
                 "properties": {
-                  "Name": {
+                  "ProductName": {
                     "maxLength": 100,
-                    "minLength": 0,
+                    "minLength": 3,
                     "type": "string"
                   },
-                  "Description": {
+                  "ProductDescription": {
                     "maxLength": 500,
-                    "minLength": 0,
+                    "minLength": 10,
                     "type": "string"
                   },
-                  "Price": {
+                  "ProductPrice": {
+                    "maximum": 1000000,
                     "minimum": 0.01,
                     "type": "number",
                     "format": "double"
                   },
-                  "StockQuantity": {
-                    "maximum": 2147483647,
+                  "ProductStockQuantity": {
+                    "maximum": 100000,
                     "minimum": 0,
                     "type": "integer",
                     "format": "int32"
                   },
                   "CategoryId": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
                     "type": "integer",
                     "format": "int32"
                   },
@@ -856,16 +890,16 @@
                 }
               },
               "encoding": {
-                "Name": {
+                "ProductName": {
                   "style": "form"
                 },
-                "Description": {
+                "ProductDescription": {
                   "style": "form"
                 },
-                "Price": {
+                "ProductPrice": {
                   "style": "form"
                 },
-                "StockQuantity": {
+                "ProductStockQuantity": {
                   "style": "form"
                 },
                 "CategoryId": {
@@ -896,10 +930,10 @@
               "schema": {
                 "required": [
                   "CategoryId",
-                  "Name",
-                  "Price",
                   "ProductId",
-                  "StockQuantity"
+                  "ProductName",
+                  "ProductPrice",
+                  "ProductStockQuantity"
                 ],
                 "type": "object",
                 "properties": {
@@ -907,23 +941,24 @@
                     "type": "integer",
                     "format": "int32"
                   },
-                  "Name": {
+                  "ProductName": {
                     "maxLength": 100,
-                    "minLength": 0,
+                    "minLength": 3,
                     "type": "string"
                   },
-                  "Description": {
+                  "ProductDescription": {
                     "maxLength": 500,
-                    "minLength": 0,
+                    "minLength": 10,
                     "type": "string"
                   },
-                  "Price": {
+                  "ProductPrice": {
+                    "maximum": 1000000,
                     "minimum": 0.01,
                     "type": "number",
                     "format": "double"
                   },
-                  "StockQuantity": {
-                    "maximum": 2147483647,
+                  "ProductStockQuantity": {
+                    "maximum": 100000,
                     "minimum": 0,
                     "type": "integer",
                     "format": "int32"
@@ -945,16 +980,16 @@
                 "ProductId": {
                   "style": "form"
                 },
-                "Name": {
+                "ProductName": {
                   "style": "form"
                 },
-                "Description": {
+                "ProductDescription": {
                   "style": "form"
                 },
-                "Price": {
+                "ProductPrice": {
                   "style": "form"
                 },
-                "StockQuantity": {
+                "ProductStockQuantity": {
                   "style": "form"
                 },
                 "CategoryId": {
@@ -1054,7 +1089,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Users/GetUserById/{id}": {
@@ -1077,7 +1117,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Users/AddUser": {
@@ -1089,17 +1134,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
+                "$ref": "#/components/schemas/RegisterUserDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
+                "$ref": "#/components/schemas/RegisterUserDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
+                "$ref": "#/components/schemas/RegisterUserDto"
               }
             }
           }
@@ -1108,7 +1153,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Users/UpdateUser": {
@@ -1139,7 +1189,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/Users/DeleteUser/{id}": {
@@ -1162,7 +1217,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     }
   },
@@ -1204,6 +1264,21 @@
         },
         "additionalProperties": false
       },
+      "CategoriesCollections": {
+        "enum": [
+          "Electronics",
+          "Clothing",
+          "HomeAppliances",
+          "Books",
+          "BeautyProducts",
+          "SportsEquipment",
+          "ToysAndGames",
+          "AutomotiveParts",
+          "HealthAndPersonalCare",
+          "OfficeSupplies"
+        ],
+        "type": "string"
+      },
       "CategoryDto": {
         "type": "object",
         "properties": {
@@ -1211,11 +1286,10 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
-            "type": "string",
-            "nullable": true
+          "categoryName": {
+            "$ref": "#/components/schemas/CategoriesCollections"
           },
-          "description": {
+          "categoryDescription": {
             "type": "string",
             "nullable": true
           }
@@ -1251,13 +1325,17 @@
         "additionalProperties": false
       },
       "CreateCategoryDto": {
+        "required": [
+          "categoryName"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
+          "categoryName": {
+            "$ref": "#/components/schemas/CategoriesCollections"
           },
-          "description": {
+          "categoryDescription": {
+            "maxLength": 500,
+            "minLength": 10,
             "type": "string",
             "nullable": true
           }
@@ -1265,9 +1343,17 @@
         "additionalProperties": false
       },
       "CreateOrderDto": {
+        "required": [
+          "orderDate",
+          "status",
+          "totalAmount",
+          "userId"
+        ],
         "type": "object",
         "properties": {
           "userId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
@@ -1276,10 +1362,11 @@
             "format": "date-time"
           },
           "status": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/OrderStatus"
           },
           "totalAmount": {
+            "maximum": 1000000,
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           }
@@ -1287,71 +1374,64 @@
         "additionalProperties": false
       },
       "CreateOrderItemDto": {
+        "required": [
+          "orderId",
+          "productId",
+          "quantity",
+          "unitPrice"
+        ],
         "type": "object",
         "properties": {
           "orderId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "productId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "quantity": {
+            "maximum": 1000,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "unitPrice": {
+            "maximum": 1000000,
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           }
         },
         "additionalProperties": false
       },
-      "CreateUserDto": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          },
-          "fullName": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumber": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "LoginUserDto": {
+        "required": [
+          "userEmail",
+          "userName",
+          "userPassword"
+        ],
         "type": "object",
         "properties": {
           "userName": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
           },
-          "password": {
+          "userEmail": {
+            "maxLength": 100,
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
-          "email": {
+          "userPassword": {
+            "minLength": 12,
             "type": "string",
-            "nullable": true
+            "format": "password"
           }
         },
         "additionalProperties": false
@@ -1372,8 +1452,7 @@
             "format": "date-time"
           },
           "status": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/OrderStatus"
           },
           "totalAmount": {
             "type": "number",
@@ -1408,6 +1487,58 @@
         },
         "additionalProperties": false
       },
+      "OrderStatus": {
+        "enum": [
+          "Pending",
+          "Shipped",
+          "Delivered",
+          "Cancelled"
+        ],
+        "type": "string"
+      },
+      "RegisterUserDto": {
+        "required": [
+          "userAddress",
+          "userEmail",
+          "userFullName",
+          "userName",
+          "userPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "userName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "userEmail": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "userPassword": {
+            "minLength": 12,
+            "type": "string",
+            "format": "password"
+          },
+          "userFullName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "userAddress": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "userPhoneNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UserDto": {
         "type": "object",
         "properties": {
@@ -1415,32 +1546,40 @@
             "type": "integer",
             "format": "int32"
           },
-          "username": {
+          "userName": {
             "type": "string",
             "nullable": true
           },
-          "email": {
+          "userEmail": {
             "type": "string",
             "nullable": true
           },
-          "password": {
+          "userPassword": {
             "type": "string",
             "nullable": true
           },
-          "fullName": {
+          "userFullName": {
             "type": "string",
             "nullable": true
           },
-          "address": {
+          "userAddress": {
             "type": "string",
             "nullable": true
           },
-          "phoneNumber": {
+          "userPhoneNumber": {
             "type": "string",
             "nullable": true
           }
         },
         "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }

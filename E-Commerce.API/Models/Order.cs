@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.API.Models
+﻿namespace E_Commerce.API.Models
 {
-    enum OrderStatus
+    public enum OrderStatus
     {
         Pending,
         Shipped,
@@ -11,24 +9,15 @@ namespace E_Commerce.API.Models
     }
     public class Order
     {
-        [Key]
         public int OrderId { get; set; }
-
-        [Required]
-        public int UserId { get; set; } 
-
-        [Required]
+        public int UserId { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
-
-        [Required]
-        [StringLength(50)]
-        public string Status { get; set; }
-
-        [Required]
-        [Range(0.01, double.MaxValue)]
+        public OrderStatus Status { get; set; }
         public decimal TotalAmount { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+        // Navigation properties
+        public virtual User? User { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
     }
 }

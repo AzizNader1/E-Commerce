@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using E_Commerce.API.Models;
 
 namespace E_Commerce.API.DTOs.ProductDTOs
 {
@@ -6,22 +6,22 @@ namespace E_Commerce.API.DTOs.ProductDTOs
     {
         public int ProductId { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        public string ProductName { get; set; } = string.Empty;
 
-        public string Description { get; set; } = string.Empty;
+        public string ProductDescription { get; set; } = string.Empty;
 
-        public decimal Price { get; set; }
+        public decimal ProductPrice { get; set; }
 
-        public int StockQuantity { get; set; }
+        public int ProductStockQuantity { get; set; }
 
-        public string? ImageBase64 { get; set; }
+        public string? ProductImage { get; set; }
 
-        public string? ImageContentType { get; set; }
+        public string? ProductImageContentType { get; set; }
 
-        public bool HasImage => !string.IsNullOrEmpty(ImageBase64);
+        public bool IsProductHasImage => !string.IsNullOrEmpty(ProductImage);
 
         public int CategoryId { get; set; }
 
-        public string CategoryName { get; set; } = string.Empty;
+        public CategoriesCollections? CategoryName { get; set; }
     }
 }

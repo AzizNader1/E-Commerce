@@ -1,7 +1,6 @@
-﻿using E_Commerce.API.Repositories;
-using E_Commerce.API.UnitOfWork;
+﻿using E_Commerce.API.DTOs.ProductDTOs;
 using E_Commerce.API.Models;
-using E_Commerce.API.DTOs.ProductDTOs;
+using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
 {
@@ -36,17 +35,17 @@ namespace E_Commerce.API.Services
 
             var newProduct = new Product
             {
-                Name = createProductDto.Name,
-                Description = createProductDto.Description,
-                Price = createProductDto.Price,
-                StockQuantity = createProductDto.StockQuantity,
+                ProductName = createProductDto.ProductName,
+                ProductDescription = createProductDto.ProductDescription,
+                ProductPrice = createProductDto.ProductPrice,
+                ProductStockQuantity = createProductDto.ProductStockQuantity,
                 CategoryId = createProductDto.CategoryId,
-                ImageData = imageData,
-                ImageContentType = imageContentType
+                ProductImageData = imageData,
+                ProductImageContentType = imageContentType
             };
 
             _uow.ProductRepository.AddAsync(newProduct);
-            
+
             return MapToDto(newProduct);
         }
 
@@ -75,14 +74,14 @@ namespace E_Commerce.API.Services
                 productDtos.Add(new ProductDto
                 {
                     ProductId = product.ProductId,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Price = product.Price,
-                    StockQuantity = product.StockQuantity,
+                    ProductName = product.ProductName,
+                    ProductDescription = product.ProductDescription,
+                    ProductPrice = product.ProductPrice,
+                    ProductStockQuantity = product.ProductStockQuantity,
                     CategoryId = product.CategoryId,
-                    CategoryName = product.Category != null ? product.Category.Name : string.Empty,
-                    ImageBase64 = product.ImageData != null ? Convert.ToBase64String(product.ImageData) : null,
-                    ImageContentType = product.ImageContentType
+                    CategoryName = product.Category.CategoryName,
+                    ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
+                    ProductImageContentType = product.ProductImageContentType
                 });
             }
             return productDtos;
@@ -110,14 +109,14 @@ namespace E_Commerce.API.Services
                     productDtos.Add(new ProductDto
                     {
                         ProductId = product.ProductId,
-                        Name = product.Name,
-                        Description = product.Description,
-                        Price = product.Price,
-                        StockQuantity = product.StockQuantity,
+                        ProductName = product.ProductName,
+                        ProductDescription = product.ProductDescription,
+                        ProductPrice = product.ProductPrice,
+                        ProductStockQuantity = product.ProductStockQuantity,
                         CategoryId = product.CategoryId,
-                        CategoryName = product.Category != null ? product.Category.Name : string.Empty,
-                        ImageBase64 = product.ImageData != null ? Convert.ToBase64String(product.ImageData) : null,
-                        ImageContentType = product.ImageContentType
+                        CategoryName = product.Category.CategoryName,
+                        ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
+                        ProductImageContentType = product.ProductImageContentType
                     });
                 }
             }
@@ -133,7 +132,7 @@ namespace E_Commerce.API.Services
             if (allCategories == null || allCategories.Count == 0)
                 throw new ArgumentNullException(nameof(allCategories), "there is no categories exists in the database");
 
-            var selectedCategory = allCategories.FirstOrDefault(c => c.Name == categoryName)!;
+            var selectedCategory = allCategories.FirstOrDefault(c => c.CategoryName.ToString() == categoryName)!;
             if (selectedCategory == null)
                 throw new ArgumentNullException(nameof(selectedCategory), "there is no category in the database for the name you sended");
 
@@ -150,14 +149,14 @@ namespace E_Commerce.API.Services
                     productDtos.Add(new ProductDto
                     {
                         ProductId = product.ProductId,
-                        Name = product.Name,
-                        Description = product.Description,
-                        Price = product.Price,
-                        StockQuantity = product.StockQuantity,
+                        ProductName = product.ProductName,
+                        ProductDescription = product.ProductDescription,
+                        ProductPrice = product.ProductPrice,
+                        ProductStockQuantity = product.ProductStockQuantity,
                         CategoryId = product.CategoryId,
-                        CategoryName = product.Category != null ? product.Category.Name : string.Empty,
-                        ImageBase64 = product.ImageData != null ? Convert.ToBase64String(product.ImageData) : null,
-                        ImageContentType = product.ImageContentType
+                        CategoryName = product.Category.CategoryName,
+                        ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
+                        ProductImageContentType = product.ProductImageContentType
                     });
                 }
             }
@@ -176,14 +175,14 @@ namespace E_Commerce.API.Services
             return new ProductDto
             {
                 ProductId = product.ProductId,
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
+                ProductName = product.ProductName,
+                ProductDescription = product.ProductDescription,
+                ProductPrice = product.ProductPrice,
+                ProductStockQuantity = product.ProductStockQuantity,
                 CategoryId = product.CategoryId,
-                CategoryName = product.Category != null ? product.Category.Name : string.Empty,
-                ImageBase64 = product.ImageData != null ? Convert.ToBase64String(product.ImageData) : null,
-                ImageContentType = product.ImageContentType
+                CategoryName = product.Category.CategoryName,
+                ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
+                ProductImageContentType = product.ProductImageContentType
             };
         }
 
@@ -199,7 +198,7 @@ namespace E_Commerce.API.Services
             var selectedCategory = _uow.CategoryRepository.GetByIdAsync(updateProductDto.CategoryId);
             if (selectedCategory == null)
                 throw new ArgumentNullException(nameof(selectedCategory), "there is no category in the database for the id you entried");
-             
+
             byte[]? imageData = null;
             string? imageContentType = null;
 
@@ -211,18 +210,18 @@ namespace E_Commerce.API.Services
 
             var updatedProduct = new Product
             {
-                Name = updateProductDto.Name,
-                Description = updateProductDto.Description,
-                Price = updateProductDto.Price,
-                StockQuantity = updateProductDto.StockQuantity,
+                ProductName = updateProductDto.ProductName,
+                ProductDescription = updateProductDto.ProductDescription,
+                ProductPrice = updateProductDto.ProductPrice,
+                ProductStockQuantity = updateProductDto.ProductStockQuantity,
                 CategoryId = updateProductDto.CategoryId,
-                ImageData = imageData ?? selectedProduct.ImageData,
-                ImageContentType = imageContentType ?? selectedProduct.ImageContentType
+                ProductImageData = imageData ?? selectedProduct.ProductImageData,
+                ProductImageContentType = imageContentType ?? selectedProduct.ProductImageContentType
             };
 
-           _uow.ProductRepository.UpdateAsync(updatedProduct);
-           return MapToDto(updatedProduct);
-        }   
+            _uow.ProductRepository.UpdateAsync(updatedProduct);
+            return MapToDto(updatedProduct);
+        }
 
         private void ValidateImage(IFormFile productImage)
         {
@@ -249,14 +248,14 @@ namespace E_Commerce.API.Services
             return new ProductDto
             {
                 ProductId = product.ProductId,
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
+                ProductName = product.ProductName,
+                ProductDescription = product.ProductDescription,
+                ProductPrice = product.ProductPrice,
+                ProductStockQuantity = product.ProductStockQuantity,
                 CategoryId = product.CategoryId,
-                CategoryName = product.Category != null ? product.Category.Name : string.Empty,
-                ImageBase64 = product.ImageData != null ? Convert.ToBase64String(product.ImageData) : null,
-                ImageContentType = product.ImageContentType
+                CategoryName = product.Category.CategoryName,
+                ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
+                ProductImageContentType = product.ProductImageContentType
             };
 
         }

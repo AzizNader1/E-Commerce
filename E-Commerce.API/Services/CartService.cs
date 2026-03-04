@@ -1,6 +1,5 @@
 ﻿using E_Commerce.API.DTOs.CartDTOs;
 using E_Commerce.API.Models;
-using E_Commerce.API.Repositories;
 using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
@@ -67,7 +66,7 @@ namespace E_Commerce.API.Services
             List<Cart> carts = _uow.CartRepository.GetAllAsync();
             if (carts == null || carts.Count == 0)
                 throw new ArgumentNullException(nameof(carts), "No carts found in the database");
-           
+
             List<Cart> userCarts = carts.Where(c => c.UserId == userId).ToList();
             if (userCarts == null || userCarts.Count == 0)
                 throw new ArgumentNullException(nameof(userCarts), "No carts found for the given user ID");
@@ -86,33 +85,34 @@ namespace E_Commerce.API.Services
 
         public List<CartDto> GetAllCartsByUserNameAsync(string userName)
         {
-            if (string.IsNullOrWhiteSpace(userName))
-                throw new ArgumentException("Invalid user name", nameof(userName));
+            return new List<CartDto>();
+            //if (string.IsNullOrWhiteSpace(userName))
+            //    throw new ArgumentException("Invalid user name", nameof(userName));
 
-            List<User> users = _uow.UserRepository.GetAllAsync();
-            if (users == null || users.Count == 0)
-                throw new ArgumentNullException(nameof(users), "No users found in the database");
+            //List<User> users = _uow.UserRepository.GetAllAsync();
+            //if (users == null || users.Count == 0)
+            //    throw new ArgumentNullException(nameof(users), "No users found in the database");
 
-            User user = users.FirstOrDefault(u => u.Username.Equals(userName, StringComparison.OrdinalIgnoreCase))!;
-            
-            List<Cart> carts = _uow.CartRepository.GetAllAsync();
-            if (carts == null || carts.Count == 0)
-                throw new ArgumentNullException(nameof(carts), "No carts found in the database");
+            //User user = users.FirstOrDefault(u => u.Username.Equals(userName, StringComparison.OrdinalIgnoreCase))!;
 
-            List<Cart> userCarts = carts.Where(c => c.UserId == user.UserId).ToList();
-            if (userCarts == null || userCarts.Count == 0)
-                throw new ArgumentNullException(nameof(userCarts), "No carts found for the given user ID");
+            //List<Cart> carts = _uow.CartRepository.GetAllAsync();
+            //if (carts == null || carts.Count == 0)
+            //    throw new ArgumentNullException(nameof(carts), "No carts found in the database");
 
-            List<CartDto> cartDtos = new List<CartDto>();
-            foreach (var cart in userCarts)
-            {
-                cartDtos.Add(new CartDto
-                {
-                    CartId = cart.CartId,
-                    UserId = cart.UserId
-                });
-            }
-            return cartDtos;
+            //List<Cart> userCarts = carts.Where(c => c.UserId == user.UserId).ToList();
+            //if (userCarts == null || userCarts.Count == 0)
+            //    throw new ArgumentNullException(nameof(userCarts), "No carts found for the given user ID");
+
+            //List<CartDto> cartDtos = new List<CartDto>();
+            //foreach (var cart in userCarts)
+            //{
+            //    cartDtos.Add(new CartDto
+            //    {
+            //        CartId = cart.CartId,
+            //        UserId = cart.UserId
+            //    });
+            //}
+            //return cartDtos;
         }
 
         public CartDto GetCartByIdAsync(int cartId)

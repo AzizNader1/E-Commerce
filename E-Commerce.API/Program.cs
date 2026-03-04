@@ -1,11 +1,13 @@
 using E_Commerce.API.Data;
-using E_Commerce.API.Models;
-using E_Commerce.API.Repositories;
+using E_Commerce.API.Helpers;
 using E_Commerce.API.Services;
 using E_Commerce.API.UnitOfWork;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace E_Commerce.API
 {
@@ -17,12 +19,52 @@ namespace E_Commerce.API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api_Assignment", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
+
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
+
+            builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                            .AddJwtBearer(o =>
+                            {
+                                o.RequireHttpsMetadata = false;
+                                o.SaveToken = false;
+                                o.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuerSigningKey = true,
+                                    ValidateIssuer = true,
+                                    ValidateAudience = true,
+                                    ValidateLifetime = true,
+                                    ValidIssuer = builder.Configuration["JWT:Issuer"],
+                                    ValidAudience = builder.Configuration["JWT:Audience"],
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"]!))
+                                };
+                            });
+
             builder.Services.AddScoped<UOW>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IProductService, ProductService>();
@@ -33,20 +75,6 @@ namespace E_Commerce.API
             builder.Services.AddScoped<IOrderItemService, OrderItemService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
 
-            builder.Services
-                .AddAuthentication(opt => opt.DefaultAuthenticateScheme = "name")
-                .AddJwtBearer("name",
-                option =>
-                {
-                    string secretKey = "welcome to my programming world while you can convert your dreams into reality";
-                    var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
-                    option.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        IssuerSigningKey = key,
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
 
             builder.Services.AddCors(options =>
             {
@@ -68,7 +96,7 @@ namespace E_Commerce.API
             }
 
             app.UseHttpsRedirection();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors();

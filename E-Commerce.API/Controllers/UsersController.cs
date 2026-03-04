@@ -1,11 +1,11 @@
 ﻿using E_Commerce.API.DTOs.UserDTOs;
-using E_Commerce.API.Models;
 using E_Commerce.API.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -15,6 +15,7 @@ namespace E_Commerce.API.Controllers
         {
             this.userService = userService;
         }
+
         [HttpGet]
         public IActionResult GetAllUsers()
         {
@@ -23,7 +24,7 @@ namespace E_Commerce.API.Controllers
                 var users = userService.GetAllUsersAsync();
                 return Ok(users);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -44,7 +45,7 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddUser([FromBody] CreateUserDto createUserDto)
+        public IActionResult AddUser([FromBody] RegisterUserDto createUserDto)
         {
             try
             {

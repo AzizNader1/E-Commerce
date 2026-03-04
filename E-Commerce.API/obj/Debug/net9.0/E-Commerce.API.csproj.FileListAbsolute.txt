@@ -167,8 +167,8 @@ C:\Users\ZeeZo\Desktop\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-
 C:\Users\ZeeZo\Desktop\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-Commerce.API.genruntimeconfig.cache
 C:\Users\ZeeZo\Desktop\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\ref\E-Commerce.API.dll
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\appsettings.Development.json
-P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\E-Commerce.API.staticwebassets.endpoints.json
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\appsettings.json
+P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\E-Commerce.API.staticwebassets.endpoints.json
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\E-Commerce.API.exe
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\E-Commerce.API.deps.json
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\E-Commerce.API.runtimeconfig.json
@@ -178,6 +178,7 @@ P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Azure.Core.dll
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Azure.Identity.dll
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Humanizer.dll
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Microsoft.Build.Locator.dll
 P:\My Projects\E-Commerce\E-Commerce.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.dll
@@ -327,6 +328,7 @@ P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\staticwebassets.build.
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\staticwebassets.build.json.cache
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\staticwebassets.development.json
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\swae.build.ex.cache
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-Commer.7DAE3097.Up2Date
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-Commerce.API.dll
@@ -334,4 +336,3 @@ P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\refint\E-Commerce.API.
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-Commerce.API.pdb
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\E-Commerce.API.genruntimeconfig.cache
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\ref\E-Commerce.API.dll
-P:\My Projects\E-Commerce\E-Commerce.API\obj\Debug\net9.0\swae.build.ex.cache

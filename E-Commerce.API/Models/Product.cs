@@ -1,34 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.API.Models
+﻿namespace E_Commerce.API.Models
 {
     public class Product
     {
-        [Key]
         public int ProductId { get; set; }
+        public string? ProductName { get; set; }
+        public string? ProductDescription { get; set; }
+        public decimal ProductPrice { get; set; }
+        public int ProductStockQuantity { get; set; }
+        public byte[]? ProductImageData { get; set; }
+        public string? ProductImageContentType { get; set; }
+        public int CategoryId { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
 
-        [StringLength(500)]
-        public string Description { get; set; }
-
-        [Required]
-        [Range(0.01, double.MaxValue)]
-        public decimal Price { get; set; }
-
-        [Required]
-        [Range(1, int.MaxValue)]
-        public int StockQuantity { get; set; }
-
-        public byte[]? ImageData { get; set; }
-        public string? ImageContentType { get; set; }
-
-        public int CategoryId { get; set; } 
-
-        public virtual Category Category { get; set; }
-        public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>(); 
+        // Navigation properties
+        public virtual Category? Category { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; } = [];
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
     }
 }
