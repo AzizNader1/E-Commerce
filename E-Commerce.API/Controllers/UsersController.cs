@@ -1,11 +1,9 @@
 ﻿using E_Commerce.API.DTOs.UserDTOs;
 using E_Commerce.API.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -21,7 +19,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var users = userService.GetAllUsersAsync();
+                var users = userService.GetAllUsers();
                 return Ok(users);
             }
             catch (Exception e)
@@ -35,7 +33,10 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var user = userService.GetUserByIdAsync(id);
+                if (id <= 0)
+                    return BadRequest("Invalid User Id");
+
+                var user = userService.GetUserById(id);
                 return Ok(user);
             }
             catch (Exception e)
@@ -49,8 +50,8 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                userService.AddUserAsync(createUserDto);
-                return Created();
+                userService.AddUser(createUserDto);
+                return Ok("this user created successfully");
             }
             catch (Exception e)
             {
@@ -63,8 +64,8 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                userService.UpdateUserAsync(userDto);
-                return NoContent();
+                userService.UpdateUser(userDto);
+                return Ok("this user data updated successfully");
             }
             catch (Exception e)
             {
@@ -77,8 +78,8 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                userService.DeleteUserAsync(id);
-                return NoContent();
+                userService.DeleteUser(id);
+                return Ok("this user deleted successfully");
             }
             catch (Exception e)
             {

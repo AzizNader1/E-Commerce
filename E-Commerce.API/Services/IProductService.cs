@@ -4,12 +4,12 @@ namespace E_Commerce.API.Services
 {
     public interface IProductService
     {
-        List<ProductDto> GetAllProductsAsync();
-        ProductDto GetProductByIdAsync(int productId);
+        List<ProductDto> GetAllProducts();
+        ProductDto GetProductById(int productId);
         List<ProductDto> GetAllProductsByCategoryId(int categoryId);
         List<ProductDto> GetAllProductsByCategoryName(string categoryName);
-        ProductDto AddProductAsync(CreateProductDto createProductDto, IFormFile productImage);
-        ProductDto UpdateProductAsync(UpdateProductDto updateProductDto, IFormFile productImage);
-        void DeleteProductAsync(int productId);
+        ProductDto AddProduct(CreateProductDto createProductDto, IFormFile productImage);
+        ProductDto UpdateProduct(UpdateProductDto updateProductDto, IFormFile productImage);
+        void DeleteProduct(int productId);
     }
 }

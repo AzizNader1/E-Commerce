@@ -1,4 +1,5 @@
 ﻿using E_Commerce.API.DTOs.CartDTOs;
+using E_Commerce.API.DTOs.CartItemDTOs;
 using E_Commerce.API.Models;
 using E_Commerce.API.UnitOfWork;
 
@@ -12,136 +13,200 @@ namespace E_Commerce.API.Services
             _uow = uow;
         }
 
-        public void AddCartAsync(CreateCartDto createCartDto)
+        public void AddCart(CreateCartDto createCartDto)
         {
             if (createCartDto == null)
                 throw new ArgumentNullException(nameof(createCartDto), "Cart data cannot be null");
 
-            _uow.CartRepository.AddAsync(new Cart
+            if (createCartDto.UserId <= 0)
+                throw new ArgumentException("Invalid user ID", nameof(createCartDto.UserId));
+
+            if (_uow.CartRepository.GetAllModels().Any(c => c.UserId == createCartDto.UserId))
+                throw new InvalidOperationException("A cart already exists for the given user ID");
+
+            _uow.CartRepository.AddModel(new Cart
             {
                 UserId = createCartDto.UserId,
             });
         }
 
-        public void DeleteCartAsync(int cartId)
+        public void DeleteCart(int cartId)
         {
             if (cartId <= 0)
                 throw new ArgumentException("Invalid cart ID", nameof(cartId));
 
-            Cart selectedCart = _uow.CartRepository.GetByIdAsync(cartId);
-            if (selectedCart == null)
-                throw new ArgumentNullException(nameof(selectedCart), "No cart found for the given ID");
+            if (_uow.CartRepository.GetModelById(cartId) == null)
+                throw new ArgumentNullException("No cart found for the given ID");
 
-            _uow.CartRepository.DeleteAsync(cartId);
+            var cartItems = _uow.CartItemRepository.GetAllModels().Where(ci => ci.CartId == cartId).ToList();
+            foreach (var cartItem in cartItems)
+            {
+                _uow.CartItemRepository.DeleteModel(cartItem.CartItemId);
+            }
+
+            _uow.CartRepository.DeleteModel(cartId);
         }
 
-        public List<CartDto> GetAllCartsAsync()
+        public List<CartDto> GetAllCarts()
         {
-            List<Cart> carts = _uow.CartRepository.GetAllAsync();
+            var carts = _uow.CartRepository.GetAllModels();
             if (carts == null || carts.Count == 0)
                 throw new ArgumentNullException(nameof(carts), "No carts found in the database");
 
-            List<CartDto> cartDtos = new List<CartDto>();
+            var cartItemsDto = new List<CartItemDto>();
+            var cartItems = _uow.CartItemRepository.GetAllModels();
+            foreach (var cartItem in cartItems)
+            {
+                cartItemsDto.Add(new CartItemDto
+                {
+                    CartItemId = cartItem.CartItemId,
+                    CartId = cartItem.CartId,
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity
+                });
+            }
+
+            var cartDtos = new List<CartDto>();
 
             foreach (var cart in carts)
             {
                 cartDtos.Add(new CartDto
                 {
                     CartId = cart.CartId,
-                    UserId = cart.UserId
+                    UserId = cart.UserId,
+                    CartItems = cartItemsDto.Where(ci => ci.CartId == cart.CartId).ToList()
                 });
             }
             return cartDtos;
         }
 
-        public List<CartDto> GetAllCartsByUserIdAsync(int userId)
+        public List<CartDto> GetAllCartsByUserId(int userId)
         {
             if (userId <= 0)
                 throw new ArgumentException("Invalid user ID", nameof(userId));
 
-            User user = _uow.UserRepository.GetByIdAsync(userId);
+            var user = _uow.UserRepository.GetModelById(userId);
             if (user == null)
                 throw new ArgumentNullException(nameof(user), "No user found for the given ID");
 
-            List<Cart> carts = _uow.CartRepository.GetAllAsync();
+            var carts = _uow.CartRepository.GetAllModels();
             if (carts == null || carts.Count == 0)
                 throw new ArgumentNullException(nameof(carts), "No carts found in the database");
 
-            List<Cart> userCarts = carts.Where(c => c.UserId == userId).ToList();
+            var userCarts = carts.Where(c => c.UserId == userId).ToList();
             if (userCarts == null || userCarts.Count == 0)
                 throw new ArgumentNullException(nameof(userCarts), "No carts found for the given user ID");
 
-            List<CartDto> cartDtos = new List<CartDto>();
+            var cartItemsDto = new List<CartItemDto>();
+            var cartItems = _uow.CartItemRepository.GetAllModels();
+            foreach (var cartItem in cartItems)
+            {
+                cartItemsDto.Add(new CartItemDto
+                {
+                    CartItemId = cartItem.CartItemId,
+                    CartId = cartItem.CartId,
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity
+                });
+            }
+
+            var cartDtos = new List<CartDto>();
             foreach (var cart in userCarts)
             {
                 cartDtos.Add(new CartDto
                 {
                     CartId = cart.CartId,
-                    UserId = cart.UserId
+                    UserId = cart.UserId,
+                    CartItems = cartItemsDto.Where(ci => ci.CartId == cart.CartId).ToList()
                 });
             }
             return cartDtos;
         }
 
-        public List<CartDto> GetAllCartsByUserNameAsync(string userName)
+        public List<CartDto> GetAllCartsByUserName(string userName)
         {
-            return new List<CartDto>();
-            //if (string.IsNullOrWhiteSpace(userName))
-            //    throw new ArgumentException("Invalid user name", nameof(userName));
+            if (userName == null || userName == default || userName == "")
+                throw new ArgumentException("Invalid user name", nameof(userName));
 
-            //List<User> users = _uow.UserRepository.GetAllAsync();
-            //if (users == null || users.Count == 0)
-            //    throw new ArgumentNullException(nameof(users), "No users found in the database");
+            var user = _uow.UserRepository.GetAllModels().FirstOrDefault(u => u.UserName == userName);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "No user found for the given name");
 
-            //User user = users.FirstOrDefault(u => u.Username.Equals(userName, StringComparison.OrdinalIgnoreCase))!;
+            var carts = _uow.CartRepository.GetAllModels();
+            if (carts == null || carts.Count == 0)
+                throw new ArgumentNullException(nameof(carts), "No carts found in the database");
 
-            //List<Cart> carts = _uow.CartRepository.GetAllAsync();
-            //if (carts == null || carts.Count == 0)
-            //    throw new ArgumentNullException(nameof(carts), "No carts found in the database");
+            var userCarts = carts.Where(c => c.UserId == user.UserId).ToList();
+            if (userCarts == null || userCarts.Count == 0)
+                throw new ArgumentNullException(nameof(userCarts), "No carts found for the given user name");
 
-            //List<Cart> userCarts = carts.Where(c => c.UserId == user.UserId).ToList();
-            //if (userCarts == null || userCarts.Count == 0)
-            //    throw new ArgumentNullException(nameof(userCarts), "No carts found for the given user ID");
+            var cartItemsDto = new List<CartItemDto>();
+            var cartItems = _uow.CartItemRepository.GetAllModels();
+            foreach (var cartItem in cartItems)
+            {
+                cartItemsDto.Add(new CartItemDto
+                {
+                    CartItemId = cartItem.CartItemId,
+                    CartId = cartItem.CartId,
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity
+                });
+            }
 
-            //List<CartDto> cartDtos = new List<CartDto>();
-            //foreach (var cart in userCarts)
-            //{
-            //    cartDtos.Add(new CartDto
-            //    {
-            //        CartId = cart.CartId,
-            //        UserId = cart.UserId
-            //    });
-            //}
-            //return cartDtos;
+            var cartDtos = new List<CartDto>();
+            foreach (var cart in userCarts)
+            {
+                cartDtos.Add(new CartDto
+                {
+                    CartId = cart.CartId,
+                    UserId = cart.UserId,
+                    CartItems = cartItemsDto.Where(ci => ci.CartId == cart.CartId).ToList()
+                });
+            }
+            return cartDtos;
         }
 
-        public CartDto GetCartByIdAsync(int cartId)
+        public CartDto GetCartById(int cartId)
         {
             if (cartId <= 0)
                 throw new ArgumentException("Invalid cart ID", nameof(cartId));
 
-            Cart cart = _uow.CartRepository.GetByIdAsync(cartId);
+            var cart = _uow.CartRepository.GetModelById(cartId);
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart), "No cart found for the given ID");
+
+            var cartItemsDto = new List<CartItemDto>();
+            var cartItems = _uow.CartItemRepository.GetAllModels().Where(ci => ci.CartId == cartId).ToList();
+            foreach (var cartItem in cartItemsDto)
+            {
+                cartItemsDto.Add(new CartItemDto
+                {
+                    CartItemId = cartItem.CartItemId,
+                    CartId = cartItem.CartId,
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity
+                });
+            }
 
             return new CartDto
             {
                 CartId = cart.CartId,
-                UserId = cart.UserId
+                UserId = cart.UserId,
+                CartItems = cartItemsDto
             };
         }
 
-        public void UpdateCartAsync(CartDto cartDto)
+        public void UpdateCart(CartDto cartDto)
         {
             if (cartDto == null)
                 throw new ArgumentNullException(nameof(cartDto), "Cart data cannot be null");
 
-            Cart existingCart = _uow.CartRepository.GetByIdAsync(cartDto.CartId);
+            Cart existingCart = _uow.CartRepository.GetModelById(cartDto.CartId);
             if (existingCart == null)
                 throw new ArgumentNullException(nameof(existingCart), "No cart found for the given ID");
 
             existingCart.UserId = cartDto.UserId;
-            _uow.CartRepository.UpdateAsync(existingCart);
+            _uow.CartRepository.UpdateModel(existingCart);
         }
     }
 }

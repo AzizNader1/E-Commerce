@@ -12,12 +12,12 @@ namespace E_Commerce.API.Services
             _uow = uow;
         }
 
-        public void AddUserAsync(RegisterUserDto createUserDto)
+        public void AddUser(RegisterUserDto createUserDto)
         {
             if (createUserDto == null)
                 throw new ArgumentNullException(nameof(createUserDto), "the user data can not be left empty");
 
-            _uow.UserRepository.AddAsync(new User
+            _uow.UserRepository.AddModel(new User
             {
                 UserFullName = createUserDto.UserFullName,
                 UserEmail = createUserDto.UserEmail,
@@ -28,73 +28,54 @@ namespace E_Commerce.API.Services
             });
         }
 
-        public void DeleteUserAsync(int userId)
+        public void DeleteUser(int userId)
         {
-            if (userId == null || userId == 0)
+            if (userId <= 0)
                 throw new ArgumentNullException(nameof(userId), "invalid user id");
 
-            User selectedUser = _uow.UserRepository.GetByIdAsync(userId);
-            if (selectedUser == null)
-                throw new ArgumentNullException(nameof(selectedUser), "there is no user exists in the database for that id");
+            if (_uow.UserRepository.GetModelById(userId) == null)
+                throw new ArgumentNullException("there is no user exists in the database for that id");
 
-            _uow.UserRepository.DeleteAsync(userId);
+            _uow.UserRepository.DeleteModel(userId);
         }
 
-        public List<UserDto> GetAllUsersAsync()
+        public List<UserDto> GetAllUsers()
         {
-            List<User> users = _uow.UserRepository.GetAllAsync();
+            var users = _uow.UserRepository.GetAllModels();
             if (users == null || users.Count == 0)
                 throw new ArgumentNullException(nameof(users), "there is no users exists in the database");
 
-            List<UserDto> userDtos = new List<UserDto>();
+            var userDtos = new List<UserDto>();
 
             foreach (var user in users)
             {
-                userDtos.Add(new UserDto
-                {
-                    UserId = user.UserId,
-                    UserFullName = user.UserFullName,
-                    UserEmail = user.UserEmail,
-                    UserAddress = user.UserAddress,
-                    UserPhoneNumber = user.UserPhoneNumber,
-                    UserName = user.UserName,
-                    UserPassword = user.UserPassword
-                });
+                userDtos.Add(MapModelToDto(user));
             }
             return userDtos;
         }
 
-        public UserDto GetUserByIdAsync(int userId)
+        public UserDto GetUserById(int userId)
         {
-            if (userId == null || userId == 0)
+            if (userId <= 0)
                 throw new ArgumentNullException(nameof(userId), "invalid user id");
 
-            User user = _uow.UserRepository.GetByIdAsync(userId);
+            var user = _uow.UserRepository.GetModelById(userId);
             if (user == null)
                 throw new ArgumentNullException(nameof(user), "there is no user exists for that specific id you want");
 
-            return new UserDto
-            {
-                UserFullName = user.UserFullName,
-                UserAddress = user.UserAddress,
-                UserPhoneNumber = user.UserPhoneNumber,
-                UserEmail = user.UserEmail,
-                UserId = user.UserId,
-                UserName = user.UserName,
-                UserPassword = user.UserPassword
-            };
+            return MapModelToDto(user);
         }
 
-        public void UpdateUserAsync(UserDto userDto)
+        public void UpdateUser(UserDto userDto)
         {
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto), "user data can not be null");
 
-            User selectedUser = _uow.UserRepository.GetByIdAsync(userDto.UserId);
+            var selectedUser = _uow.UserRepository.GetModelById(userDto.UserId);
             if (selectedUser == null)
                 throw new ArgumentNullException(nameof(selectedUser), "there is no user exists for that specific data you send");
 
-            _uow.UserRepository.UpdateAsync(new User
+            _uow.UserRepository.UpdateModel(new User
             {
                 UserFullName = userDto.UserFullName,
                 UserEmail = userDto.UserEmail,
@@ -103,6 +84,20 @@ namespace E_Commerce.API.Services
                 UserName = userDto.UserName,
                 UserPassword = userDto.UserPassword
             });
+        }
+
+        private UserDto MapModelToDto(User user)
+        {
+            return new UserDto
+            {
+                UserId = user.UserId,
+                UserFullName = user.UserFullName,
+                UserEmail = user.UserEmail!,
+                UserAddress = user.UserAddress,
+                UserPhoneNumber = user.UserPhoneNumber!,
+                UserName = user.UserName!,
+                UserPassword = user.UserPassword!
+            };
         }
     }
 }

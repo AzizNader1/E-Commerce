@@ -20,7 +20,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var orderItems = orderItemService.GetAllOrderItemsAsync();
+                var orderItems = orderItemService.GetAllOrderItems();
                 return Ok(orderItems);
             }
             catch (Exception e)
@@ -34,7 +34,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var orderItem = orderItemService.GetOrderItemByIdAsync(id);
+                var orderItem = orderItemService.GetOrderItemById(id);
                 return Ok(orderItem);
             }
             catch (Exception e)
@@ -48,7 +48,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                orderItemService.AddOrderItemAsync(createOrderItemDto);
+                orderItemService.AddOrderItem(createOrderItemDto);
                 return Created();
             }
             catch (Exception e)
@@ -62,7 +62,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                orderItemService.UpdateOrderItemAsync(orderItemDto);
+                orderItemService.UpdateOrderItem(orderItemDto);
                 return NoContent();
             }
             catch (Exception e)
@@ -76,7 +76,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                orderItemService.DeleteOrderItemAsync(id);
+                orderItemService.DeleteOrderItem(id);
                 return NoContent();
             }
             catch (Exception e)
@@ -90,7 +90,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var orderItems = orderItemService.GetOrderItemsByOrderIdAsync(orderId);
+                var orderItems = orderItemService.GetOrderItemsByOrderId(orderId);
                 return Ok(orderItems);
             }
             catch (Exception e)

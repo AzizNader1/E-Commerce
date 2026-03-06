@@ -20,7 +20,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var orders = orderService.GetAllOrdersAsync();
+                var orders = orderService.GetAllOrders();
                 return Ok(orders);
             }
             catch (Exception e)
@@ -34,7 +34,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var order = orderService.GetOrderByIdAsync(id);
+                var order = orderService.GetOrderById(id);
                 return Ok(order);
             }
             catch (Exception e)
@@ -48,7 +48,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                orderService.AddOrderAsync(createOrderDto);
+                orderService.AddOrder(createOrderDto);
                 return Created();
             }
             catch (Exception e)
@@ -62,7 +62,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                orderService.UpdateOrderAsync(orderDto);
+                orderService.UpdateOrder(orderDto);
                 return NoContent();
             }
             catch (Exception e)
@@ -76,7 +76,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                orderService.DeleteOrderAsync(id);
+                orderService.DeleteOrder(id);
                 return NoContent();
             }
             catch (Exception e)

@@ -1,6 +1,6 @@
 ﻿using E_Commerce.API.DTOs.CategoryDTOs;
+using E_Commerce.API.Models;
 using E_Commerce.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
@@ -20,7 +20,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var categories = categoryService.GetAllCategoriesAsync();
+                var categories = categoryService.GetAllCategories();
                 return Ok(categories);
             }
             catch (Exception e)
@@ -34,7 +34,21 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var category = categoryService.GetCategoryByIdAsync(id);
+                var category = categoryService.GetCategoryById(id);
+                return Ok(category);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{categoryName}")]
+        public IActionResult GetCategoryByName(CategoriesCollections categoryName)
+        {
+            try
+            {
+                var category = categoryService.GetCategoryByName(categoryName.ToString());
                 return Ok(category);
             }
             catch (Exception e)
@@ -44,12 +58,12 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCategory([FromBody] CreateCategoryDto createCategoryDto)
+        public IActionResult AddCategory([FromForm] CreateCategoryDto createCategoryDto)
         {
             try
             {
-                categoryService.AddCategoryAsync(createCategoryDto);
-                return Created();
+                categoryService.AddCategory(createCategoryDto);
+                return Ok("This category created successfully");
             }
             catch (Exception e)
             {
@@ -58,12 +72,12 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateCategory([FromBody] CategoryDto categoryDto)
+        public IActionResult UpdateCategory([FromForm] CategoryDto categoryDto)
         {
             try
             {
-                categoryService.UpdateCategoryAsync(categoryDto);
-                return NoContent();
+                categoryService.UpdateCategory(categoryDto);
+                return Ok("this category updated successfully");
             }
             catch (Exception e)
             {
@@ -76,8 +90,8 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                categoryService.DeleteCategoryAsync(id);
-                return NoContent();
+                categoryService.DeleteCategory(id);
+                return Ok("this category deleted successfully");
             }
             catch (Exception e)
             {

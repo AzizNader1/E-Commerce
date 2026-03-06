@@ -61,17 +61,22 @@ namespace E_Commerce.API.Controllers
             }
         }
 
-        //[HttpPost]
-        //public IActionResult Logout(LogoutUserDto logoutUserDto)
-        //{
-        //    try
-        //    {
-        //        return Ok(_accountService.Login(loginUserDto));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
+        [HttpDelete("{id}")]
+        public IActionResult Logout(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                    return BadRequest("Invalid user ID.");
+
+                var result = _accountService.Logout(id);
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

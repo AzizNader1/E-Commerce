@@ -17,6 +17,22 @@
   },
   {
     "ContainingType": "E_Commerce.API.Controllers.AccountsController",
+    "Method": "Logout",
+    "RelativePath": "api/Accounts/Logout/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "E_Commerce.API.Controllers.AccountsController",
     "Method": "Register",
     "RelativePath": "api/Accounts/Register",
     "HttpMethod": "POST",
@@ -236,9 +252,14 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "createCategoryDto",
-        "Type": "E_Commerce.API.DTOs.CategoryDTOs.CreateCategoryDto",
-        "IsRequired": true
+        "Name": "CategoryName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CategoryDescription",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -287,6 +308,22 @@
   },
   {
     "ContainingType": "E_Commerce.API.Controllers.CategoriesController",
+    "Method": "GetCategoryByName",
+    "RelativePath": "api/Categories/GetCategoryByName/{categoryName}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "categoryName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "E_Commerce.API.Controllers.CategoriesController",
     "Method": "UpdateCategory",
     "RelativePath": "api/Categories/UpdateCategory",
     "HttpMethod": "PUT",
@@ -294,9 +331,19 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "categoryDto",
-        "Type": "E_Commerce.API.DTOs.CategoryDTOs.CategoryDto",
-        "IsRequired": true
+        "Name": "CategoryId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "CategoryName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CategoryDescription",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

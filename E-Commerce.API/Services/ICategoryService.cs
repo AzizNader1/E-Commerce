@@ -4,10 +4,11 @@ namespace E_Commerce.API.Services
 {
     public interface ICategoryService
     {
-        List<CategoryDto> GetAllCategoriesAsync();
-        CategoryDto GetCategoryByIdAsync(int categoryId);
-        void AddCategoryAsync(CreateCategoryDto createCategoryDto);
-        void UpdateCategoryAsync(CategoryDto categoryDto);
-        void DeleteCategoryAsync(int categoryId);
+        List<CategoryDto> GetAllCategories();
+        CategoryDto GetCategoryById(int categoryId);
+        CategoryDto GetCategoryByName(string categoryName);
+        void AddCategory(CreateCategoryDto createCategoryDto);
+        void UpdateCategory(CategoryDto categoryDto);
+        void DeleteCategory(int categoryId);
     }
 }

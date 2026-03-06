@@ -1,6 +1,5 @@
 ﻿using E_Commerce.API.DTOs.CategoryDTOs;
 using E_Commerce.API.Models;
-using E_Commerce.API.Repositories;
 using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
@@ -13,80 +12,94 @@ namespace E_Commerce.API.Services
             _uow = uow;
         }
 
-        public void AddCategoryAsync(CreateCategoryDto createCategoryDto)
+        public void AddCategory(CreateCategoryDto createCategoryDto)
         {
-            if(createCategoryDto == null)
-                throw new ArgumentNullException(nameof(createCategoryDto),"the data of the category can not be empty");
-            
-            _uow.CategoryRepository.AddAsync(new Category { 
+            if (createCategoryDto == null)
+                throw new ArgumentNullException(nameof(createCategoryDto), "the data of the category can not be empty");
+
+            if (_uow.CategoryRepository.GetAllModels().Any(c => c.CategoryName == createCategoryDto.CategoryName))
+                throw new ArgumentException("this category name is aleady exists, the category name must be unique");
+
+            _uow.CategoryRepository.AddModel(new Category
+            {
                 CategoryName = createCategoryDto.CategoryName,
                 CategoryDescription = createCategoryDto.CategoryDescription
             });
         }
 
-        public void DeleteCategoryAsync(int categoryId)
+        public void DeleteCategory(int categoryId)
         {
-            if(categoryId == null || categoryId == 0)
-                throw new ArgumentNullException(nameof(categoryId),"invalid category id");
+            if (categoryId <= 0)
+                throw new ArgumentNullException(nameof(categoryId), "invalid category id");
 
-            Category selectedCategory = _uow.CategoryRepository.GetByIdAsync(categoryId);
-            if(selectedCategory == null)
-                throw new ArgumentNullException(nameof(selectedCategory),"there is no category exists in the database for that id");
+            if (_uow.CategoryRepository.GetModelById(categoryId) == null)
+                throw new ArgumentNullException("there is no category exists in the database for that id");
 
-            _uow.CategoryRepository.DeleteAsync(categoryId);
+            _uow.CategoryRepository.DeleteModel(categoryId);
         }
 
-        public List<CategoryDto> GetAllCategoriesAsync()
+        public List<CategoryDto> GetAllCategories()
         {
-            List<Category> categories = _uow.CategoryRepository.GetAllAsync();
-            if(categories == null || categories.Count == 0)
-                throw new ArgumentNullException(nameof(categories),"there is no categories exists in the database");
+            var categories = _uow.CategoryRepository.GetAllModels();
+            if (categories == null || categories.Count == 0)
+                throw new ArgumentNullException(nameof(categories), "there is no categories exists in the database");
 
-            List<CategoryDto> categoryDtos = new List<CategoryDto>();
-           
-            foreach(var category in categories)
+            var categoryDtos = new List<CategoryDto>();
+
+            foreach (var category in categories)
             {
-                categoryDtos.Add(new CategoryDto
-                {
-                    CategoryId = category.CategoryId,
-                    CategoryName = category.CategoryName,
-                    CategoryDescription = category.CategoryDescription
-                });
+                categoryDtos.Add(MapModelToDto(category));
             }
             return categoryDtos;
         }
 
-        public CategoryDto GetCategoryByIdAsync(int categoryId)
+        public CategoryDto GetCategoryById(int categoryId)
         {
-            if(categoryId == null || categoryId == 0)
-                throw new ArgumentNullException(nameof(categoryId),"invalid category id");
+            if (categoryId <= 0)
+                throw new ArgumentNullException(nameof(categoryId), "invalid category id");
 
-            Category selectedCategory = _uow.CategoryRepository.GetByIdAsync(categoryId);
-            if(selectedCategory == null)
-                throw new ArgumentNullException(nameof(selectedCategory),"there is no category exists in the database for that id");
+            var selectedCategory = _uow.CategoryRepository.GetModelById(categoryId);
+            if (selectedCategory == null)
+                throw new ArgumentNullException(nameof(selectedCategory), "there is no category exists in the database for that id");
 
-            return new CategoryDto
-            {
-                CategoryId = selectedCategory.CategoryId,
-                CategoryName = selectedCategory.CategoryName,
-                CategoryDescription = selectedCategory.CategoryDescription
-            };
+            return MapModelToDto(selectedCategory);
         }
 
-        public void UpdateCategoryAsync(CategoryDto categoryDto)
+        public CategoryDto GetCategoryByName(string categoryName)
         {
-            if(categoryDto == null)
-                throw new ArgumentNullException(nameof(categoryDto),"the data of the category can not be empty");
+            if (string.IsNullOrEmpty(categoryName))
+                throw new ArgumentNullException(nameof(categoryName), "the category name can not be empty");
 
-            Category selectedCategory = _uow.CategoryRepository.GetByIdAsync(categoryDto.CategoryId);
-            if(selectedCategory == null)
-                throw new ArgumentNullException(nameof(selectedCategory),"there is no category exists in the database for that id");
+            var selectedCategory = _uow.CategoryRepository.GetAllModels().FirstOrDefault(c => c.CategoryName.ToString() == categoryName);
+            if (selectedCategory == null)
+                throw new ArgumentNullException(nameof(selectedCategory), "there is no category exists in the database for that name");
 
-            _uow.CategoryRepository.UpdateAsync(new Category
+            return MapModelToDto(selectedCategory);
+        }
+
+        public void UpdateCategory(CategoryDto categoryDto)
+        {
+            if (categoryDto == null)
+                throw new ArgumentNullException(nameof(categoryDto), "the data of the category can not be empty");
+
+            if (_uow.CategoryRepository.GetModelById(categoryDto.CategoryId) == null)
+                throw new ArgumentNullException("there is no category exists in the database for that id");
+
+            _uow.CategoryRepository.UpdateModel(new Category
             {
                 CategoryName = categoryDto.CategoryName,
                 CategoryDescription = categoryDto.CategoryDescription
             });
+        }
+
+        private CategoryDto MapModelToDto(Category category)
+        {
+            return new CategoryDto
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                CategoryDescription = category.CategoryDescription!
+            };
         }
     }
 }

@@ -4,12 +4,12 @@ namespace E_Commerce.API.Services
 {
     public interface ICartService
     {
-        List<CartDto> GetAllCartsAsync();
-        CartDto GetCartByIdAsync(int cartId);
-        List<CartDto> GetAllCartsByUserIdAsync(int userId);
-        List<CartDto> GetAllCartsByUserNameAsync(string userName);
-        void AddCartAsync(CreateCartDto ceateCartDto);
-        void UpdateCartAsync(CartDto cartDto);
-        void DeleteCartAsync(int cartId);
+        List<CartDto> GetAllCarts();
+        CartDto GetCartById(int cartId);
+        List<CartDto> GetAllCartsByUserId(int userId);
+        List<CartDto> GetAllCartsByUserName(string userName);
+        void AddCart(CreateCartDto ceateCartDto);
+        void UpdateCart(CartDto cartDto);
+        void DeleteCart(int cartId);
     }
 }

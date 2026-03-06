@@ -13,12 +13,12 @@ namespace E_Commerce.API.Services
             _uow = uow;
         }
 
-        public void AddOrderItemAsync(CreateOrderItemDto createOrderItemDto)
+        public void AddOrderItem(CreateOrderItemDto createOrderItemDto)
         {
             if (createOrderItemDto == null)
                 throw new ArgumentNullException(nameof(createOrderItemDto),"order item data can not be null");
 
-            _uow.OrderItemRepository.AddAsync(new OrderItem
+            _uow.OrderItemRepository.AddModel(new OrderItem
             {
                 OrderId = createOrderItemDto.OrderId,
                 ProductId = createOrderItemDto.ProductId,
@@ -27,21 +27,21 @@ namespace E_Commerce.API.Services
             });
         }
 
-        public void DeleteOrderItemAsync(int orderItemId)
+        public void DeleteOrderItem(int orderItemId)
         {
             if (orderItemId <= 0)
                 throw new ArgumentException("Invalid order item ID", nameof(orderItemId));
 
-            OrderItem selectedOrderItem = _uow.OrderItemRepository.GetByIdAsync(orderItemId);
+            OrderItem selectedOrderItem = _uow.OrderItemRepository.GetModelById(orderItemId);
             if (selectedOrderItem == null)
                 throw new ArgumentNullException(nameof(selectedOrderItem), "No order item found for the given ID");
 
-            _uow.OrderItemRepository.DeleteAsync(orderItemId);
+            _uow.OrderItemRepository.DeleteModel(orderItemId);
         }
 
-        public List<OrderItemDto> GetAllOrderItemsAsync()
+        public List<OrderItemDto> GetAllOrderItems()
         {
-            List<OrderItem> orderItems = _uow.OrderItemRepository.GetAllAsync();
+            List<OrderItem> orderItems = _uow.OrderItemRepository.GetAllModels();
             if (orderItems == null || orderItems.Count == 0)
                 throw new ArgumentNullException(nameof(orderItems), "No order items found in the database");
 
@@ -60,12 +60,12 @@ namespace E_Commerce.API.Services
             return orderItemDtos;
         }
 
-        public OrderItemDto GetOrderItemByIdAsync(int orderItemId)
+        public OrderItemDto GetOrderItemById(int orderItemId)
         {
             if (orderItemId <= 0)
                 throw new ArgumentException("Invalid order item ID", nameof(orderItemId));
 
-            OrderItem selectedOrderItem = _uow.OrderItemRepository.GetByIdAsync(orderItemId);
+            OrderItem selectedOrderItem = _uow.OrderItemRepository.GetModelById(orderItemId);
             if (selectedOrderItem == null)
                 throw new ArgumentNullException(nameof(selectedOrderItem), "No order item found for the given ID");
 
@@ -78,16 +78,16 @@ namespace E_Commerce.API.Services
             };
         }
 
-        public List<OrderItemDto> GetOrderItemsByOrderIdAsync(int orderId)
+        public List<OrderItemDto> GetOrderItemsByOrderId(int orderId)
         {
             if (orderId <= 0)
                 throw new ArgumentException("Invalid order ID", nameof(orderId));
 
-            Order order = _uow.OrderRepository.GetByIdAsync(orderId);
+            Order order = _uow.OrderRepository.GetModelById(orderId);
             if (order == null)
                 throw new ArgumentNullException(nameof(order), "No order found for the given ID");
 
-            List<OrderItem> orderItems = _uow.OrderItemRepository.GetAllAsync();
+            List<OrderItem> orderItems = _uow.OrderItemRepository.GetAllModels();
             if (orderItems == null || orderItems.Count == 0)
                 throw new ArgumentNullException(nameof(orderItems), "No order items found in the database");
 
@@ -110,16 +110,16 @@ namespace E_Commerce.API.Services
             return orderItemDtos;
         }
 
-        public void UpdateOrderItemAsync(OrderItemDto orderItemDto)
+        public void UpdateOrderItem(OrderItemDto orderItemDto)
         {
             if (orderItemDto == null)
                 throw new ArgumentNullException(nameof(orderItemDto), "Order item data can not be null");
 
-            OrderItem existingOrderItem = _uow.OrderItemRepository.GetByIdAsync(orderItemDto.OrderItemId);
+            OrderItem existingOrderItem = _uow.OrderItemRepository.GetModelById(orderItemDto.OrderItemId);
             if (existingOrderItem == null)
                 throw new ArgumentNullException(nameof(existingOrderItem), "No order item found for the given ID");
 
-            _uow.OrderItemRepository.UpdateAsync(new OrderItem
+            _uow.OrderItemRepository.UpdateModel(new OrderItem
             {
                 Quantity = orderItemDto.Quantity,
                 UnitPrice = orderItemDto.UnitPrice

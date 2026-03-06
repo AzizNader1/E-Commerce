@@ -1,6 +1,5 @@
 ﻿using E_Commerce.API.DTOs.CartItemDTOs;
 using E_Commerce.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
@@ -20,7 +19,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var cartItems = cartItemService.GetAllCartItemsAsync();
+                var cartItems = cartItemService.GetAllCartItems();
                 return Ok(cartItems);
             }
             catch (Exception e)
@@ -34,7 +33,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var cartItem = cartItemService.GetCartItemByIdAsync(id);
+                var cartItem = cartItemService.GetCartItemById(id);
                 return Ok(cartItem);
             }
             catch (Exception e)
@@ -48,7 +47,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                cartItemService.AddCartItemAsync(createCartItemDto);
+                cartItemService.AddCartItem(createCartItemDto);
                 return Created();
             }
             catch (Exception e)
@@ -62,7 +61,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                cartItemService.UpdateCartItemAsync(cartItemDto);
+                cartItemService.UpdateCartItem(cartItemDto);
                 return NoContent();
             }
             catch (Exception e)
@@ -76,7 +75,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                cartItemService.DeleteCartItemAsync(id);
+                cartItemService.DeleteCartItem(id);
                 return NoContent();
             }
             catch (Exception e)
@@ -90,7 +89,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var cartItems = cartItemService.GetCartItemsByCartIdAsync(cartId);
+                var cartItems = cartItemService.GetCartItemsByCartId(cartId);
                 return Ok(cartItems);
             }
             catch (Exception e)

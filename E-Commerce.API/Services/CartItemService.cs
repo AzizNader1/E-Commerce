@@ -1,6 +1,5 @@
 ﻿using E_Commerce.API.DTOs.CartItemDTOs;
 using E_Commerce.API.Models;
-using E_Commerce.API.Repositories;
 using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
@@ -13,38 +12,52 @@ namespace E_Commerce.API.Services
             _uow = uow;
         }
 
-        public void AddCartItemAsync(CreateCartItemDto createCartItemDto)
+        public void AddCartItem(CreateCartItemDto createCartItemDto)
         {
             if (createCartItemDto == null)
                 throw new ArgumentNullException(nameof(createCartItemDto), "Cart item data can not be null");
 
-            _uow.CartItemRepository.AddAsync(new CartItem { 
+            if (!_uow.CartRepository.GetAllModels().Any(c => c.CartId == createCartItemDto.CartId))
+                throw new ArgumentException("No cart found for the given cart ID", nameof(createCartItemDto.CartId));
+
+            var product = _uow.ProductRepository.GetModelById(createCartItemDto.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found for the given product ID", nameof(createCartItemDto.ProductId));
+
+            if (createCartItemDto.Quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero", nameof(createCartItemDto.Quantity));
+
+            if (createCartItemDto.Quantity > product.ProductStockQuantity)
+                throw new ArgumentException("Requested quantity exceeds available stock", nameof(createCartItemDto.Quantity));
+
+            _uow.CartItemRepository.AddModel(new CartItem
+            {
                 CartId = createCartItemDto.CartId,
                 ProductId = createCartItemDto.ProductId,
                 Quantity = createCartItemDto.Quantity,
             });
         }
 
-        public void DeleteCartItemAsync(int cartItemId)
+        public void DeleteCartItem(int cartItemId)
         {
             if (cartItemId <= 0)
                 throw new ArgumentException("Invalid cart item ID", nameof(cartItemId));
 
-            CartItem selectedCartItem = _uow.CartItemRepository.GetByIdAsync(cartItemId);
+            var selectedCartItem = _uow.CartItemRepository.GetModelById(cartItemId);
             if (selectedCartItem == null)
                 throw new ArgumentNullException(nameof(selectedCartItem), "No cart item found for the given ID");
 
-            _uow.CartItemRepository.DeleteAsync(cartItemId);
+            _uow.CartItemRepository.DeleteModel(cartItemId);
         }
 
-        public List<CartItemDto> GetAllCartItemsAsync()
+        public List<CartItemDto> GetAllCartItems()
         {
-            List<CartItem> cartItems = _uow.CartItemRepository.GetAllAsync();
+            var cartItems = _uow.CartItemRepository.GetAllModels();
             if (cartItems == null || cartItems.Count == 0)
                 throw new ArgumentNullException(nameof(cartItems), "No cart items found in the database");
 
-            List<CartItemDto> cartItemDtos = new List<CartItemDto>();
-            
+            var cartItemDtos = new List<CartItemDto>();
+
             foreach (var cartItem in cartItems)
             {
                 cartItemDtos.Add(new CartItemDto
@@ -58,12 +71,12 @@ namespace E_Commerce.API.Services
             return cartItemDtos;
         }
 
-        public CartItemDto GetCartItemByIdAsync(int cartItemId)
+        public CartItemDto GetCartItemById(int cartItemId)
         {
             if (cartItemId <= 0)
                 throw new ArgumentException("Invalid cart item ID", nameof(cartItemId));
 
-            CartItem selectedCartItem = _uow.CartItemRepository.GetByIdAsync(cartItemId);
+            var selectedCartItem = _uow.CartItemRepository.GetModelById(cartItemId);
             if (selectedCartItem == null)
                 throw new ArgumentNullException(nameof(selectedCartItem), "No cart item found for the given ID");
 
@@ -76,16 +89,19 @@ namespace E_Commerce.API.Services
             };
         }
 
-        public List<CartItemDto> GetCartItemsByCartIdAsync(int cartId)
+        public List<CartItemDto> GetCartItemsByCartId(int cartId)
         {
             if (cartId <= 0)
                 throw new ArgumentException("Invalid cart ID", nameof(cartId));
 
-            List<CartItem> cartItems = _uow.CartItemRepository.GetAllAsync();
+            var cartItems = _uow.CartItemRepository.GetAllModels();
             if (cartItems == null || cartItems.Count == 0)
                 throw new ArgumentNullException(nameof(cartItems), "No cart items found in the database");
 
-            List<CartItemDto> cartItemDtos = new List<CartItemDto>();
+            if (!cartItems.Any(c => c.CartId == cartId))
+                throw new ArgumentException("No cart items found for the given cart ID", nameof(cartId));
+
+            var cartItemDtos = new List<CartItemDto>();
             foreach (var cartItem in cartItems)
             {
                 if (cartItem.CartId == cartId)
@@ -102,16 +118,16 @@ namespace E_Commerce.API.Services
             return cartItemDtos;
         }
 
-        public void UpdateCartItemAsync(CartItemDto cartItemDto)
+        public void UpdateCartItem(CartItemDto cartItemDto)
         {
             if (cartItemDto == null)
                 throw new ArgumentNullException(nameof(cartItemDto), "Cart item data can not be null");
 
-            CartItem existingCartItem = _uow.CartItemRepository.GetByIdAsync(cartItemDto.CartItemId);
+            var existingCartItem = _uow.CartItemRepository.GetModelById(cartItemDto.CartItemId);
             if (existingCartItem == null)
                 throw new ArgumentNullException(nameof(existingCartItem), "No cart item found for the given ID");
 
-            _uow.CartItemRepository.UpdateAsync(new CartItem
+            _uow.CartItemRepository.UpdateModel(new CartItem
             {
                 Quantity = cartItemDto.Quantity
             });

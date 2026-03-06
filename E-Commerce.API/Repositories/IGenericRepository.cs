@@ -2,10 +2,10 @@
 {
     public interface IGenericRepository<T> where T : class
     {
-        List<T> GetAllAsync();
-        T GetByIdAsync(int id);
-        void AddAsync(T entity);
-        void UpdateAsync(T entity);
-        void DeleteAsync(int id);
+        List<T> GetAll();
+        T GetById(int id);
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(int id);
     }
 }

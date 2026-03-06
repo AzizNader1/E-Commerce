@@ -67,6 +67,29 @@
         }
       }
     },
+    "/api/Accounts/Logout/{id}": {
+      "delete": {
+        "tags": [
+          "Accounts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/CartItems/GetAllCartItems": {
       "get": {
         "tags": [
@@ -410,6 +433,28 @@
         }
       }
     },
+    "/api/Categories/GetCategoryByName/{categoryName}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "parameters": [
+          {
+            "name": "categoryName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CategoriesCollections"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Categories/AddCategory": {
       "post": {
         "tags": [
@@ -417,19 +462,30 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateCategoryDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCategoryDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCategoryDto"
+                "required": [
+                  "CategoryName"
+                ],
+                "type": "object",
+                "properties": {
+                  "CategoryName": {
+                    "$ref": "#/components/schemas/CategoriesCollections"
+                  },
+                  "CategoryDescription": {
+                    "maxLength": 500,
+                    "minLength": 10,
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "CategoryName": {
+                  "style": "form"
+                },
+                "CategoryDescription": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -448,19 +504,32 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CategoryDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CategoryDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CategoryDto"
+                "type": "object",
+                "properties": {
+                  "CategoryId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CategoryName": {
+                    "$ref": "#/components/schemas/CategoriesCollections"
+                  },
+                  "CategoryDescription": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "CategoryId": {
+                  "style": "form"
+                },
+                "CategoryName": {
+                  "style": "form"
+                },
+                "CategoryDescription": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1069,7 +1138,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/CategoriesCollections"
             }
           }
         ],
@@ -1089,12 +1158,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Users/GetUserById/{id}": {
@@ -1117,12 +1181,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Users/AddUser": {
@@ -1153,12 +1212,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Users/UpdateUser": {
@@ -1189,12 +1243,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Users/DeleteUser/{id}": {
@@ -1217,12 +1266,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     }
   },
@@ -1279,23 +1323,6 @@
         ],
         "type": "string"
       },
-      "CategoryDto": {
-        "type": "object",
-        "properties": {
-          "categoryId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "categoryName": {
-            "$ref": "#/components/schemas/CategoriesCollections"
-          },
-          "categoryDescription": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateCartDto": {
         "type": "object",
         "properties": {
@@ -1320,24 +1347,6 @@
           "quantity": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateCategoryDto": {
-        "required": [
-          "categoryName"
-        ],
-        "type": "object",
-        "properties": {
-          "categoryName": {
-            "$ref": "#/components/schemas/CategoriesCollections"
-          },
-          "categoryDescription": {
-            "maxLength": 500,
-            "minLength": 10,
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false

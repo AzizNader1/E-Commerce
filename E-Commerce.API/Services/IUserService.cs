@@ -4,10 +4,10 @@ namespace E_Commerce.API.Services
 {
     public interface IUserService
     {
-        List<UserDto> GetAllUsersAsync();
-        UserDto GetUserByIdAsync(int userId);
-        void AddUserAsync(RegisterUserDto createUserDto);
-        void UpdateUserAsync(UserDto userDto);
-        void DeleteUserAsync(int userId);
+        List<UserDto> GetAllUsers();
+        UserDto GetUserById(int userId);
+        void AddUser(RegisterUserDto createUserDto);
+        void UpdateUser(UserDto userDto);
+        void DeleteUser(int userId);
     }
 }

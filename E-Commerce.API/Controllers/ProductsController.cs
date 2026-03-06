@@ -1,6 +1,6 @@
 ﻿using E_Commerce.API.DTOs.ProductDTOs;
+using E_Commerce.API.Models;
 using E_Commerce.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
@@ -20,7 +20,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var products = productService.GetAllProductsAsync();
+                var products = productService.GetAllProducts();
                 return Ok(products);
             }
             catch (Exception e)
@@ -34,7 +34,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var product = productService.GetProductByIdAsync(id);
+                var product = productService.GetProductById(id);
                 return Ok(product);
             }
             catch (Exception e)
@@ -48,7 +48,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var createdProduct = productService.AddProductAsync(createProductDto, productImage);
+                var createdProduct = productService.AddProduct(createProductDto, productImage);
                 return Ok(createdProduct);
             }
             catch (Exception e)
@@ -62,7 +62,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var updatedProduct = productService.UpdateProductAsync(updateProductDto, productImage);
+                var updatedProduct = productService.UpdateProduct(updateProductDto, productImage);
                 return Ok(updatedProduct);
             }
             catch (Exception e)
@@ -76,8 +76,8 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                productService.DeleteProductAsync(id);
-                return NoContent();
+                productService.DeleteProduct(id);
+                return Ok("this product deleted successfully");
             }
             catch (Exception e)
             {
@@ -100,11 +100,11 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpGet("{categoryName}")]
-        public IActionResult GetAllProductsByCategoryName(string categoryName)
+        public IActionResult GetAllProductsByCategoryName(CategoriesCollections categoryName)
         {
             try
             {
-                var products = productService.GetAllProductsByCategoryName(categoryName);
+                var products = productService.GetAllProductsByCategoryName(categoryName.ToString());
                 return Ok(products);
             }
             catch (Exception e)

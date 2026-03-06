@@ -23,7 +23,7 @@ namespace E_Commerce.API.Services
         public LoginResponseDto Register(RegisterUserDto createUserDto)
         {
             var loginResponseDto = new LoginResponseDto();
-            var users = _uow.UserRepository.GetAllAsync();
+            var users = _uow.UserRepository.GetAllModels();
             foreach (var user in users)
             {
                 if (user.UserEmail == createUserDto.UserEmail)
@@ -49,7 +49,7 @@ namespace E_Commerce.API.Services
                 UserRole = createUserDto.UserName.Contains("admin", StringComparison.OrdinalIgnoreCase) ? UserRoles.Admin : UserRoles.Customer
             };
 
-            _uow.UserRepository.AddAsync(newUser);
+            _uow.UserRepository.AddModel(newUser);
 
             loginResponseDto.UserName = newUser.UserName;
             loginResponseDto.UserRoles = [newUser.UserRole.ToString()];
@@ -64,7 +64,7 @@ namespace E_Commerce.API.Services
         {
             var loginResponseDto = new LoginResponseDto();
 
-            var users = _uow.UserRepository.GetAllAsync();
+            var users = _uow.UserRepository.GetAllModels();
             foreach (var user in users)
             {
                 if (user.UserName == loginUserDto.UserName && user.UserPassword == loginUserDto.UserPassword && user.UserEmail == loginUserDto.UserEmail)
@@ -82,9 +82,14 @@ namespace E_Commerce.API.Services
             return loginResponseDto;
         }
 
-        public void Logout(LoginUserDto loginUserDto)
+        public string Logout(int userId)
         {
+            var user = _uow.UserRepository.GetModelById(userId);
+            if (user == null)
+                return "User not found.";
 
+            _uow.UserRepository.DeleteModel(userId);
+            return "User logged out successfully.";
         }
 
         public string GenerateToken(User user)

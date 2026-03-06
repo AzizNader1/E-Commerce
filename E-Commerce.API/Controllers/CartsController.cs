@@ -1,6 +1,5 @@
 ﻿using E_Commerce.API.DTOs.CartDTOs;
 using E_Commerce.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.API.Controllers
@@ -20,7 +19,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var carts = cartService.GetAllCartsAsync();
+                var carts = cartService.GetAllCarts();
                 return Ok(carts);
             }
             catch (Exception e)
@@ -34,7 +33,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var cart = cartService.GetCartByIdAsync(id);
+                var cart = cartService.GetCartById(id);
                 return Ok(cart);
             }
             catch (Exception e)
@@ -48,7 +47,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                cartService.AddCartAsync(createCartDto);
+                cartService.AddCart(createCartDto);
                 return Created();
             }
             catch (Exception e)
@@ -62,7 +61,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                cartService.UpdateCartAsync(cartDto);
+                cartService.UpdateCart(cartDto);
                 return NoContent();
             }
             catch (Exception e)
@@ -76,7 +75,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                cartService.DeleteCartAsync(id);
+                cartService.DeleteCart(id);
                 return NoContent();
             }
             catch (Exception e)
@@ -90,7 +89,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var carts = cartService.GetAllCartsByUserIdAsync(userId);
+                var carts = cartService.GetAllCartsByUserId(userId);
                 return Ok(carts);
             }
             catch (Exception e)
@@ -104,7 +103,7 @@ namespace E_Commerce.API.Controllers
         {
             try
             {
-                var carts = cartService.GetAllCartsByUserNameAsync(userName);
+                var carts = cartService.GetAllCartsByUserName(userName);
                 return Ok(carts);
             }
             catch (Exception e)

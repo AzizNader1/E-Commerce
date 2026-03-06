@@ -12,12 +12,12 @@ namespace E_Commerce.API.Services
             _uow = uow;
         }
 
-        public void AddOrderAsync(CreateOrderDto createOrderDto)
+        public void AddOrder(CreateOrderDto createOrderDto)
         {
             if (createOrderDto == null)
                 throw new ArgumentNullException(nameof(createOrderDto), "the data of the order can not be lefted as empty");
 
-            _uow.OrderRepository.AddAsync(new Order
+            _uow.OrderRepository.AddModel(new Order
             {
                 UserId = createOrderDto.UserId,
                 OrderDate = createOrderDto.OrderDate,
@@ -26,21 +26,21 @@ namespace E_Commerce.API.Services
             });
         }
 
-        public void DeleteOrderAsync(int produtId)
+        public void DeleteOrder(int produtId)
         {
             if (produtId == null || produtId == 0)
                 throw new ArgumentNullException(nameof(produtId), "invalid data entried");
 
-            Order selectedOrder = _uow.OrderRepository.GetByIdAsync(produtId);
+            Order selectedOrder = _uow.OrderRepository.GetModelById(produtId);
             if (selectedOrder == null)
                 throw new ArgumentNullException(nameof(selectedOrder), "there is no data exists for that id");
 
-            _uow.OrderRepository.DeleteAsync(produtId);
+            _uow.OrderRepository.DeleteModel(produtId);
         }
 
-        public List<OrderDto> GetAllOrdersAsync()
+        public List<OrderDto> GetAllOrders()
         {
-            List<Order> orders = _uow.OrderRepository.GetAllAsync();
+            List<Order> orders = _uow.OrderRepository.GetAllModels();
             if (orders == null || orders.Count == 0)
                 throw new ArgumentNullException(nameof(orders), "there is no data exists in the database");
 
@@ -65,11 +65,11 @@ namespace E_Commerce.API.Services
             if (userId == null || userId == 0)
                 throw new ArgumentNullException(nameof(userId), "invalid data entried");
 
-            User user = _uow.UserRepository.GetByIdAsync(userId);
+            User user = _uow.UserRepository.GetModelById(userId);
             if (user == null)
                 throw new ArgumentNullException(nameof(user), "there is no data exists for that id");
 
-            List<Order> orders = _uow.OrderRepository.GetAllAsync();
+            List<Order> orders = _uow.OrderRepository.GetAllModels();
             if (orders == null || orders.Count == 0)
                 throw new ArgumentNullException(nameof(orders), "there is no data exists in the database");
 
@@ -127,12 +127,12 @@ namespace E_Commerce.API.Services
             //return orderDtos;
         }
 
-        public OrderDto GetOrderByIdAsync(int orderId)
+        public OrderDto GetOrderById(int orderId)
         {
             if (orderId == null || orderId == 0)
                 throw new ArgumentNullException(nameof(orderId), "invalid data entried");
 
-            Order selectedOrder = _uow.OrderRepository.GetByIdAsync(orderId);
+            Order selectedOrder = _uow.OrderRepository.GetModelById(orderId);
             if (selectedOrder == null)
                 throw new ArgumentNullException(nameof(selectedOrder), "there is no data exists for that id");
 
@@ -146,16 +146,16 @@ namespace E_Commerce.API.Services
             };
         }
 
-        public void UpdateOrderAsync(OrderDto orderDto)
+        public void UpdateOrder(OrderDto orderDto)
         {
             if (orderDto == null)
                 throw new ArgumentNullException(nameof(orderDto), "invalid data entried");
 
-            Order selectedOrder = _uow.OrderRepository.GetByIdAsync(orderDto.OrderId);
+            Order selectedOrder = _uow.OrderRepository.GetModelById(orderDto.OrderId);
             if (selectedOrder == null)
                 throw new ArgumentNullException(nameof(selectedOrder), "there is no orders exists for that id");
 
-            _uow.OrderRepository.UpdateAsync(new Order
+            _uow.OrderRepository.UpdateModel(new Order
             {
                 OrderDate = orderDto.OrderDate,
                 TotalAmount = orderDto.TotalAmount,

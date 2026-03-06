@@ -5,7 +5,7 @@ namespace E_Commerce.API.Services
     public interface IAccountService
     {
         LoginResponseDto Login(LoginUserDto loginUserDto);
-        void Logout(LoginUserDto loginUserDto);
+        string Logout(int userId);
         LoginResponseDto Register(RegisterUserDto createUserDto);
 
     }

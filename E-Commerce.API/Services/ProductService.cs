@@ -15,12 +15,12 @@ namespace E_Commerce.API.Services
             _uow = uow;
         }
 
-        public ProductDto AddProductAsync(CreateProductDto createProductDto, IFormFile productImage)
+        public ProductDto AddProduct(CreateProductDto createProductDto, IFormFile productImage)
         {
             if (createProductDto == null)
                 throw new ArgumentNullException(nameof(createProductDto), "the product data can not be left empty");
 
-            var selectedCategory = _uow.CategoryRepository.GetByIdAsync(createProductDto.CategoryId);
+            var selectedCategory = _uow.CategoryRepository.GetModelById(createProductDto.CategoryId);
             if (selectedCategory == null)
                 throw new ArgumentNullException(nameof(selectedCategory), "there is no category in the database for the id you entried");
 
@@ -44,26 +44,26 @@ namespace E_Commerce.API.Services
                 ProductImageContentType = imageContentType
             };
 
-            _uow.ProductRepository.AddAsync(newProduct);
+            _uow.ProductRepository.AddModel(newProduct);
 
-            return MapToDto(newProduct);
+            return MapModelToDto(newProduct);
         }
 
-        public void DeleteProductAsync(int productId)
+        public void DeleteProduct(int productId)
         {
-            if (productId == null || productId == 0)
+            if (productId <= 0)
                 throw new ArgumentNullException(nameof(productId), "invalid product id");
 
-            var selectedProduct = _uow.ProductRepository.GetByIdAsync(productId);
+            var selectedProduct = _uow.ProductRepository.GetModelById(productId);
             if (selectedProduct == null)
                 throw new ArgumentNullException(nameof(selectedProduct), "there is no products exists in the database for that id");
 
-            _uow.ProductRepository.DeleteAsync(productId);
+            _uow.ProductRepository.DeleteModel(productId);
         }
 
-        public List<ProductDto> GetAllProductsAsync()
+        public List<ProductDto> GetAllProducts()
         {
-            var products = _uow.ProductRepository.GetAllAsync();
+            var products = _uow.ProductRepository.GetAllModels();
             if (products == null || products.Count == 0)
                 throw new ArgumentNullException(nameof(products), "there is no products exists in the database");
 
@@ -71,53 +71,38 @@ namespace E_Commerce.API.Services
 
             foreach (var product in products)
             {
-                productDtos.Add(new ProductDto
-                {
-                    ProductId = product.ProductId,
-                    ProductName = product.ProductName,
-                    ProductDescription = product.ProductDescription,
-                    ProductPrice = product.ProductPrice,
-                    ProductStockQuantity = product.ProductStockQuantity,
-                    CategoryId = product.CategoryId,
-                    CategoryName = product.Category.CategoryName,
-                    ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
-                    ProductImageContentType = product.ProductImageContentType
-                });
+                var category = _uow.CategoryRepository.GetModelById(product.CategoryId);
+                product.Category!.CategoryName = category.CategoryName;
+                productDtos.Add(MapModelToDto(product));
             }
             return productDtos;
         }
 
         public List<ProductDto> GetAllProductsByCategoryId(int categoryId)
         {
-            if (categoryId == null || categoryId == 0)
-                throw new ArgumentNullException(nameof(categoryId), "invalid id");
+            if (categoryId <= 0)
+                throw new ArgumentNullException(nameof(categoryId), "invalid category id");
 
-            var selectedCategory = _uow.CategoryRepository.GetByIdAsync(categoryId);
+            var selectedCategory = _uow.CategoryRepository.GetModelById(categoryId);
             if (selectedCategory == null)
                 throw new ArgumentNullException(nameof(selectedCategory), "there no categories exists for that id");
 
-            var products = _uow.ProductRepository.GetAllAsync();
+            var products = _uow.ProductRepository.GetAllModels();
             if (products == null || products.Count == 0)
                 throw new ArgumentNullException(nameof(products), "there is no products exists in the database");
 
+            var productsByCategoryId = products.Where(p => p.CategoryId == categoryId).ToList();
+            if (productsByCategoryId == null || productsByCategoryId.Count == 0)
+                throw new ArgumentNullException(nameof(productsByCategoryId), "there is no products for this category");
+
             var productDtos = new List<ProductDto>();
 
-            foreach (var product in products)
+            foreach (var product in productsByCategoryId)
             {
                 if (product.CategoryId == categoryId)
                 {
-                    productDtos.Add(new ProductDto
-                    {
-                        ProductId = product.ProductId,
-                        ProductName = product.ProductName,
-                        ProductDescription = product.ProductDescription,
-                        ProductPrice = product.ProductPrice,
-                        ProductStockQuantity = product.ProductStockQuantity,
-                        CategoryId = product.CategoryId,
-                        CategoryName = product.Category.CategoryName,
-                        ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
-                        ProductImageContentType = product.ProductImageContentType
-                    });
+                    product.Category!.CategoryName = selectedCategory.CategoryName;
+                    productDtos.Add(MapModelToDto(product));
                 }
             }
             return productDtos;
@@ -125,84 +110,66 @@ namespace E_Commerce.API.Services
 
         public List<ProductDto> GetAllProductsByCategoryName(string categoryName)
         {
-            if (categoryName == null)
-                throw new ArgumentNullException(nameof(categoryName), "invalid data entried");
+            if (categoryName == "" || categoryName == default)
+                throw new ArgumentNullException(nameof(categoryName), "invalid category name");
 
-            var allCategories = _uow.CategoryRepository.GetAllAsync();
-            if (allCategories == null || allCategories.Count == 0)
-                throw new ArgumentNullException(nameof(allCategories), "there is no categories exists in the database");
-
-            var selectedCategory = allCategories.FirstOrDefault(c => c.CategoryName.ToString() == categoryName)!;
+            var categories = _uow.CategoryRepository.GetAllModels();
+            var selectedCategory = categories.FirstOrDefault(c => c.CategoryName.ToString() == categoryName);
             if (selectedCategory == null)
-                throw new ArgumentNullException(nameof(selectedCategory), "there is no category in the database for the name you sended");
+                throw new ArgumentNullException(nameof(selectedCategory), "there no categories exists for this name");
 
-            var products = _uow.ProductRepository.GetAllAsync();
+            var products = _uow.ProductRepository.GetAllModels();
             if (products == null || products.Count == 0)
                 throw new ArgumentNullException(nameof(products), "there is no products exists in the database");
 
+            var productsByCategoryName = products.Where(p => p.Category!.CategoryName.ToString() == categoryName).ToList();
+            if (productsByCategoryName == null || productsByCategoryName.Count == 0)
+                throw new ArgumentNullException(nameof(productsByCategoryName), "there is no products for this category");
+
             var productDtos = new List<ProductDto>();
 
-            foreach (var product in products)
+            foreach (var product in productsByCategoryName)
             {
                 if (product.CategoryId == selectedCategory.CategoryId)
                 {
-                    productDtos.Add(new ProductDto
-                    {
-                        ProductId = product.ProductId,
-                        ProductName = product.ProductName,
-                        ProductDescription = product.ProductDescription,
-                        ProductPrice = product.ProductPrice,
-                        ProductStockQuantity = product.ProductStockQuantity,
-                        CategoryId = product.CategoryId,
-                        CategoryName = product.Category.CategoryName,
-                        ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
-                        ProductImageContentType = product.ProductImageContentType
-                    });
+                    product.Category!.CategoryName = selectedCategory.CategoryName;
+                    productDtos.Add(MapModelToDto(product));
                 }
             }
             return productDtos;
         }
 
-        public ProductDto GetProductByIdAsync(int productId)
+        public ProductDto GetProductById(int productId)
         {
-            if (productId == null || productId == 0)
+            if (productId <= 0)
                 throw new ArgumentNullException(nameof(productId), "invalid data entried");
 
-            var product = _uow.ProductRepository.GetByIdAsync(productId);
+            var product = _uow.ProductRepository.GetModelById(productId);
             if (product == null)
                 throw new ArgumentNullException(nameof(product), "there is no product in the database for the id you entried");
 
-            return new ProductDto
-            {
-                ProductId = product.ProductId,
-                ProductName = product.ProductName,
-                ProductDescription = product.ProductDescription,
-                ProductPrice = product.ProductPrice,
-                ProductStockQuantity = product.ProductStockQuantity,
-                CategoryId = product.CategoryId,
-                CategoryName = product.Category.CategoryName,
-                ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
-                ProductImageContentType = product.ProductImageContentType
-            };
+            var category = _uow.CategoryRepository.GetModelById(product.CategoryId);
+            product.Category!.CategoryName = category.CategoryName;
+            return MapModelToDto(product);
         }
 
-        public ProductDto UpdateProductAsync(UpdateProductDto updateProductDto, IFormFile productImage)
+        public ProductDto UpdateProduct(UpdateProductDto updateProductDto, IFormFile productImage)
         {
             if (updateProductDto == null)
-                throw new ArgumentNullException(nameof(updateProductDto), "the data of the product you  entried can not be lefted as empty");
+                throw new ArgumentNullException(nameof(updateProductDto), "the data of the product you entried can not be lefted empty");
 
-            var selectedProduct = _uow.ProductRepository.GetByIdAsync(updateProductDto.ProductId);
+            var selectedProduct = _uow.ProductRepository.GetModelById(updateProductDto.ProductId);
             if (selectedProduct == null)
-                throw new ArgumentNullException(nameof(selectedProduct), "there is no products exists in the database for the data you wanna update");
+                throw new ArgumentNullException(nameof(selectedProduct), "there is no data exists in the database for the product you need to update");
 
-            var selectedCategory = _uow.CategoryRepository.GetByIdAsync(updateProductDto.CategoryId);
+            var selectedCategory = _uow.CategoryRepository.GetModelById(updateProductDto.CategoryId);
             if (selectedCategory == null)
                 throw new ArgumentNullException(nameof(selectedCategory), "there is no category in the database for the id you entried");
 
             byte[]? imageData = null;
             string? imageContentType = null;
 
-            if (productImage != null)
+            if (productImage != null) // he need to update the image of the product because he upload a new image here
             {
                 ValidateImage(productImage);
                 (imageData, imageContentType) = ConvertImageToByteArray(productImage).Result;
@@ -219,8 +186,8 @@ namespace E_Commerce.API.Services
                 ProductImageContentType = imageContentType ?? selectedProduct.ProductImageContentType
             };
 
-            _uow.ProductRepository.UpdateAsync(updatedProduct);
-            return MapToDto(updatedProduct);
+            _uow.ProductRepository.UpdateModel(updatedProduct);
+            return MapModelToDto(updatedProduct);
         }
 
         private void ValidateImage(IFormFile productImage)
@@ -240,24 +207,23 @@ namespace E_Commerce.API.Services
             using var memoryStream = new MemoryStream();
             await productImage.CopyToAsync(memoryStream);
             return (memoryStream.ToArray(), productImage.ContentType);
-
         }
 
-        private ProductDto MapToDto(Product product)
+        private ProductDto MapModelToDto(Product product)
         {
             return new ProductDto
             {
                 ProductId = product.ProductId,
-                ProductName = product.ProductName,
-                ProductDescription = product.ProductDescription,
+                ProductName = product.ProductName!,
+                ProductDescription = product.ProductDescription!,
                 ProductPrice = product.ProductPrice,
                 ProductStockQuantity = product.ProductStockQuantity,
                 CategoryId = product.CategoryId,
-                CategoryName = product.Category.CategoryName,
+                CategoryName = product.Category!.CategoryName,
                 ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
                 ProductImageContentType = product.ProductImageContentType
             };
-
         }
+
     }
 }
