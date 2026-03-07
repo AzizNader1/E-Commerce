@@ -167,3 +167,4 @@ P:\My Projects\E-Commerce\E-Commerce.API\obj\Release\net9.0\refint\E-Commerce.AP
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Release\net9.0\E-Commerce.API.pdb
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Release\net9.0\E-Commerce.API.genruntimeconfig.cache
 P:\My Projects\E-Commerce\E-Commerce.API\obj\Release\net9.0\ref\E-Commerce.API.dll
+P:\My Projects\E-Commerce\E-Commerce.API\bin\Release\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
