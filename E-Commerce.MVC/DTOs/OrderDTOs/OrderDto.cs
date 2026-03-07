@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using E_Commerce.MVC.DTOs.OrderItemDTOs;
+using E_Commerce.MVC.Models;
 
-namespace E_Commerce.API.DTOs.OrderDTOs
+namespace E_Commerce.MVC.DTOs.OrderDTOs
 {
     public class OrderDto
     {
@@ -10,8 +11,10 @@ namespace E_Commerce.API.DTOs.OrderDTOs
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
-        public string Status { get; set; }
+        public OrderStatus Status { get; set; }
 
         public decimal TotalAmount { get; set; }
+
+        public List<OrderItemDto> OrderItems { get; set; } = [];
     }
 }

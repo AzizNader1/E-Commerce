@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using E_Commerce.MVC.DTOs.CartItemDTOs;
 
-namespace E_Commerce.API.DTOs.CartDTOs
+namespace E_Commerce.MVC.DTOs.CartDTOs
 {
     public class CartDto
     {
         public int CartId { get; set; }
         public int UserId { get; set; }
+        public List<CartItemDto> CartItems { get; set; }
     }
 }

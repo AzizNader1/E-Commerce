@@ -252,14 +252,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CategoryName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "CategoryDescription",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "createCategoryDto",
+        "Type": "E_Commerce.API.DTOs.CategoryDTOs.CreateCategoryDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -331,19 +326,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CategoryId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "CategoryName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "CategoryDescription",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "categoryDto",
+        "Type": "E_Commerce.API.DTOs.CategoryDTOs.CategoryDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -553,29 +538,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ProductName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProductDescription",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProductPrice",
-        "Type": "System.Decimal",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProductStockQuantity",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "CategoryId",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "createProductDto",
+        "Type": "E_Commerce.API.DTOs.ProductDTOs.CreateProductDto",
+        "IsRequired": true
       },
       {
         "Name": "productImage",
@@ -668,39 +633,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ProductId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProductName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProductDescription",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProductPrice",
-        "Type": "System.Decimal",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProductStockQuantity",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "CategoryId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "UpdateImage",
-        "Type": "System.Boolean",
-        "IsRequired": false
+        "Name": "updateProductDto",
+        "Type": "E_Commerce.API.DTOs.ProductDTOs.UpdateProductDto",
+        "IsRequired": true
       },
       {
         "Name": "productImage",

@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.API.DTOs.UserDTOs
+﻿namespace E_Commerce.MVC.DTOs.UserDTOs
 {
     public class CreateUserDto
     {

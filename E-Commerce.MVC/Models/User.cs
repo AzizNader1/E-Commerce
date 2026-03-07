@@ -1,33 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.MVC.Models
+﻿namespace E_Commerce.MVC.Models
 {
+    public enum UserRoles
+    {
+        Customer,
+        Admin
+    }
     public class User
     {
-        [Key]
         public int UserId { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Username { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [StringLength(100)]
-        public string Email { get; set; }
-
-        [StringLength(100)]
-        public string? FullName { get; set; }
-
-        [StringLength(200)]
-        public string? Address { get; set; }
-
-        [StringLength(20)]
-        [Required]
-        public string PhoneNumber { get; set; }
+        public string? UserName { get; set; }
+        public string? UserEmail { get; set; }
+        public string? UserPassword { get; set; }
+        public string? UserFullName { get; set; }
+        public string? UserAddress { get; set; }
+        public string? UserPhoneNumber { get; set; }
+        public UserRoles UserRole { get; set; }
 
 
+        // Navigation properties
         public virtual Cart? Cart { get; set; }
-        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual ICollection<Order> Orders { get; set; } = [];
     }
 }

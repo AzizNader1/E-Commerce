@@ -1,3 +1,5 @@
+using E_Commerce.MVC.Services;
+
 namespace E_Commerce.MVC
 {
     public class Program
@@ -15,6 +17,13 @@ namespace E_Commerce.MVC
             });
 
             builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor for accessing HttpContext and dealing with cookies in services
+            builder.Services.AddScoped<IApiAccountsService, ApiAccountsService>();
+            builder.Services.AddScoped<IApiCartService, ApiCartService>();
+            builder.Services.AddScoped<IApiCategoryService, ApiCategoryService>();
+            builder.Services.AddScoped<IApiOrderService, ApiOrderService>();
+            builder.Services.AddScoped<IApiProductService, ApiProductService>();
+            builder.Services.AddScoped<IApiUserService, ApiUserService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

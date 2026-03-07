@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace E_Commerce.API.DTOs.OrderItemDTOs
+namespace E_Commerce.MVC.DTOs.OrderItemDTOs
 {
     public class OrderItemDto
     {

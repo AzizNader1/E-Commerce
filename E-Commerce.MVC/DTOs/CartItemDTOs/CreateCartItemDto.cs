@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.API.DTOs.CartItemDTOs
+﻿namespace E_Commerce.MVC.DTOs.CartItemDTOs
 {
     public class CreateCartItemDto
     {
