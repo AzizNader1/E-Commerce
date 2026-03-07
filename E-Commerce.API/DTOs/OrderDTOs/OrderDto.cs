@@ -1,4 +1,5 @@
-﻿using E_Commerce.API.Models;
+﻿using E_Commerce.API.DTOs.OrderItemDTOs;
+using E_Commerce.API.Models;
 
 namespace E_Commerce.API.DTOs.OrderDTOs
 {
@@ -13,5 +14,7 @@ namespace E_Commerce.API.DTOs.OrderDTOs
         public OrderStatus Status { get; set; }
 
         public decimal TotalAmount { get; set; }
+
+        public List<OrderItemDto> OrderItems { get; set; } = [];
     }
 }

@@ -1,4 +1,5 @@
 ﻿using E_Commerce.API.DTOs.OrderDTOs;
+using E_Commerce.API.DTOs.OrderItemDTOs;
 using E_Commerce.API.Models;
 using E_Commerce.API.UnitOfWork;
 
@@ -17,6 +18,9 @@ namespace E_Commerce.API.Services
             if (createOrderDto == null)
                 throw new ArgumentNullException(nameof(createOrderDto), "the data of the order can not be lefted as empty");
 
+            if (createOrderDto.UserId <= 0)
+                throw new ArgumentNullException(nameof(createOrderDto.UserId), "invalid data entried");
+
             _uow.OrderRepository.AddModel(new Order
             {
                 UserId = createOrderDto.UserId,
@@ -26,25 +30,44 @@ namespace E_Commerce.API.Services
             });
         }
 
-        public void DeleteOrder(int produtId)
+        public void DeleteOrder(int orderId)
         {
-            if (produtId == null || produtId == 0)
-                throw new ArgumentNullException(nameof(produtId), "invalid data entried");
+            if (orderId <= 0)
+                throw new ArgumentNullException(nameof(orderId), "invalid data entried");
 
-            Order selectedOrder = _uow.OrderRepository.GetModelById(produtId);
-            if (selectedOrder == null)
-                throw new ArgumentNullException(nameof(selectedOrder), "there is no data exists for that id");
+            if (_uow.OrderRepository.GetModelById(orderId) == null)
+                throw new ArgumentNullException("there is no orders exists for that id");
 
-            _uow.OrderRepository.DeleteModel(produtId);
+            var orderItems = _uow.OrderItemRepository.GetAllModels().Where(o => o.OrderId == orderId).ToList();
+            foreach (var item in orderItems)
+            {
+                _uow.OrderItemRepository.DeleteModel(item.OrderItemId);
+            }
+
+            _uow.OrderRepository.DeleteModel(orderId);
         }
 
         public List<OrderDto> GetAllOrders()
         {
-            List<Order> orders = _uow.OrderRepository.GetAllModels();
+            var orders = _uow.OrderRepository.GetAllModels();
             if (orders == null || orders.Count == 0)
                 throw new ArgumentNullException(nameof(orders), "there is no data exists in the database");
 
-            List<OrderDto> orderDtos = new List<OrderDto>();
+            var orderItemsDto = new List<OrderItemDto>();
+            var orderItems = _uow.OrderItemRepository.GetAllModels();
+            foreach (var item in orderItems)
+            {
+                orderItemsDto.Add(new OrderItemDto
+                {
+                    OrderItemId = item.OrderItemId,
+                    OrderId = item.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice
+                });
+            }
+
+            var orderDtos = new List<OrderDto>();
 
             foreach (var order in orders)
             {
@@ -54,7 +77,8 @@ namespace E_Commerce.API.Services
                     UserId = order.UserId,
                     OrderDate = order.OrderDate,
                     TotalAmount = order.TotalAmount,
-                    Status = order.Status
+                    Status = order.Status,
+                    OrderItems = orderItemsDto.Where(o => o.OrderId == order.OrderId).ToList()
                 });
             }
             return orderDtos;
@@ -62,18 +86,35 @@ namespace E_Commerce.API.Services
 
         public List<OrderDto> GetAllOrdersByUserId(int userId)
         {
-            if (userId == null || userId == 0)
+            if (userId <= 0)
                 throw new ArgumentNullException(nameof(userId), "invalid data entried");
 
-            User user = _uow.UserRepository.GetModelById(userId);
+            var user = _uow.UserRepository.GetModelById(userId);
             if (user == null)
                 throw new ArgumentNullException(nameof(user), "there is no data exists for that id");
 
-            List<Order> orders = _uow.OrderRepository.GetAllModels();
+            var orders = _uow.OrderRepository.GetAllModels();
             if (orders == null || orders.Count == 0)
                 throw new ArgumentNullException(nameof(orders), "there is no data exists in the database");
 
-            List<OrderDto> orderDtos = new List<OrderDto>();
+            if (!orders.Any(o => o.UserId == userId))
+                throw new ArgumentNullException("there is no order related to this user");
+
+            var orderItemsDto = new List<OrderItemDto>();
+            var orderItems = _uow.OrderItemRepository.GetAllModels();
+            foreach (var item in orderItems)
+            {
+                orderItemsDto.Add(new OrderItemDto
+                {
+                    OrderItemId = item.OrderItemId,
+                    OrderId = item.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice
+                });
+            }
+
+            var orderDtos = new List<OrderDto>();
 
             foreach (var order in orders)
             {
@@ -85,7 +126,8 @@ namespace E_Commerce.API.Services
                         UserId = order.UserId,
                         OrderDate = order.OrderDate,
                         TotalAmount = order.TotalAmount,
-                        Status = order.Status
+                        Status = order.Status,
+                        OrderItems = orderItemsDto.Where(o => o.OrderId == order.OrderId).ToList()
                     });
                 }
             }
@@ -95,46 +137,79 @@ namespace E_Commerce.API.Services
 
         public List<OrderDto> GetAllOrdersByUserName(string userName)
         {
-            return new List<OrderDto>();
-            //if (userName == null)
-            //    throw new ArgumentNullException(nameof(userName), "invalid data entried");
+            if (userName == null || userName == "" || userName == default)
+                throw new ArgumentNullException(nameof(userName), "invalid data entried");
 
-            //List<User> users = _uow.UserRepository.GetAllAsync();
-            //if(users == null || users.Count == 0)
-            //    throw new ArgumentNullException(nameof(users),"there is no data exists in the database");
-            //User user = users.FirstOrDefault(u => u.Username == userName);
+            var user = _uow.UserRepository.GetAllModels().FirstOrDefault(u => u.UserName == userName);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "there is no data exists for that id");
 
-            //List<Order> orders = _uow.OrderRepository.GetAllAsync();
-            //if (orders == null || orders.Count == 0)
-            //    throw new ArgumentNullException(nameof(orders), "there is no data exists in the database");
+            var orders = _uow.OrderRepository.GetAllModels();
+            if (orders == null || orders.Count == 0)
+                throw new ArgumentNullException(nameof(orders), "there is no data exists in the database");
 
-            //List<OrderDto> orderDtos = new List<OrderDto>();
+            if (!orders.Any(o => o.UserId == user.UserId))
+                throw new ArgumentNullException("there is no orders related to this user");
 
-            //foreach (var order in orders)
-            //{
-            //    if (order.UserId == user.UserId)
-            //    {
-            //        orderDtos.Add(new OrderDto
-            //        {
-            //            OrderId = order.OrderId,
-            //            UserId = order.UserId,
-            //            OrderDate = order.OrderDate,
-            //            TotalAmount = order.TotalAmount,
-            //            Status = order.Status
-            //        });
-            //    }
-            //}
-            //return orderDtos;
+            var orderItemsDto = new List<OrderItemDto>();
+            var orderItems = _uow.OrderItemRepository.GetAllModels();
+            foreach (var item in orderItems)
+            {
+                orderItemsDto.Add(new OrderItemDto
+                {
+                    OrderItemId = item.OrderItemId,
+                    OrderId = item.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice
+                });
+            }
+
+            var orderDtos = new List<OrderDto>();
+
+            foreach (var order in orders)
+            {
+                if (order.UserId == user.UserId)
+                {
+                    orderDtos.Add(new OrderDto
+                    {
+                        OrderId = order.OrderId,
+                        UserId = order.UserId,
+                        OrderDate = order.OrderDate,
+                        TotalAmount = order.TotalAmount,
+                        Status = order.Status,
+                        OrderItems = orderItemsDto
+                    });
+                }
+            }
+            return orderDtos;
         }
 
         public OrderDto GetOrderById(int orderId)
         {
-            if (orderId == null || orderId == 0)
+            if (orderId <= 0)
                 throw new ArgumentNullException(nameof(orderId), "invalid data entried");
 
-            Order selectedOrder = _uow.OrderRepository.GetModelById(orderId);
+            var selectedOrder = _uow.OrderRepository.GetModelById(orderId);
             if (selectedOrder == null)
                 throw new ArgumentNullException(nameof(selectedOrder), "there is no data exists for that id");
+
+            var orderItemsDto = new List<OrderItemDto>();
+            var orderItems = _uow.OrderItemRepository.GetAllModels().Where(o => o.OrderId == orderId);
+            if (orderItems == null)
+                throw new ArgumentNullException(nameof(orderItems), "there is no order items inside this order number");
+
+            foreach (var item in orderItems)
+            {
+                orderItemsDto.Add(new OrderItemDto
+                {
+                    OrderItemId = item.OrderItemId,
+                    OrderId = item.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice
+                });
+            }
 
             return new OrderDto
             {
@@ -142,7 +217,8 @@ namespace E_Commerce.API.Services
                 UserId = selectedOrder.UserId,
                 OrderDate = selectedOrder.OrderDate,
                 TotalAmount = selectedOrder.TotalAmount,
-                Status = selectedOrder.Status
+                Status = selectedOrder.Status,
+                OrderItems = orderItemsDto
             };
         }
 

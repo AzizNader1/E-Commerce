@@ -58,7 +58,7 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCategory([FromForm] CreateCategoryDto createCategoryDto)
+        public IActionResult AddCategory([FromBody] CreateCategoryDto createCategoryDto)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateCategory([FromForm] CategoryDto categoryDto)
+        public IActionResult UpdateCategory([FromBody] CategoryDto categoryDto)
         {
             try
             {

@@ -44,7 +44,7 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProduct([FromForm] CreateProductDto createProductDto, IFormFile productImage)
+        public IActionResult AddProduct([FromBody] CreateProductDto createProductDto, IFormFile productImage)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace E_Commerce.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateProduct([FromForm] UpdateProductDto updateProductDto, IFormFile productImage)
+        public IActionResult UpdateProduct([FromBody] UpdateProductDto updateProductDto, IFormFile productImage)
         {
             try
             {
