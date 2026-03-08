@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════════════════
+   E-COMMERCE — DESIGN SYSTEM (Global Tokens & Utilities)
+   Import this file on every page for consistent branding.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    /* ─── Brand Colors ─── */
+    --primary: #7c3aed;
+    --primary-light: #a855f7;
+    --primary-dark: #6d28d9;
+    --primary-glow: rgba(124, 58, 237, 0.35);
+
+    --accent: #06b6d4;
+    --accent-light: #22d3ee;
+    --accent-glow: rgba(6, 182, 212, 0.25);
+
+    --blue: #3b82f6;
+    --blue-glow: rgba(59, 130, 246, 0.15);
+
+    /* ─── Background Palette ─── */
+    --bg-deep: #0f0c29;
+    --bg-mid: #302b63;
+    --bg-surface: #24243e;
+    --bg-glass: rgba(255, 255, 255, 0.05);
+    --bg-glass-hover: rgba(255, 255, 255, 0.08);
+
+    /* ─── Text Colors ─── */
+    --text-white: #ffffff;
+    --text-soft: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --text-faint: rgba(255, 255, 255, 0.35);
+    --text-ghost: rgba(255, 255, 255, 0.15);
+
+    /* ─── Borders ─── */
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --border-focus: rgba(168, 85, 247, 0.6);
+    --border-error: rgba(239, 68, 68, 0.6);
+    --border-success: rgba(34, 197, 94, 0.6);
+
+    /* ─── Semantic Colors ─── */
+    --error: #ef4444;
+    --error-light: #f87171;
+    --error-soft: #fca5a5;
+    --error-bg: rgba(239, 68, 68, 0.12);
+    --error-border: rgba(239, 68, 68, 0.25);
+
+    --success: #22c55e;
+    --success-light: #4ade80;
+    --success-bg: rgba(34, 197, 94, 0.12);
+    --success-border: rgba(34, 197, 94, 0.25);
+
+    --warning: #f59e0b;
+    --warning-bg: rgba(245, 158, 11, 0.12);
+
+    /* ─── Gradients ─── */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+    --gradient-bg: linear-gradient(-45deg, var(--bg-deep), var(--bg-mid), var(--bg-surface), var(--bg-deep));
+    --gradient-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    --gradient-orb-1: radial-gradient(circle, var(--primary), var(--primary-light));
+    --gradient-orb-2: radial-gradient(circle, var(--accent), var(--blue));
+
+    /* ─── Shadows ─── */
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow-card-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+    --shadow-btn: 0 8px 28px rgba(124, 58, 237, 0.45);
+    --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    --shadow-input: 0 0 0 4px rgba(168, 85, 247, 0.12);
+    --shadow-error: 0 0 0 4px rgba(239, 68, 68, 0.12);
+
+    /* ─── Radii ─── */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+    --radius-2xl: 24px;
+    --radius-full: 50%;
+
+    /* ─── Typography ─── */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-xs: 0.75rem;
+    /* 12px */
+    --font-sm: 0.85rem;
+    /* ~13.6px */
+    --font-base: 0.95rem;
+    /* ~15.2px */
+    --font-md: 1rem;
+    /* 16px */
+    --font-lg: 1.25rem;
+    /* 20px */
+    --font-xl: 1.5rem;
+    /* 24px */
+    --font-2xl: 1.75rem;
+    /* 28px */
+    --font-3xl: 2.25rem;
+    /* 36px */
+
+    /* ─── Spacing ─── */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 2.5rem;
+    --space-3xl: 3rem;
+
+    /* ─── Transitions ─── */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration: 0.3s;
+}
+
+/* ─── Global Reset for Dark Pages ─── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Shared Animations ─── */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shakeIn {
+    0% {
+        transform: translateX(-8px);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translateX(4px);
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes floatOrb {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -30px) scale(1.05);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.95);
+    }
+}
+
+@keyframes particleFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.5;
+    }
+
+    25% {
+        transform: translate(15px, -20px) scale(1.3);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-10px, -35px) scale(0.8);
+        opacity: 0.6;
+    }
+
+    75% {
+        transform: translate(20px, -15px) scale(1.1);
+        opacity: 0.9;
+    }
+}

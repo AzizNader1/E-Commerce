@@ -1,0 +1,296 @@
+@model E_Commerce.MVC.DTOs.UserDTOs.RegisterUserDto
+
+@{
+    ViewData["Title"] = "Sign Up";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account — E-Commerce</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Design System + Signup CSS -->
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/signup.css" />
+</head>
+<body>
+
+<div class="signup-page">
+
+    <!-- Floating Particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="signup-card">
+
+        <!-- Brand -->
+        <div class="signup-brand">
+            <div class="brand-icon">
+                <!-- User Plus SVG Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <line x1="19" y1="8" x2="19" y2="14" />
+                    <line x1="22" y1="11" x2="16" y2="11" />
+                </svg>
+            </div>
+            <h1>Create Account</h1>
+            <p>Join us and start shopping today</p>
+        </div>
+
+        <!-- Error Banner -->
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="signup-error-banner">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>@ViewBag.ErrorMessage</span>
+            </div>
+        }
+
+        <!-- Signup Form -->
+        <form asp-action="Register" asp-controller="Accounts" method="post" id="signupForm">
+
+            <div class="signup-fields">
+
+                <!-- Full Name -->
+                <div class="signup-input-group">
+                    <label class="input-label" for="inputFullName">Full Name</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </span>
+                        <input asp-for="UserFullName"
+                               type="text"
+                               placeholder="John Doe"
+                               autocomplete="name"
+                               id="inputFullName" />
+                    </div>
+                    <span asp-validation-for="UserFullName"></span>
+                </div>
+
+                <!-- Username -->
+                <div class="signup-input-group">
+                    <label class="input-label" for="inputUsername">Username</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="4" />
+                                <path d="M16 8v5a3 3 0 006 0v-1a10 10 0 10-3.92 7.94" />
+                            </svg>
+                        </span>
+                        <input asp-for="UserName"
+                               type="text"
+                               placeholder="johndoe"
+                               autocomplete="username"
+                               id="inputUsername" />
+                    </div>
+                    <span asp-validation-for="UserName"></span>
+                </div>
+
+                <!-- Email (full width) -->
+                <div class="signup-input-group field-full">
+                    <label class="input-label" for="inputEmail">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7" />
+                            </svg>
+                        </span>
+                        <input asp-for="UserEmail"
+                               type="email"
+                               placeholder="john@example.com"
+                               autocomplete="email"
+                               id="inputEmail" />
+                    </div>
+                    <span asp-validation-for="UserEmail"></span>
+                </div>
+
+                <!-- Password (full width) -->
+                <div class="signup-input-group field-full">
+                    <label class="input-label" for="inputPassword">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                        </span>
+                        <input asp-for="UserPassword"
+                               type="password"
+                               placeholder="Min. 12 characters"
+                               autocomplete="new-password"
+                               id="inputPassword" />
+                        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Strength Indicator -->
+                    <div class="password-strength" id="strengthBars" data-strength="0">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                    <div class="password-strength-text" id="strengthText" data-strength="0"></div>
+                    <span asp-validation-for="UserPassword"></span>
+                </div>
+
+                <!-- Address -->
+                <div class="signup-input-group">
+                    <label class="input-label" for="inputAddress">Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                        </span>
+                        <input asp-for="UserAddress"
+                               type="text"
+                               placeholder="Your address"
+                               autocomplete="street-address"
+                               id="inputAddress" />
+                    </div>
+                    <span asp-validation-for="UserAddress"></span>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="signup-input-group">
+                    <label class="input-label" for="inputPhone">Phone <span style="color: var(--text-faint); text-transform: none; letter-spacing: 0;">(optional)</span></label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                                <line x1="12" y1="18" x2="12.01" y2="18" />
+                            </svg>
+                        </span>
+                        <input asp-for="UserPhoneNumber"
+                               type="tel"
+                               placeholder="+1 234 567 8900"
+                               autocomplete="tel"
+                               id="inputPhone" />
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Terms -->
+            <div class="terms-row">
+                <input type="checkbox" id="agreeTerms" />
+                <label for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn-signup" id="btnSignup">
+                <span class="btn-text">Create Account</span>
+                <span class="spinner"></span>
+            </button>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="signup-divider">
+            <span>or</span>
+        </div>
+
+        <!-- Login Link -->
+        <div class="signup-footer">
+            <p>Already have an account? <a asp-action="Login" asp-controller="Accounts">Sign in</a></p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    // Password visibility toggle
+    function togglePassword() {
+        const input = document.getElementById('inputPassword');
+        const icon = document.getElementById('eyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = `
+                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />`;
+        } else {
+            input.type = 'password';
+            icon.innerHTML = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />`;
+        }
+    }
+
+    // Password strength checker
+    const passwordInput = document.getElementById('inputPassword');
+    const strengthBars = document.getElementById('strengthBars');
+    const strengthText = document.getElementById('strengthText');
+
+    passwordInput.addEventListener('input', function () {
+        const val = this.value;
+        let strength = 0;
+        let label = '';
+
+        if (val.length === 0) {
+            strengthBars.setAttribute('data-strength', '0');
+            strengthText.setAttribute('data-strength', '0');
+            strengthText.textContent = '';
+            return;
+        }
+
+        if (val.length >= 6)  strength++;
+        if (val.length >= 12) strength++;
+        if (/[A-Z]/.test(val) && /[a-z]/.test(val) && /[0-9]/.test(val)) strength++;
+        if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+        switch (strength) {
+            case 1: label = 'Weak'; break;
+            case 2: label = 'Fair'; break;
+            case 3: label = 'Good'; break;
+            case 4: label = 'Strong'; break;
+        }
+
+        strengthBars.setAttribute('data-strength', strength);
+        strengthText.setAttribute('data-strength', strength);
+        strengthText.textContent = label;
+    });
+
+    // Loading state on submit
+    document.getElementById('signupForm').addEventListener('submit', function () {
+        const btn = document.getElementById('btnSignup');
+        btn.classList.add('loading');
+    });
+</script>
+
+</body>
+</html>

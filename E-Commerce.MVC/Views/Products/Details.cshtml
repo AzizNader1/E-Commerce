@@ -1,0 +1,219 @@
+@model E_Commerce.MVC.DTOs.ProductDTOs.ProductDto
+
+@{
+    ViewData["Title"] = Model.ProductName;
+    Layout = null; // We use a custom landing layout for this premium feel, similar to Index
+
+    var imgSrc = Model.ProductImage != null && Model.ProductImage!.Length > 0
+        ? $"data:{Model.ProductImageContentType};base64,{Model.ProductImage}"
+        : "https://placehold.co/600x600/1e1b4b/a855f7?text=No+Image";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | E-Commerce</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Design System + Details CSS -->
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/home.css" />
+    <link rel="stylesheet" href="~/css/product-details.css" />
+</head>
+<body>
+
+<div class="landing-page details-page">
+
+    <!-- Background Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- ═══════════ NAVBAR ═══════════ -->
+    <nav class="landing-nav scrolled" id="navbar">
+        <a class="nav-logo" asp-controller="Home" asp-action="Index">
+            <div class="logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 01-8 0" />
+                </svg>
+            </div>
+            <span class="logo-text">E-<span>Commerce</span></span>
+        </a>
+
+        <div class="nav-actions">
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var username = User.Identity.Name ?? "User";
+                var initial = username.Substring(0, 1).ToUpper();
+
+                <div class="user-dropdown-wrapper">
+                    <button class="user-profile-btn">
+                        <div class="user-avatar">@initial</div>
+                        <span class="user-name">@username</span>
+                        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown-menu">
+                        <div class="dropdown-header">
+                            <div class="user-avatar large">@initial</div>
+                            <div class="user-info">
+                                <strong>@username</strong>
+                                <span>Verified Member</span>
+                            </div>
+                        </div>
+                        <hr class="dropdown-divider" />
+                        <form asp-controller="Accounts" asp-action="LogoutPost" method="post" class="m-0">
+                            <button type="submit" class="dropdown-item text-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                Log out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Accounts" asp-action="Login" class="nav-btn nav-btn-ghost">Sign In</a>
+                <a asp-controller="Accounts" asp-action="Register" class="nav-btn nav-btn-primary">Get Started</a>
+            }
+        </div>
+    </nav>
+
+    <!-- ═══════════ MAIN DETAILS ═══════════ -->
+    <main class="details-container">
+        
+        <!-- Back Button -->
+        <a asp-controller="Home" asp-action="Index" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Products
+        </a>
+
+        <div class="product-showcase">
+            <!-- Left: Image Gallery -->
+            <div class="product-gallery">
+                <div class="main-image-wrapper">
+                    <img src="@imgSrc" alt="@Model.ProductName" class="main-image" id="mainImage" />
+                    @if (Model.ProductStockQuantity <= 5 && Model.ProductStockQuantity > 0)
+                    {
+                        <div class="stock-badge warning">Only @Model.ProductStockQuantity left!</div>
+                    }
+                    else if (Model.ProductStockQuantity == 0)
+                    {
+                        <div class="stock-badge danger">Out of Stock</div>
+                    }
+                </div>
+            </div>
+
+            <!-- Right: Product Info -->
+            <div class="product-details-content">
+                <div class="category-tag">@Model.CategoryName?.ToString()</div>
+                
+                <h1 class="title">@Model.ProductName</h1>
+                
+                <div class="price-wrapper">
+                    <span class="price">$@Model.ProductPrice.ToString("0.00")</span>
+                </div>
+
+                <div class="description-box">
+                    <h3>About this product</h3>
+                    <p>@Model.ProductDescription</p>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="f-icon purple"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                        <span>Premium Quality</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="f-icon cyan"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
+                        <span>Fast Delivery</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="f-icon blue"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                        <span>Secure Transaction</span>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Form -->
+                <div class="action-box">
+                    <form asp-controller="Products" asp-action="AddToCart" method="post" class="add-to-cart-form">
+                        <input type="hidden" name="productId" value="@Model.ProductId" />
+                        
+                        <div class="quantity-selector">
+                            <button type="button" class="qty-btn minus" onclick="decrement()">-</button>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" max="@Model.ProductStockQuantity" class="qty-input" readonly />
+                            <button type="button" class="qty-btn plus" onclick="increment()">+</button>
+                        </div>
+
+                        <button type="submit" class="btn-hero btn-hero-primary block-btn" @(Model.ProductStockQuantity == 0 ? "disabled" : "")>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            Add to Cart
+                        </button>
+                    </form>
+                    
+                    @if (User.Identity == null || !User.Identity.IsAuthenticated)
+                    {
+                        <div class="auth-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            You must be <a asp-controller="Accounts" asp-action="Login">signed in</a> to add items to your cart.
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer class="landing-footer">
+        <p>&copy; 2025 E-Commerce. All rights reserved.</p>
+    </footer>
+
+</div>
+
+<!-- Scripts -->
+<script>
+    const maxQty = parseInt('@Model.ProductStockQuantity', 10);
+    const qtyInput = document.getElementById('quantity');
+
+    function increment() {
+        let val = parseInt(qtyInput.value, 10);
+        if (val < maxQty) {
+            qtyInput.value = val + 1;
+        }
+    }
+
+    function decrement() {
+        let val = parseInt(qtyInput.value, 10);
+        if (val > 1) {
+            qtyInput.value = val - 1;
+        }
+    }
+
+    // User Profile Dropdown logic
+    const userProfileBtn = document.querySelector('.user-profile-btn');
+    const userDropdownWrapper = document.querySelector('.user-dropdown-wrapper');
+    if (userProfileBtn && userDropdownWrapper) {
+        userProfileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdownWrapper.classList.toggle('active');
+        });
+        document.addEventListener('click', (e) => {
+            if (!userDropdownWrapper.contains(e.target)) {
+                userDropdownWrapper.classList.remove('active');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

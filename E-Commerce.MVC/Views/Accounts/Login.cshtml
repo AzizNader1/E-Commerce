@@ -1,1 +1,185 @@
-﻿<h1>Welcome</h1>
+﻿@model E_Commerce.MVC.DTOs.UserDTOs.LoginUserDto
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = null; /* Full-page standalone design — no shared layout */
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — E-Commerce</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Design System (shared across all pages) -->
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <!-- Login Page CSS -->
+    <link rel="stylesheet" href="~/css/login.css" />
+</head>
+<body>
+
+<div class="login-page">
+
+    <!-- Floating Particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="login-card">
+
+        <!-- Brand / Logo -->
+        <div class="login-brand">
+            <div class="brand-icon">
+                <!-- Shopping Bag SVG Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 01-8 0" />
+                </svg>
+            </div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to your account to continue</p>
+        </div>
+
+        <!-- Error Banner (shown when ViewBag.ErrorMessage is set by controller) -->
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="login-error-banner">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>@ViewBag.ErrorMessage</span>
+            </div>
+        }
+
+        <!-- Login Form -->
+        <form asp-action="Login" asp-controller="Accounts" method="post" id="loginForm">
+
+            <!-- Username -->
+            <div class="form-floating-custom">
+                <input asp-for="UserName"
+                       type="text"
+                       placeholder="Username"
+                       autocomplete="username"
+                       id="inputUsername" />
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                </span>
+                <span asp-validation-for="UserName"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-floating-custom">
+                <input asp-for="UserEmail"
+                       type="email"
+                       placeholder="Email address"
+                       autocomplete="email"
+                       id="inputEmail" />
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="16" x="2" y="4" rx="2" />
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7" />
+                    </svg>
+                </span>
+                <span asp-validation-for="UserEmail"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating-custom">
+                <input asp-for="UserPassword"
+                       type="password"
+                       placeholder="Password"
+                       autocomplete="current-password"
+                       id="inputPassword" />
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                </span>
+                <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility">
+                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </button>
+                <span asp-validation-for="UserPassword"></span>
+            </div>
+
+            <!-- Remember Me + Forgot Password -->
+            <div class="remember-row">
+                <div class="remember-check">
+                    <input type="checkbox" id="rememberMe" />
+                    <label for="rememberMe">Remember me</label>
+                </div>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-login" id="btnLogin">
+                <span class="btn-text">Sign In</span>
+                <span class="spinner"></span>
+            </button>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="login-divider">
+            <span>or</span>
+        </div>
+
+        <!-- Register Link -->
+        <div class="login-footer">
+            <p>Don't have an account? <a asp-action="Register" asp-controller="Accounts">Create one</a></p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    // Password visibility toggle
+    function togglePassword() {
+        const input = document.getElementById('inputPassword');
+        const icon = document.getElementById('eyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = `
+                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />`;
+        } else {
+            input.type = 'password';
+            icon.innerHTML = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />`;
+        }
+    }
+
+    // Loading state on submit
+    document.getElementById('loginForm').addEventListener('submit', function () {
+        const btn = document.getElementById('btnLogin');
+        btn.classList.add('loading');
+    });
+</script>
+
+</body>
+</html>

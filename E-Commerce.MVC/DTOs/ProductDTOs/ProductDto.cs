@@ -14,11 +14,11 @@ namespace E_Commerce.MVC.DTOs.ProductDTOs
 
         public int ProductStockQuantity { get; set; }
 
-        public string? ProductImage { get; set; }
+        public byte[]? ProductImage { get; set; }
 
         public string? ProductImageContentType { get; set; }
 
-        public bool IsProductHasImage => !string.IsNullOrEmpty(ProductImage);
+        public bool IsProductHasImage { get; set; } = false;
 
         public int CategoryId { get; set; }
 
