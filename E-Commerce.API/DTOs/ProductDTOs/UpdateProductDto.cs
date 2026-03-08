@@ -2,6 +2,9 @@
 
 namespace E_Commerce.API.DTOs.ProductDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for updating an existing product in an e-commerce application. It contains properties to hold the product ID (ProductId), the name of the product (ProductName), a description of the product (ProductDescription), the price of the product (ProductPrice), the stock quantity of the product (ProductStockQuantity), and the category ID to which the product belongs (CategoryId). The ProductId, ProductName, ProductPrice, ProductStockQuantity, and CategoryId properties are marked as required, meaning that they must be provided when updating a product. The ProductDescription property has a string length constraint, allowing it to be between 10 and 500 characters if provided. Additionally, there is a boolean property called UpdateImage that indicates whether the product image should be updated or not. This DTO is used to transfer product data from the client to the server when updating an existing product in the system.
+    /// </summary>
     public class UpdateProductDto
     {
         [Required]

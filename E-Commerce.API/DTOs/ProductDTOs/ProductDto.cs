@@ -2,6 +2,9 @@
 
 namespace E_Commerce.API.DTOs.ProductDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for a product in an e-commerce application. It contains properties to hold the unique identifier of the product (ProductId), the name of the product (ProductName), a description of the product (ProductDescription), the price of the product (ProductPrice), the stock quantity of the product (ProductStockQuantity), an optional image of the product (ProductImage) along with its content type (ProductImageContentType), a boolean flag indicating whether the product has an image (IsProductHasImage), and the category ID to which the product belongs (CategoryId) along with an optional reference to the category name (CategoryName). This DTO is used to transfer product data between different layers of the application, such as between the API and the service layer or between the service layer and the database.
+    /// </summary>
     public class ProductDto
     {
         public int ProductId { get; set; }

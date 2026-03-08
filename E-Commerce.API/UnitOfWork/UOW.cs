@@ -4,6 +4,9 @@ using E_Commerce.API.Repositories;
 
 namespace E_Commerce.API.UnitOfWork
 {
+    /// <summary>
+    /// This class represents a Unit of Work (UOW) pattern implementation for an e-commerce application. It serves as a central point of access for various repositories that interact with the database context (ApplicationDBContext). The UOW class provides properties to access repositories for different entities such as User, Product, Category, Cart, CartItem, Order, and OrderItem. Each repository is lazily initialized when accessed for the first time, ensuring that resources are efficiently utilized. The UOW pattern helps to manage database transactions and maintain consistency across multiple operations by coordinating the work of multiple repositories.
+    /// </summary>
     public class UOW
     {
         private readonly ApplicationDBContext _context;

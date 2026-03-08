@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.API.DTOs.CartItemDTOs
+﻿namespace E_Commerce.API.DTOs.CartItemDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for a cart item in an e-commerce application.
+    /// </summary>
     public class CartItemDto
     {
         public int CartItemId { get; set; }

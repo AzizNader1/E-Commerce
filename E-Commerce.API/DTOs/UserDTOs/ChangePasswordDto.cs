@@ -2,6 +2,9 @@
 
 namespace E_Commerce.API.DTOs.UserDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for changing a user's password in an e-commerce application. It contains properties to hold the user ID (UserId), the current password (CurrentPassword), the new password (NewPassword), and a confirmation of the new password (ConfirmNewPassword). The UserId property is marked as required and must be a valid positive number. The CurrentPassword, NewPassword, and ConfirmNewPassword properties are also required and have validation attributes to ensure that they meet certain criteria, such as minimum length and matching passwords. This DTO is used to transfer password change data from the client to the server when a user wants to update their password in the system.
+    /// </summary>
     public class ChangePasswordDto
     {
         [Required]

@@ -2,6 +2,9 @@
 
 namespace E_Commerce.API.DTOs.UserDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for registering a new user in an e-commerce application. It contains properties to hold the user's name (UserName), email address (UserEmail), password (UserPassword), full name (UserFullName), address (UserAddress), and phone number (UserPhoneNumber). The UserName, UserEmail, UserPassword, UserFullName, and UserAddress properties are marked as required, meaning that they must be provided when registering a new user. The UserEmail property also has an email address validation attribute to ensure that the provided email is in a valid format. The UserPassword property has a minimum length requirement of 12 characters to enhance security. This DTO is used to transfer user registration data from the client to the server when creating a new user account in the system.
+    /// </summary>
     public class RegisterUserDto
     {
         [Required(ErrorMessage = "User Name Is Required Field And You Can Not Left It Empty")]
