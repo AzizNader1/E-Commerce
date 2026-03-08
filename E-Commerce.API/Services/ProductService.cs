@@ -219,9 +219,10 @@ namespace E_Commerce.API.Services
                 ProductPrice = product.ProductPrice,
                 ProductStockQuantity = product.ProductStockQuantity,
                 CategoryId = product.CategoryId,
-                CategoryName = product.Category!.CategoryName,
-                ProductImage = product.ProductImageData != null ? Convert.ToBase64String(product.ProductImageData) : null,
-                ProductImageContentType = product.ProductImageContentType
+                CategoryName = product.Category?.CategoryName,
+                ProductImageContentType = product.ProductImageContentType,
+                IsProductHasImage = product.ProductImageData == null ? false : true,
+                ProductImage = product.ProductImageData
             };
         }
 

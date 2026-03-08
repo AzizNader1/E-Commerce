@@ -132,5 +132,28 @@ namespace E_Commerce.API.Services
 
 
         }
+
+        public string ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            if (changePasswordDto.UserId <= 0)
+                return "Invalid user ID.";
+
+            if (changePasswordDto.NewPassword == "stringstring" || changePasswordDto.ConfirmNewPassword == "stringstring")
+                return "please change the data from default values to your own values";
+
+            var user = _uow.UserRepository.GetModelById(changePasswordDto.UserId);
+            if (user == null)
+                return "User not found.";
+
+            if (user.UserPassword != changePasswordDto.CurrentPassword)
+                return "Current password is incorrect.";
+
+            if (changePasswordDto.NewPassword != changePasswordDto.ConfirmNewPassword)
+                return "New password and confirm new password do not match.";
+
+            user.UserPassword = changePasswordDto.NewPassword;
+            _uow.UserRepository.UpdateModel(user);
+            return "Password changed successfully.";
+        }
     }
 }

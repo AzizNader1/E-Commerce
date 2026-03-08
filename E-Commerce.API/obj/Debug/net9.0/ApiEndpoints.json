@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "E_Commerce.API.Controllers.AccountsController",
+    "Method": "ChangePassowrd",
+    "RelativePath": "api/Accounts/ChangePassowrd",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "changePasswordDto",
+        "Type": "E_Commerce.API.DTOs.UserDTOs.ChangePasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "E_Commerce.API.Controllers.AccountsController",
     "Method": "Login",
     "RelativePath": "api/Accounts/Login",
     "HttpMethod": "POST",

@@ -78,5 +78,20 @@ namespace E_Commerce.API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ChangePassowrd([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                var result = _accountService.ChangePassword(changePasswordDto);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace E_Commerce.API.Services
         LoginResponseDto Login(LoginUserDto loginUserDto);
         string Logout(int userId);
         LoginResponseDto Register(RegisterUserDto createUserDto);
+        string ChangePassword(ChangePasswordDto changePasswordDto);
 
     }
 }
