@@ -1,22 +1,17 @@
-﻿using System.Text.Json;
+﻿using E_Commerce.MVC.DTOs.ProductDTOs;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace E_Commerce.MVC.Services
 {
-    public interface IApiProductService
-    {
-        Task<List<ProductDto>> GetAllProductsAsync();
-        Task<ProductDto?> GetProductByIdAsync(int id);
-    }
-    public class ApiProductService : IApiProductService
+    public class ApiProductsService : IApiProductsService
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public ApiProductService(IHttpClientFactory httpClientFactory)
+        public ApiProductsService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
-
         public async Task<List<ProductDto>> GetAllProductsAsync()
         {
             var client = _httpClientFactory.CreateClient("ECommerceApi");
@@ -39,20 +34,11 @@ namespace E_Commerce.MVC.Services
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<ProductDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                return JsonSerializer.Deserialize<ProductDto>(content, options) ?? new ProductDto();
             }
             return null;
         }
-    }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum CategoriesCollections { }
-
-    public class ProductDto
-    {
-        // Other properties...
-
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public CategoriesCollections? CategoryName { get; set; }
     }
 }

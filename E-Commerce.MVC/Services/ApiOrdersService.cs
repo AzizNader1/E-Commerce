@@ -1,15 +1,13 @@
 ﻿namespace E_Commerce.MVC.Services
 {
-    public interface IApiCartService
-    {
-    }
-    public class ApiCartService : IApiCartService
+    public class ApiOrdersService : IApiOrdersService
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public ApiCartService(IHttpClientFactory httpClientFactory)
+        public ApiOrdersService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
+
     }
 }

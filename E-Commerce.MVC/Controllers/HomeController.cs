@@ -5,9 +5,9 @@ namespace E_Commerce.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IApiProductService _productService;
+        private readonly IApiProductsService _productService;
 
-        public HomeController(IApiProductService productService)
+        public HomeController(IApiProductsService productService)
         {
             _productService = productService;
         }

@@ -1,15 +1,9 @@
-﻿using System.Text;
+﻿using E_Commerce.MVC.DTOs.UserDTOs;
+using System.Text;
 using System.Text.Json;
-using E_Commerce.MVC.DTOs.UserDTOs;
 
 namespace E_Commerce.MVC.Services
 {
-    public interface IApiAccountsService
-    {
-        Task<LoginResponseDto> LoginAsync(LoginUserDto loginUserDto);
-        Task<LoginResponseDto> RegisterAsync(RegisterUserDto registerUserDto);
-    }
-
     public class ApiAccountsService : IApiAccountsService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -25,7 +19,7 @@ namespace E_Commerce.MVC.Services
             var content = new StringContent(JsonSerializer.Serialize(loginUserDto), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync("/api/Accounts/Login", content);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();

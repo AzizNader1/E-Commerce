@@ -5,7 +5,7 @@
     Layout = null; // We use a custom landing layout for this premium feel, similar to Index
 
     var imgSrc = Model.ProductImage != null && Model.ProductImage!.Length > 0
-        ? $"data:{Model.ProductImageContentType};base64,{Model.ProductImage}"
+        ? $"data:{Model.ProductImageContentType};base64,{Convert.ToBase64String(Model.ProductImage)}"
         : "https://placehold.co/600x600/1e1b4b/a855f7?text=No+Image";
 }
 

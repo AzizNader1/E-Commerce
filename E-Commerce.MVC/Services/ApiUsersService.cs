@@ -1,15 +1,13 @@
 ﻿namespace E_Commerce.MVC.Services
 {
-    public interface IApiCategoryService
-    {
-    }
-    public class ApiCategoryService : IApiCategoryService
+    public class ApiUsersService : IApiUsersService
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public ApiCategoryService(IHttpClientFactory httpClientFactory)
+        public ApiUsersService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
+
     }
 }

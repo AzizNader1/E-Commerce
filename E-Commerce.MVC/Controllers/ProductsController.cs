@@ -6,9 +6,9 @@ namespace E_Commerce.MVC.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly IApiProductService _productService;
+        private readonly IApiProductsService _productService;
 
-        public ProductsController(IApiProductService productService)
+        public ProductsController(IApiProductsService productService)
         {
             _productService = productService;
         }
@@ -32,7 +32,7 @@ namespace E_Commerce.MVC.Controllers
         {
             // The user must be signed in because of the [Authorize] attribute.
             // When we implement the real Cart logic, we will call ApiCartService here
-            
+
             // For now, redirect back to the home page or cart page
             TempData["SuccessMessage"] = "Product added to cart successfully!";
             return RedirectToAction("Index", "Home");

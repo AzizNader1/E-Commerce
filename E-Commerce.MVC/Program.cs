@@ -18,11 +18,11 @@ namespace E_Commerce.MVC
 
             builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor for accessing HttpContext and dealing with cookies in services
             builder.Services.AddScoped<IApiAccountsService, ApiAccountsService>();
-            builder.Services.AddScoped<IApiCartService, ApiCartService>();
-            builder.Services.AddScoped<IApiCategoryService, ApiCategoryService>();
-            builder.Services.AddScoped<IApiOrderService, ApiOrderService>();
-            builder.Services.AddScoped<IApiProductService, ApiProductService>();
-            builder.Services.AddScoped<IApiUserService, ApiUserService>();
+            builder.Services.AddScoped<IApiCartsService, ApiCartsService>();
+            builder.Services.AddScoped<IApiCategoriesService, ApiCategoriesService>();
+            builder.Services.AddScoped<IApiOrdersService, ApiOrdersService>();
+            builder.Services.AddScoped<IApiProductsService, ApiProductsService>();
+            builder.Services.AddScoped<IApiUsersService, ApiUsersService>();
 
             var app = builder.Build();
 
