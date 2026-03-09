@@ -4,6 +4,9 @@ using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
 {
+    /// <summary>
+    /// This class represents the service layer for managing categories in an e-commerce application. It implements the ICategoryService interface and provides methods for adding, deleting, retrieving, and updating categories. The service interacts with the database through a Unit of Work (UOW) pattern to perform operations on category data. Each method includes validation checks to ensure that the input data is valid and that the necessary related entities exist in the database. The service is responsible for handling all business logic related to categories, ensuring that the application functions correctly when users create or modify product categories.
+    /// </summary>
     public class CategoryService : ICategoryService
     {
         private readonly UOW _uow;

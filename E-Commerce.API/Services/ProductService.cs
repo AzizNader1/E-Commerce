@@ -4,6 +4,9 @@ using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
 {
+    /// <summary>
+    /// This class represents the service layer for managing products in an e-commerce application. It implements the IProductService interface and provides methods for adding, deleting, retrieving, and updating products. The service interacts with the database through a Unit of Work (UOW) pattern to perform operations on product data. Each method includes validation checks to ensure that the input data is valid and that the necessary related entities (such as categories) exist in the database. The service is responsible for handling all business logic related to products, ensuring that the application functions correctly when users create or modify product information, including handling product images with specific validation for image type and size.
+    /// </summary>
     public class ProductService : IProductService
     {
         private readonly UOW _uow;

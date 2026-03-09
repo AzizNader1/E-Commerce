@@ -4,6 +4,9 @@ using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
 {
+    /// <summary>
+    /// This class represents the service layer for managing order items in an e-commerce application. It implements the IOrderItemService interface and provides methods for adding, deleting, retrieving, and updating order items. The service interacts with the database through a Unit of Work (UOW) pattern to perform operations on order item data. Each method includes validation checks to ensure that the input data is valid and that the necessary related entities (such as orders and products) exist in the database. The service is responsible for handling all business logic related to order items, ensuring that the application functions correctly when users create or modify their orders.
+    /// </summary>
     public class OrderItemService : IOrderItemService
     {
         private readonly UOW _uow;

@@ -5,6 +5,9 @@ using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
 {
+    /// <summary>
+    /// This class represents the service layer for managing shopping carts in an e-commerce application. It implements the ICartService interface and provides methods for adding, deleting, retrieving, and updating carts. The service interacts with the database through a Unit of Work (UOW) pattern to perform operations on cart data. Each method includes validation checks to ensure that the input data is valid and that the necessary related entities (such as users and cart items) exist in the database. The service is responsible for handling all business logic related to shopping carts, ensuring that the application functions correctly when users create or modify their carts.
+    /// </summary>
     public class CartService : ICartService
     {
         private readonly UOW _uow;

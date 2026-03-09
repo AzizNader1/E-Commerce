@@ -10,6 +10,9 @@ using System.Text;
 
 namespace E_Commerce.API.Services
 {
+    /// <summary>
+    /// This class represents the account service for an e-commerce application. It implements the IAccountService interface and provides methods for user registration, login, logout, token generation, and password change. The service interacts with the database through a Unit of Work (UOW) pattern to manage user data. It also utilizes JWT (JSON Web Tokens) for authentication and authorization purposes. The Register method checks for existing users and creates a new user if the email and username are unique. The Login method validates user credentials and generates a JWT token upon successful authentication. The Logout method deletes the user from the database, and the ChangePassword method allows users to update their passwords securely. Overall, this service is responsible for handling all account-related operations in the application.
+    /// </summary>
     public class AccountService : IAccountService
     {
         private readonly UOW _uow;

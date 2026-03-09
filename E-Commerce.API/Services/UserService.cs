@@ -4,6 +4,9 @@ using E_Commerce.API.UnitOfWork;
 
 namespace E_Commerce.API.Services
 {
+    /// <summary>
+    /// This class represents the service layer for managing users in an e-commerce application. It implements the IUserService interface and provides methods for adding, deleting, retrieving, and updating user information. The service interacts with the database through a Unit of Work (UOW) pattern to perform operations on user data. Each method includes validation checks to ensure that the input data is valid and that the necessary related entities exist in the database. The service is responsible for handling all business logic related to users, ensuring that the application functions correctly when users create or modify their accounts.
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly UOW _uow;
