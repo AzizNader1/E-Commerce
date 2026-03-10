@@ -16,6 +16,12 @@ namespace E_Commerce.MVC
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60); // Session timeout.
+                options.Cookie.IsEssential = true; // Make the session cookie essential
+            });
+
             builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor for accessing HttpContext and dealing with cookies in services
             builder.Services.AddScoped<IApiAccountsService, ApiAccountsService>();
             builder.Services.AddScoped<IApiCartsService, ApiCartsService>();
@@ -34,6 +40,7 @@ namespace E_Commerce.MVC
                 app.UseHsts();
             }
 
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

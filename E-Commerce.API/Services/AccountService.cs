@@ -52,13 +52,13 @@ namespace E_Commerce.API.Services
                 UserRole = createUserDto.UserName.Contains("admin", StringComparison.OrdinalIgnoreCase) ? UserRoles.Admin : UserRoles.Customer
             };
 
-            _uow.UserRepository.AddModel(newUser);
 
             loginResponseDto.UserName = newUser.UserName;
             loginResponseDto.UserRoles = [newUser.UserRole.ToString()];
             loginResponseDto.UserToken = GenerateToken(newUser);
             loginResponseDto.IsAuthenticated = true;
 
+            _uow.UserRepository.AddModel(newUser);
             return loginResponseDto;
 
         }
@@ -81,7 +81,7 @@ namespace E_Commerce.API.Services
             }
 
             loginResponseDto.IsAuthenticated = false;
-            loginResponseDto.ErrorMessage = "Invalid username, email or password.";
+            loginResponseDto.ErrorMessage = "Invalid username, email or password. Try to register first";
             return loginResponseDto;
         }
 

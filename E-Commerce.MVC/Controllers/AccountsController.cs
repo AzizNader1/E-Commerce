@@ -1,27 +1,23 @@
-﻿using E_Commerce.MVC.DTOs.UserDTOs;
+using E_Commerce.MVC.DTOs.UserDTOs;
 using E_Commerce.MVC.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace E_Commerce.MVC.Controllers
 {
     public class AccountsController : Controller
     {
         private readonly IApiAccountsService _apiAccountsService;
+        private readonly IApiUsersService _apiUsersService;
 
-        public AccountsController(IApiAccountsService apiAccountsService)
+        public AccountsController(IApiAccountsService apiAccountsService, IApiUsersService apiUsersService)
         {
             _apiAccountsService = apiAccountsService;
+            _apiUsersService = apiUsersService;
         }
 
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home");
-
             return View();
         }
 
@@ -35,20 +31,22 @@ namespace E_Commerce.MVC.Controllers
 
             if (response.IsAuthenticated)
             {
-                await SignInUser(response);
+                HttpContext.Session.SetString("UserName", response.UserName ?? "");
+                TempData["UserName"] = response.UserName;
+                HttpContext.Session.SetString("UserRole", response.UserRoles.ToString() ?? "");
+                TempData["UserRole"] = response.UserRoles.ToString();
+                HttpContext.Session.SetString("UserToken", response.UserToken ?? "");
+                TempData["UserToken"] = response.UserToken;
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError(string.Empty, response.ErrorMessage ?? "Invalid login attempt.");
+            ViewBag.ErrorMessage = response.ErrorMessage == string.Empty ? "Invalid login attempt." : response.ErrorMessage;
             return View(loginUserDto);
         }
 
         [HttpGet]
         public IActionResult Register()
         {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home");
-
             return View();
         }
 
@@ -62,55 +60,70 @@ namespace E_Commerce.MVC.Controllers
 
             if (response.IsAuthenticated)
             {
-                await SignInUser(response);
+                AddUserCreadentials(response);
                 return RedirectToAction("Index", "Home");
             }
-
-            ModelState.AddModelError(string.Empty, response.ErrorMessage ?? "Registration failed.");
+            ViewBag.ErrorMessage = response.ErrorMessage == string.Empty ? "Registration failed." : response.ErrorMessage;
             return View(registerUserDto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserProfile(string userName)
+        {
+            var userDto = new UserDto();
+            userDto = await _apiUsersService.GetUserByNameAsync(userName);
+
+            TempData["UserName"] = HttpContext.Session.GetString("UserName");
+            TempData["UserRole"] = HttpContext.Session.GetString("UserRole");
+            TempData["UserToken"] = HttpContext.Session.GetString("UserToken");
+            return View(userDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserProfile(UserDto userDto)
+        {
+            if (!ModelState.IsValid)
+                return View(userDto);
+
+            var response = await _apiUsersService.UpdateUserAsync(userDto);
+
+            if (response.IsAuthenticated)
+            {
+                AddUserCreadentials(response);
+                ViewBag.SuccessMessage = string.IsNullOrWhiteSpace(response.ErrorMessage)
+                    ? "Your profile has been updated successfully."
+                    : response.ErrorMessage;
+                return View(userDto);
+            }
+
+            ViewBag.ErrorMessage = response.ErrorMessage == string.Empty ? "Profile update failed." : response.ErrorMessage;
+            return View(userDto);
         }
 
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            RemoveUserCreadentials();
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> LogoutPost()
+        private void AddUserCreadentials(LoginResponseDto loginResponseDto)
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            HttpContext.Session.SetString("UserName", loginResponseDto.UserName ?? "");
+            TempData["UserName"] = loginResponseDto.UserName;
+            HttpContext.Session.SetString("UserRole", loginResponseDto.UserRoles.ToString() ?? "");
+            TempData["UserRole"] = loginResponseDto.UserRoles.ToString();
+            HttpContext.Session.SetString("UserToken", loginResponseDto.UserToken ?? "");
+            TempData["UserToken"] = loginResponseDto.UserToken;
         }
-
-        private async Task SignInUser(LoginResponseDto response)
+        private void RemoveUserCreadentials()
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, response.UserName ?? ""),
-                new Claim("Token", response.UserToken ?? "")
-            };
-
-            if (response.UserRoles != null)
-            {
-                foreach (var role in response.UserRoles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
-                }
-            }
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            // Set cookie expiration
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-            };
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
+            HttpContext.Session.SetString("UserName", "");
+            TempData["UserName"] = "";
+            HttpContext.Session.SetString("UserRole", "");
+            TempData["UserRole"] = "";
+            HttpContext.Session.SetString("UserToken", "");
+            TempData["UserToken"] = "";
         }
     }
 }

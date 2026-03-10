@@ -2,6 +2,9 @@
 
 namespace E_Commerce.MVC.DTOs.UserDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for user login in an e-commerce application. It contains properties to hold the user's username (UserName), email address (UserEmail), and password (UserPassword). The UserName and UserEmail properties are marked as required and have maximum length constraints to ensure that they do not exceed 100 characters. The UserEmail property also has an email address validation attribute to ensure that it is in a valid email format. The UserPassword property is required and must be at least 12 characters long, with a data type of password to ensure that it is treated securely. This DTO is used to transfer user login data from the client to the server when a user attempts to log in to the system.
+    /// </summary>
     public class LoginUserDto
     {
         [Required(ErrorMessage = "User Name Is Required Field And You Can Not Left It Empty")]

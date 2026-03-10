@@ -1,0 +1,282 @@
+@model E_Commerce.MVC.DTOs.UserDTOs.UserDto
+
+@{
+    ViewData["Title"] = "Your Profile";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - E-Commerce</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Design System + Shared Home/Nav styles + Page CSS -->
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/home.css" />
+    <link rel="stylesheet" href="~/css/user-profile.css" />
+</head>
+<body>
+    <div class="profile-page">
+        <!-- Background orbs -->
+        <div class="profile-orb orb-1"></div>
+        <div class="profile-orb orb-2"></div>
+
+        <!-- Navbar (same identity as landing) -->
+        <nav class="landing-nav profile-nav" id="navbar">
+            <a class="nav-logo" asp-controller="Home" asp-action="Index">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                </div>
+                <span class="logo-text">E-<span>Commerce</span></span>
+            </a>
+
+            <div class="nav-actions">
+                <a asp-controller="Home" asp-action="Index" class="nav-btn nav-btn-ghost">Back to Home</a>
+                <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
+            </div>
+        </nav>
+
+        <!-- Profile Card -->
+        <main class="profile-wrapper">
+            <section class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <span>
+                            @{
+                                var initials = string.Empty;
+                                if (!string.IsNullOrWhiteSpace(Model.UserFullName))
+                                {
+                                    var parts = Model.UserFullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                                    if (parts.Length > 0) initials += char.ToUpper(parts[0][0]);
+                                    if (parts.Length > 1) initials += char.ToUpper(parts[1][0]);
+                                }
+                                else if (!string.IsNullOrWhiteSpace(Model.UserName))
+                                {
+                                    initials = char.ToUpper(Model.UserName[0]).ToString();
+                                }
+                            }
+                            @initials
+                        </span>
+                    </div>
+                    <div class="profile-title">
+                        <h1>Account overview</h1>
+                        <p>Manage your personal information and keep your profile up to date.</p>
+                    </div>
+                </div>
+
+
+                <!-- Alerts -->
+                @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage as string))
+                {
+                    <div class="profile-alert profile-alert-success">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                        </span>
+                        <p>@ViewBag.SuccessMessage</p>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string))
+                {
+                    <div class="profile-alert profile-alert-error">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </span>
+                        <p>@ViewBag.ErrorMessage</p>
+                    </div>
+                }
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="profile-alert profile-alert-warning">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </span>
+                        <p>Please review the highlighted fields and fix the errors.</p>
+                    </div>
+                }
+
+                <!-- Two-column layout -->
+                <div class="profile-layout">
+                    <!-- Left summary -->
+                    <aside class="profile-summary">
+                        <h2>Your details</h2>
+                        <ul>
+                            <li>
+                                <span class="label">Username</span>
+                                <span class="value">@Model.UserName</span>
+                            </li>
+                            <li>
+                                <span class="label">Email</span>
+                                <span class="value">@Model.UserEmail</span>
+                            </li>
+                            @if (!string.IsNullOrWhiteSpace(Model.UserFullName))
+                            {
+                                <li>
+                                    <span class="label">Full name</span>
+                                    <span class="value">@Model.UserFullName</span>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.UserAddress))
+                            {
+                                <li>
+                                    <span class="label">Address</span>
+                                    <span class="value">@Model.UserAddress</span>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.UserPhoneNumber))
+                            {
+                                <li>
+                                    <span class="label">Phone</span>
+                                    <span class="value">@Model.UserPhoneNumber</span>
+                                </li>
+                            }
+                        </ul>
+
+                        <p class="profile-hint">
+                            Changes here only affect your profile information. Password updates are handled in the security settings.
+                        </p>
+                    </aside>
+
+                    <!-- Right form -->
+                    <section class="profile-form-section">
+                        <h2>Edit profile</h2>
+
+                        <form asp-action="UserProfile" asp-controller="Accounts" method="post" class="profile-form">
+                            @Html.AntiForgeryToken()
+
+                            <!-- Hidden keys to ensure correct update -->
+                            <input type="hidden" asp-for="UserId" />
+                            <input type="hidden" asp-for="UserPassword" />
+
+                            <div class="profile-input-group">
+                                <label asp-for="UserName" class="input-label"></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+                                            <path d="M7 7a4 4 0 1 0 10 0 4 4 0 0 0-10 0" />
+                                            <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="UserName" class="profile-input" />
+                                </div>
+                                <span asp-validation-for="UserName" class="field-validation-error"></span>
+                            </div>
+
+                            <div class="profile-input-group">
+                                <label asp-for="UserEmail" class="input-label"></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2z" />
+                                            <polyline points="22,6 12,13 2,6" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="UserEmail" class="profile-input" />
+                                </div>
+                                <span asp-validation-for="UserEmail" class="field-validation-error"></span>
+                            </div>
+
+                            <div class="profile-input-group">
+                                <label asp-for="UserFullName" class="input-label"></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="7" r="4" />
+                                            <path d="M5.5 21a7.5 7.5 0 0 1 13 0" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="UserFullName" class="profile-input" placeholder="Your full name" />
+                                </div>
+                                <span asp-validation-for="UserFullName" class="field-validation-error"></span>
+                            </div>
+
+                            <div class="profile-input-group">
+                                <label asp-for="UserAddress" class="input-label"></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="UserAddress" class="profile-input" placeholder="Shipping / billing address" />
+                                </div>
+                                <span asp-validation-for="UserAddress" class="field-validation-error"></span>
+                            </div>
+
+                            <div class="profile-input-group">
+                                <label asp-for="UserPhoneNumber" class="input-label"></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 16.92V21a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 3.18 2 2 0 0 1 4 1h4.09a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.91 9.91a16 16 0 0 0 6 6l2.27-2.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="UserPhoneNumber" class="profile-input" placeholder="+1 555 000 0000" />
+                                </div>
+                                <span asp-validation-for="UserPhoneNumber" class="field-validation-error"></span>
+                            </div>
+
+                            <button type="submit" class="btn-save-profile">
+                                <span class="btn-text">Save changes</span>
+                            </button>
+                        </form>
+                    </section>
+                </div>
+            </section>
+        </main>
+
+        <footer class="profile-footer">
+            <p>&copy; 2025 E-Commerce. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Core JS (needed for jQuery validation) -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (!navbar) return;
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — E-Commerce</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body>
+    <div class="admin-page">
+        <div class="admin-wrapper">
+            <header class="admin-header">
+                <div>
+                    <h1>Admin panel</h1>
+                    <p>Manage products and categories for your store.</p>
+                </div>
+                <div class="admin-actions">
+                    <a asp-controller="Home" asp-action="Index" class="btn-admin-ghost">Back to store</a>
+                </div>
+            </header>
+
+            <section class="admin-card">
+                <h2 style="margin-bottom: var(--space-md); font-size: var(--font-lg);">Management</h2>
+                <div class="admin-actions">
+                    <a asp-action="Products" class="btn-admin-primary">
+                        Products
+                    </a>
+                    <a asp-action="Categories" class="btn-admin-ghost">
+                        Categories
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
+

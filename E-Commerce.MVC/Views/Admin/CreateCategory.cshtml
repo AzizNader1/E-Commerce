@@ -1,0 +1,72 @@
+@model E_Commerce.MVC.DTOs.CategoryDTOs.CreateCategoryDto
+
+@{
+    ViewData["Title"] = "Create Category";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Create Category</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body>
+    <div class="admin-page">
+        <div class="admin-wrapper">
+            <header class="admin-header">
+                <div>
+                    <h1>Create category</h1>
+                    <p>Define a new category for grouping products.</p>
+                </div>
+                <div class="admin-actions">
+                    <a asp-action="Categories" class="btn-admin-ghost">Back to categories</a>
+                </div>
+            </header>
+
+            <section class="admin-card">
+                @if (ViewBag.ErrorMessage is string error)
+                {
+                    <div class="admin-alert admin-alert-error">@error</div>
+                }
+
+                <form asp-action="CreateCategory" method="post" class="admin-form">
+                    @Html.AntiForgeryToken()
+
+                    <div class="admin-field field-full">
+                        <label asp-for="CategoryName"></label>
+                        <select asp-for="CategoryName">
+                            <option value="">Select category name</option>
+                            @foreach (var value in Enum.GetValues(typeof(E_Commerce.MVC.Models.CategoriesCollections)))
+                            {
+                                <option value="@value">@value</option>
+                            }
+                        </select>
+                        <span asp-validation-for="CategoryName" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="admin-field field-full">
+                        <label asp-for="CategoryDescription"></label>
+                        <textarea asp-for="CategoryDescription"></textarea>
+                        <span asp-validation-for="CategoryDescription" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="admin-form-actions field-full">
+                        <button type="submit" class="btn-admin-primary">Save category</button>
+                        <a asp-action="Categories" class="btn-admin-ghost">Cancel</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
+

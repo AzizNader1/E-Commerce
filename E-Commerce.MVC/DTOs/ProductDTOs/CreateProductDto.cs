@@ -2,6 +2,9 @@
 
 namespace E_Commerce.MVC.DTOs.ProductDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for creating a new product in an e-commerce application. It contains properties to hold the name of the product (ProductName), a description of the product (ProductDescription), the price of the product (ProductPrice), the stock quantity of the product (ProductStockQuantity), and the category ID to which the product belongs (CategoryId). The ProductName, ProductPrice, ProductStockQuantity, and CategoryId properties are marked as required, meaning that they must be provided when creating a new product. The ProductDescription property has a string length constraint, allowing it to be between 10 and 500 characters if provided. This DTO is used to transfer product data from the client to the server when creating a new product in the system.
+    /// </summary>
     public class CreateProductDto
     {
         [Required(ErrorMessage = "Product Name Is Required Field And You Can Not Left It Empty")]

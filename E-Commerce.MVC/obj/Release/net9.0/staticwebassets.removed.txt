@@ -1,0 +1,3 @@
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt

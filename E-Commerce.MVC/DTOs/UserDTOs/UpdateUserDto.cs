@@ -2,6 +2,9 @@
 
 namespace E_Commerce.MVC.DTOs.UserDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for updating an existing user in an e-commerce application. It contains properties to hold the user's ID (Id), username (UserName), email address (UserEmail), full name (UserFullName), address (UserAddress), and phone number (UserPhoneNumber). The Id property is marked as required, indicating that it must be provided when updating a user. The UserName, UserEmail, UserFullName, and UserAddress properties are also required and have maximum length constraints to ensure that the input data is valid. The UserEmail property is further validated to ensure that it is in a valid email format. The UserPhoneNumber property is optional and does not have any validation constraints. This DTO is used to transfer user data from the client to the server when updating an existing user in the system.
+    /// </summary>
     public class UpdateUserDto
     {
         [Required]

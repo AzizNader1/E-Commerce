@@ -2,6 +2,9 @@
 
 namespace E_Commerce.MVC.DTOs.OrderItemDTOs
 {
+    /// <summary>
+    /// This class represents a data transfer object (DTO) for creating a new order item in an e-commerce application. It contains properties to hold the order ID associated with the order item (OrderId), the product ID of the item being ordered (ProductId), the quantity of the product being ordered (Quantity), and the unit price of the product at the time of the order (UnitPrice). The OrderId and ProductId properties are marked as required and must be valid positive numbers. The Quantity property is also required and must be between 1 and 1000. The UnitPrice property is required and must be a decimal value between 0.01 and 1,000,000. This DTO is used to transfer order item data from the client to the server when creating a new order item in the system.
+    /// </summary>
     public class CreateOrderItemDto
     {
         [Required(ErrorMessage = "Order Id Is Required Field And You Can Not Left It Empty")]

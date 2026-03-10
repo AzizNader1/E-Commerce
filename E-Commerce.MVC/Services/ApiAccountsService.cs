@@ -18,12 +18,13 @@ namespace E_Commerce.MVC.Services
             var client = _httpClientFactory.CreateClient("ECommerceApi");
             var content = new StringContent(JsonSerializer.Serialize(loginUserDto), Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("/api/Accounts/Login", content);
+            var response = await client.PostAsync("Accounts/Login", content);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new LoginResponseDto();
+                var loginResponseDto = JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new LoginResponseDto();
+                return loginResponseDto;
             }
 
             return new LoginResponseDto { IsAuthenticated = false, ErrorMessage = "Invalid login attempt. API returned error." };
@@ -34,12 +35,13 @@ namespace E_Commerce.MVC.Services
             var client = _httpClientFactory.CreateClient("ECommerceApi");
             var content = new StringContent(JsonSerializer.Serialize(registerUserDto), Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("/api/Accounts/Register", content);
+            var response = await client.PostAsync("Accounts/Register", content);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new LoginResponseDto();
+                var loginResponseDto = JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new LoginResponseDto();
+                return loginResponseDto;
             }
 
             return new LoginResponseDto { IsAuthenticated = false, ErrorMessage = "Registration failed. API returned error." };

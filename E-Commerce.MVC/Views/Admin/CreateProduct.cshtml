@@ -1,0 +1,91 @@
+@model E_Commerce.MVC.DTOs.ProductDTOs.CreateProductDto
+
+@{
+    ViewData["Title"] = "Create Product";
+    Layout = null;
+    var categories = ViewBag.Categories as IEnumerable<E_Commerce.MVC.DTOs.CategoryDTOs.CategoryDto> ?? Enumerable.Empty<E_Commerce.MVC.DTOs.CategoryDTOs.CategoryDto>();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Create Product</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body>
+    <div class="admin-page">
+        <div class="admin-wrapper">
+            <header class="admin-header">
+                <div>
+                    <h1>Create product</h1>
+                    <p>Add a new product to your catalog.</p>
+                </div>
+                <div class="admin-actions">
+                    <a asp-action="Products" class="btn-admin-ghost">Back to products</a>
+                </div>
+            </header>
+
+            <section class="admin-card">
+                @if (ViewBag.ErrorMessage is string error)
+                {
+                    <div class="admin-alert admin-alert-error">@error</div>
+                }
+
+                <form asp-action="CreateProduct" method="post" class="admin-form">
+                    @Html.AntiForgeryToken()
+
+                    <div class="admin-field field-full">
+                        <label asp-for="ProductName"></label>
+                        <input asp-for="ProductName" />
+                        <span asp-validation-for="ProductName" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="admin-field">
+                        <label asp-for="ProductPrice"></label>
+                        <input asp-for="ProductPrice" />
+                        <span asp-validation-for="ProductPrice" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="admin-field">
+                        <label asp-for="ProductStockQuantity"></label>
+                        <input asp-for="ProductStockQuantity" />
+                        <span asp-validation-for="ProductStockQuantity" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="admin-field field-full">
+                        <label asp-for="ProductDescription"></label>
+                        <textarea asp-for="ProductDescription"></textarea>
+                        <span asp-validation-for="ProductDescription" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="admin-field field-full">
+                        <label asp-for="CategoryId">Category</label>
+                        <select asp-for="CategoryId">
+                            <option value="">Select category</option>
+                            @foreach (var c in categories)
+                            {
+                                <option value="@c.CategoryId">@c.CategoryName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="CategoryId" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="admin-form-actions field-full">
+                        <button type="submit" class="btn-admin-primary">Save product</button>
+                        <a asp-action="Products" class="btn-admin-ghost">Cancel</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
+

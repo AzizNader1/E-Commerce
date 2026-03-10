@@ -1,4 +1,4 @@
-﻿using E_Commerce.MVC.DTOs.ProductDTOs;
+using E_Commerce.MVC.DTOs.ProductDTOs;
 
 namespace E_Commerce.MVC.Services
 {
@@ -6,5 +6,10 @@ namespace E_Commerce.MVC.Services
     {
         Task<List<ProductDto>> GetAllProductsAsync();
         Task<ProductDto?> GetProductByIdAsync(int id);
+
+        // Admin operations
+        Task<ProductDto?> CreateProductAsync(CreateProductDto dto);
+        Task<ProductDto?> UpdateProductAsync(UpdateProductDto dto);
+        Task<bool> DeleteProductAsync(int id);
     }
 }

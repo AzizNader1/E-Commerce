@@ -1,0 +1,96 @@
+@model IEnumerable<E_Commerce.MVC.DTOs.ProductDTOs.ProductDto>
+
+@{
+    ViewData["Title"] = "Manage Products";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Products</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body>
+    <div class="admin-page">
+        <div class="admin-wrapper">
+            <header class="admin-header">
+                <div>
+                    <h1>Products</h1>
+                    <p>View, create, update and delete products.</p>
+                </div>
+                <div class="admin-actions">
+                    <a asp-action="CreateProduct" class="btn-admin-primary">Add product</a>
+                    <a asp-action="Index" class="btn-admin-ghost">Admin home</a>
+                </div>
+            </header>
+
+            <section class="admin-card">
+                @if (TempData["SuccessMessage"] is string success)
+                {
+                    <div class="admin-alert admin-alert-success">@success</div>
+                }
+                @if (TempData["ErrorMessage"] is string error)
+                {
+                    <div class="admin-alert admin-alert-error">@error</div>
+                }
+
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var p in Model)
+                                {
+                                    <tr>
+                                        <td>@p.ProductId</td>
+                                        <td>@p.ProductName</td>
+                                        <td>@p.CategoryName</td>
+                                        <td class="admin-badge-price">$@p.ProductPrice.ToString("0.00")</td>
+                                        <td>@p.ProductStockQuantity</td>
+                                        <td>
+                                            <div style="display:flex; gap:6px;">
+                                                <a asp-action="EditProduct" asp-route-id="@p.ProductId" class="btn-admin-ghost" style="padding:4px 10px; font-size:0.75rem;">Edit</a>
+                                                <form asp-action="DeleteProduct" asp-route-id="@p.ProductId" method="post" style="display:inline;">
+                                                    <button type="submit" class="btn-admin-ghost" style="padding:4px 10px; font-size:0.75rem; border-color:rgba(239,68,68,0.4); color:#f87171;">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6">No products found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
+
