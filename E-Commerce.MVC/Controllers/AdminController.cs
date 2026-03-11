@@ -25,6 +25,10 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
             return View();
         }
 
@@ -33,6 +37,10 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Products()
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
             var products = await _productsService.GetAllProductsAsync();
             return View(products);
         }
@@ -40,6 +48,10 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateProduct()
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
             ViewBag.Categories = await _categoriesService.GetAllCategoriesAsync();
             return View(new CreateProductDto());
         }
@@ -48,6 +60,10 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProduct(CreateProductDto dto, IFormFile? productImage)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
             if (!ModelState.IsValid)
             {
                 ViewBag.Categories = await _categoriesService.GetAllCategoriesAsync();
@@ -69,6 +85,11 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> EditProduct(int id)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var product = await _productsService.GetProductByIdAsync(id);
             if (product == null)
                 return NotFound();
@@ -93,6 +114,11 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(UpdateProductDto dto, IFormFile? productImage)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Categories = await _categoriesService.GetAllCategoriesAsync();
@@ -118,6 +144,11 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProduct(int id)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var ok = await _productsService.DeleteProductAsync(id);
             TempData[ok ? "SuccessMessage" : "ErrorMessage"] =
                 ok ? "Product deleted successfully." : "Failed to delete product.";
@@ -130,6 +161,11 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Categories()
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var categories = await _categoriesService.GetAllCategoriesAsync();
             return View(categories);
         }
@@ -137,6 +173,11 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public IActionResult CreateCategory()
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             return View(new CreateCategoryDto());
         }
 
@@ -144,6 +185,11 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CreateCategoryDto dto)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             if (!ModelState.IsValid)
                 return View(dto);
 
@@ -161,6 +207,11 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> EditCategory(int id)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var category = await _categoriesService.GetCategoryByIdAsync(id);
             if (category == null)
                 return NotFound();
@@ -172,6 +223,11 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditCategory(CategoryDto dto)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             if (!ModelState.IsValid)
                 return View(dto);
 
@@ -190,6 +246,11 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCategory(int id)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var ok = await _categoriesService.DeleteCategoryAsync(id);
             TempData[ok ? "SuccessMessage" : "ErrorMessage"] =
                 ok ? "Category deleted successfully." : "Failed to delete category.";
@@ -202,6 +263,11 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Users()
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var users = await _usersService.GetAllUsersAsync();
             return View(users);
         }
@@ -209,6 +275,11 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> EditUser(int id)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var user = await _usersService.GetUserByIdAsync(id);
             if (user == null)
                 return NotFound();
@@ -222,6 +293,11 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(UserDto dto)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             if (!ModelState.IsValid)
                 return View(dto);
 
@@ -251,6 +327,11 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return Unauthorized("this page that you want to access is authorized only to admins");
+            }
+
             var ok = await _usersService.DeleteUserAsync(id);
             TempData[ok ? "SuccessMessage" : "ErrorMessage"] =
                 ok ? "User deleted successfully." : "Failed to delete user.";

@@ -23,6 +23,9 @@ namespace E_Commerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("UserRole") == null || HttpContext.Session.GetString("UserRole") != "Customer")
+                return Unauthorized("You have no authorization to access this page, get your authorization first and get back again");
+
             var userName = HttpContext.Session.GetString("UserName");
 
             // Get user to get userId
@@ -53,6 +56,9 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveItem(int cartItemId)
         {
+            if (HttpContext.Session.GetString("UserRole") == null || HttpContext.Session.GetString("UserRole") != "Customer")
+                return Unauthorized("You have no authorization to access this page, get your authorization first and get back again");
+
             var result = await _apiCartsService.DeleteCartItemAsync(cartItemId);
 
             if (result)
@@ -71,6 +77,8 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ClearCart()
         {
+            if (HttpContext.Session.GetString("UserRole") == null || HttpContext.Session.GetString("UserRole") != "Customer")
+                return Unauthorized("You have no authorization to access this page, get your authorization first and get back again");
 
             var cart = await _apiCartsService.GetCartByUserNameAsync(HttpContext.Session.GetString("UserName")!);
             if (cart != null)

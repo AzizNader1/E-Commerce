@@ -63,14 +63,7 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\account\login.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\account\signup.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\account\user-profile.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\admin\admin.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\product\product-details.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\design-system.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\home.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\site.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\favicon.ico
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\js\site.js
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
@@ -126,4 +119,11 @@ P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery\dist\jquery.js
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery\dist\jquery.min.js
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery\dist\jquery.min.map
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery\LICENSE.txt
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\account\login.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\design-system.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\account\user-profile.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\admin\admin.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\product\product-details.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\home.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\site.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\cart\cart.css
