@@ -17,8 +17,78 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="~/css/design-system.css" />
-    <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/css/shared/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin/admin.css" />
+    <style>
+        .image-upload-container {
+            border: 2px dashed var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--duration) ease;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+            .image-upload-container:hover {
+                border-color: var(--border-focus);
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .image-upload-container.has-image {
+                border-style: solid;
+                border-color: var(--success-light);
+            }
+
+        .image-upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+            opacity: 0.6;
+        }
+
+        .image-upload-text {
+            color: var(--text-muted);
+            font-size: var(--font-sm);
+        }
+
+        .image-upload-hint {
+            color: var(--text-ghost);
+            font-size: var(--font-xs);
+            margin-top: var(--space-xs);
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: var(--radius-md);
+            margin-top: var(--space-sm);
+            display: none;
+        }
+
+            .image-preview.visible {
+                display: block;
+            }
+
+        .file-input {
+            display: none;
+        }
+
+        .remove-image-btn {
+            margin-top: var(--space-sm);
+            padding: 6px 12px;
+            font-size: var(--font-xs);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--duration) ease;
+        }
+
+            .remove-image-btn:hover {
+                background: rgba(239, 68, 68, 0.2);
+            }
+    </style>
 </head>
 <body>
     <div class="admin-page">
@@ -39,7 +109,7 @@
                     <div class="admin-alert admin-alert-error">@error</div>
                 }
 
-                <form asp-action="CreateProduct" method="post" class="admin-form">
+                <form asp-action="CreateProduct" method="post" enctype="multipart/form-data" class="admin-form">
                     @Html.AntiForgeryToken()
 
                     <div class="admin-field field-full">
@@ -50,13 +120,13 @@
 
                     <div class="admin-field">
                         <label asp-for="ProductPrice"></label>
-                        <input asp-for="ProductPrice" />
+                        <input asp-for="ProductPrice" type="number" step="0.01" />
                         <span asp-validation-for="ProductPrice" class="field-validation-error"></span>
                     </div>
 
                     <div class="admin-field">
                         <label asp-for="ProductStockQuantity"></label>
-                        <input asp-for="ProductStockQuantity" />
+                        <input asp-for="ProductStockQuantity" type="number" />
                         <span asp-validation-for="ProductStockQuantity" class="field-validation-error"></span>
                     </div>
 
@@ -78,6 +148,18 @@
                         <span asp-validation-for="CategoryId" class="field-validation-error"></span>
                     </div>
 
+                    <div class="admin-field field-full">
+                        <label>Product Image</label>
+                        <div class="image-upload-container" id="imageUploadContainer" onclick="document.getElementById('productImageInput').click()">
+                            <div class="image-upload-icon">📷</div>
+                            <div class="image-upload-text">Click to upload product image</div>
+                            <div class="image-upload-hint">Supported formats: JPEG, JPG, PNG, WEBP (Max 5MB)</div>
+                            <img id="imagePreview" class="image-preview" alt="Preview" />
+                        </div>
+                        <input type="file" id="productImageInput" name="productImage" class="file-input" accept="image/jpeg,image/jpg,image/png,image/webp" onchange="handleImageSelect(this)" />
+                        <button type="button" id="removeImageBtn" class="remove-image-btn" onclick="removeImage()" style="display: none;">Remove Image</button>
+                    </div>
+
                     <div class="admin-form-actions field-full">
                         <button type="submit" class="btn-admin-primary">Save product</button>
                         <a asp-action="Products" class="btn-admin-ghost">Cancel</a>
@@ -86,6 +168,55 @@
             </section>
         </div>
     </div>
+
+    <script>
+        function handleImageSelect(input) {
+            const file = input.files[0];
+            const container = document.getElementById('imageUploadContainer');
+            const preview = document.getElementById('imagePreview');
+            const removeBtn = document.getElementById('removeImageBtn');
+
+            if (file) {
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Invalid file type. Please upload a JPEG, JPG, PNG, or WEBP image.');
+                    input.value = '';
+                    return;
+                }
+
+                // Validate file size (5MB max)
+                const maxSize = 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    alert('File is too large. Maximum size is 5MB.');
+                    input.value = '';
+                    return;
+                }
+
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.add('visible');
+                    container.classList.add('has-image');
+                    removeBtn.style.display = 'inline-block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            const input = document.getElementById('productImageInput');
+            const container = document.getElementById('imageUploadContainer');
+            const preview = document.getElementById('imagePreview');
+            const removeBtn = document.getElementById('removeImageBtn');
+
+            input.value = '';
+            preview.src = '';
+            preview.classList.remove('visible');
+            container.classList.remove('has-image');
+            removeBtn.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
-

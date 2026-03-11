@@ -14,8 +14,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="~/css/design-system.css" />
-    <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/css/shared/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin/admin.css" />
 </head>
 <body>
     <div class="admin-page">
@@ -23,7 +23,7 @@
             <header class="admin-header">
                 <div>
                     <h1>Admin panel</h1>
-                    <p>Manage products and categories for your store.</p>
+                    <p>Manage products, categories and users for your store.</p>
                 </div>
                 <div class="admin-actions">
                     <a asp-controller="Home" asp-action="Index" class="btn-admin-ghost">Back to store</a>
@@ -39,10 +39,12 @@
                     <a asp-action="Categories" class="btn-admin-ghost">
                         Categories
                     </a>
+                    <a asp-action="Users" class="btn-admin-ghost">
+                        Users
+                    </a>
                 </div>
             </section>
         </div>
     </div>
 </body>
 </html>
-

@@ -74,7 +74,7 @@ namespace E_Commerce.API.Controllers
         /// Returns an IActionResult containing the created product details if the creation is successful.
         /// </returns>
         [HttpPost]
-        public IActionResult AddProduct([FromBody] CreateProductDto createProductDto, IFormFile productImage)
+        public IActionResult AddProduct([FromForm] CreateProductDto createProductDto, IFormFile productImage)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace E_Commerce.API.Controllers
         /// Returns an IActionResult containing the updated product details if the update is successful.
         /// </returns>
         [HttpPut]
-        public IActionResult UpdateProduct([FromBody] UpdateProductDto updateProductDto, IFormFile productImage)
+        public IActionResult UpdateProduct([FromForm] UpdateProductDto updateProductDto, IFormFile productImage)
         {
             try
             {

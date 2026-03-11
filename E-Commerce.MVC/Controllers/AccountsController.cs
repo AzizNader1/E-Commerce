@@ -8,11 +8,15 @@ namespace E_Commerce.MVC.Controllers
     {
         private readonly IApiAccountsService _apiAccountsService;
         private readonly IApiUsersService _apiUsersService;
+        private readonly IApiCartsService _apiCartsService;
 
-        public AccountsController(IApiAccountsService apiAccountsService, IApiUsersService apiUsersService)
+        public AccountsController(IApiAccountsService apiAccountsService,
+            IApiUsersService apiUsersService,
+            IApiCartsService apiCartsService)
         {
             _apiAccountsService = apiAccountsService;
             _apiUsersService = apiUsersService;
+            _apiCartsService = apiCartsService;
         }
 
         [HttpGet]
@@ -31,12 +35,7 @@ namespace E_Commerce.MVC.Controllers
 
             if (response.IsAuthenticated)
             {
-                HttpContext.Session.SetString("UserName", response.UserName ?? "");
-                TempData["UserName"] = response.UserName;
-                HttpContext.Session.SetString("UserRole", response.UserRoles.ToString() ?? "");
-                TempData["UserRole"] = response.UserRoles.ToString();
-                HttpContext.Session.SetString("UserToken", response.UserToken ?? "");
-                TempData["UserToken"] = response.UserToken;
+                AddUserCreadentials(response);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -73,9 +72,7 @@ namespace E_Commerce.MVC.Controllers
             var userDto = new UserDto();
             userDto = await _apiUsersService.GetUserByNameAsync(userName);
 
-            TempData["UserName"] = HttpContext.Session.GetString("UserName");
-            TempData["UserRole"] = HttpContext.Session.GetString("UserRole");
-            TempData["UserToken"] = HttpContext.Session.GetString("UserToken");
+            GetUserCredentials();
             return View(userDto);
         }
 
@@ -101,12 +98,30 @@ namespace E_Commerce.MVC.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> UserCart()
+        {
+            // get user cart items from API and pass them to the view
+            var userName = HttpContext.Session.GetString("UserName");
+            var userCarts = await _apiCartsService.GetCartByUserNameAsync(userName!);
+
+            return View(userCarts);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserCart(int productId)
+        {
+            // Handle cart updates (remove items) and call the API to update the cart
+            // For now, just redirect back to the cart page
+            TempData["SuccessMessage"] = "Cart updated successfully!";
+            return RedirectToAction("UserCart");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             RemoveUserCreadentials();
             return RedirectToAction("Index", "Home");
         }
-
         private void AddUserCreadentials(LoginResponseDto loginResponseDto)
         {
             HttpContext.Session.SetString("UserName", loginResponseDto.UserName ?? "");
@@ -124,6 +139,12 @@ namespace E_Commerce.MVC.Controllers
             TempData["UserRole"] = "";
             HttpContext.Session.SetString("UserToken", "");
             TempData["UserToken"] = "";
+        }
+        private void GetUserCredentials()
+        {
+            TempData["UserName"] = HttpContext.Session.GetString("UserName");
+            TempData["UserRole"] = HttpContext.Session.GetString("UserRole");
+            TempData["UserToken"] = HttpContext.Session.GetString("UserToken");
         }
     }
 }

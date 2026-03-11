@@ -1,5 +1,6 @@
 using E_Commerce.MVC.DTOs.CategoryDTOs;
 using E_Commerce.MVC.DTOs.ProductDTOs;
+using E_Commerce.MVC.DTOs.UserDTOs;
 using E_Commerce.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,16 @@ namespace E_Commerce.MVC.Controllers
     {
         private readonly IApiProductsService _productsService;
         private readonly IApiCategoriesService _categoriesService;
+        private readonly IApiUsersService _usersService;
 
-        public AdminController(IApiProductsService productsService, IApiCategoriesService categoriesService)
+        public AdminController(
+            IApiProductsService productsService,
+            IApiCategoriesService categoriesService,
+            IApiUsersService usersService)
         {
             _productsService = productsService;
             _categoriesService = categoriesService;
+            _usersService = usersService;
         }
 
         [HttpGet]
@@ -40,7 +46,7 @@ namespace E_Commerce.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProduct(CreateProductDto dto)
+        public async Task<IActionResult> CreateProduct(CreateProductDto dto, IFormFile? productImage)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +54,7 @@ namespace E_Commerce.MVC.Controllers
                 return View(dto);
             }
 
-            var created = await _productsService.CreateProductAsync(dto);
+            var created = await _productsService.CreateProductAsync(dto, productImage);
             if (created == null)
             {
                 ViewBag.ErrorMessage = "Failed to create product. Please try again.";
@@ -74,16 +80,18 @@ namespace E_Commerce.MVC.Controllers
                 ProductDescription = product.ProductDescription,
                 ProductPrice = product.ProductPrice,
                 ProductStockQuantity = product.ProductStockQuantity,
-                CategoryId = product.CategoryId
+                CategoryId = product.CategoryId,
+                UpdateImage = false
             };
 
             ViewBag.Categories = await _categoriesService.GetAllCategoriesAsync();
+            ViewBag.HasExistingImage = product.IsProductHasImage;
             return View(updateDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct(UpdateProductDto dto)
+        public async Task<IActionResult> EditProduct(UpdateProductDto dto, IFormFile? productImage)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +99,10 @@ namespace E_Commerce.MVC.Controllers
                 return View(dto);
             }
 
-            var updated = await _productsService.UpdateProductAsync(dto);
+            // If a new image is uploaded, set the flag
+            dto.UpdateImage = productImage != null;
+
+            var updated = await _productsService.UpdateProductAsync(dto, productImage);
             if (updated == null)
             {
                 ViewBag.ErrorMessage = "Failed to update product. Please try again.";
@@ -185,6 +196,66 @@ namespace E_Commerce.MVC.Controllers
 
             return RedirectToAction(nameof(Categories));
         }
+
+        // ───── Users ─────
+
+        [HttpGet]
+        public async Task<IActionResult> Users()
+        {
+            var users = await _usersService.GetAllUsersAsync();
+            return View(users);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(int id)
+        {
+            var user = await _usersService.GetUserByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            // Clear the password field for security
+            user.UserPassword = string.Empty;
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(UserDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            // If password is empty, get the existing user to preserve the password
+            if (string.IsNullOrEmpty(dto.UserPassword))
+            {
+                var existingUser = await _usersService.GetUserByIdAsync(dto.UserId);
+                if (existingUser != null)
+                {
+                    dto.UserPassword = existingUser.UserPassword;
+                }
+            }
+
+            var result = await _usersService.UpdateUserAsync(dto);
+            if (!result.IsAuthenticated)
+            {
+                ViewBag.ErrorMessage = result.ErrorMessage ?? "Failed to update user. Please try again.";
+                dto.UserPassword = string.Empty; // Clear password for security
+                return View(dto);
+            }
+
+            TempData["SuccessMessage"] = "User updated successfully.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var ok = await _usersService.DeleteUserAsync(id);
+            TempData[ok ? "SuccessMessage" : "ErrorMessage"] =
+                ok ? "User deleted successfully." : "Failed to delete user.";
+
+            return RedirectToAction(nameof(Users));
+        }
     }
 }
-

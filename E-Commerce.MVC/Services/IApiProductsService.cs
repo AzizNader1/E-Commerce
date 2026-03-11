@@ -8,8 +8,8 @@ namespace E_Commerce.MVC.Services
         Task<ProductDto?> GetProductByIdAsync(int id);
 
         // Admin operations
-        Task<ProductDto?> CreateProductAsync(CreateProductDto dto);
-        Task<ProductDto?> UpdateProductAsync(UpdateProductDto dto);
+        Task<ProductDto?> CreateProductAsync(CreateProductDto dto, IFormFile? productImage = null);
+        Task<ProductDto?> UpdateProductAsync(UpdateProductDto dto, IFormFile? productImage = null);
         Task<bool> DeleteProductAsync(int id);
     }
 }

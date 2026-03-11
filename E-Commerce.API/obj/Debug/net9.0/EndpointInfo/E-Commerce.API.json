@@ -923,7 +923,67 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProductDto"
+                "required": [
+                  "CategoryId",
+                  "ProductName",
+                  "ProductPrice",
+                  "ProductStockQuantity"
+                ],
+                "type": "object",
+                "properties": {
+                  "ProductName": {
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "type": "string"
+                  },
+                  "ProductDescription": {
+                    "maxLength": 500,
+                    "minLength": 10,
+                    "type": "string"
+                  },
+                  "ProductPrice": {
+                    "maximum": 1000000,
+                    "minimum": 0.01,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ProductStockQuantity": {
+                    "maximum": 100000,
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CategoryId": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "productImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "ProductName": {
+                  "style": "form"
+                },
+                "ProductDescription": {
+                  "style": "form"
+                },
+                "ProductPrice": {
+                  "style": "form"
+                },
+                "ProductStockQuantity": {
+                  "style": "form"
+                },
+                "CategoryId": {
+                  "style": "form"
+                },
+                "productImage": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -944,7 +1004,79 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProductDto"
+                "required": [
+                  "CategoryId",
+                  "ProductId",
+                  "ProductName",
+                  "ProductPrice",
+                  "ProductStockQuantity"
+                ],
+                "type": "object",
+                "properties": {
+                  "ProductId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ProductName": {
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "type": "string"
+                  },
+                  "ProductDescription": {
+                    "maxLength": 500,
+                    "minLength": 10,
+                    "type": "string"
+                  },
+                  "ProductPrice": {
+                    "maximum": 1000000,
+                    "minimum": 0.01,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ProductStockQuantity": {
+                    "maximum": 100000,
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CategoryId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "UpdateImage": {
+                    "type": "boolean"
+                  },
+                  "productImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "ProductId": {
+                  "style": "form"
+                },
+                "ProductName": {
+                  "style": "form"
+                },
+                "ProductDescription": {
+                  "style": "form"
+                },
+                "ProductPrice": {
+                  "style": "form"
+                },
+                "ProductStockQuantity": {
+                  "style": "form"
+                },
+                "CategoryId": {
+                  "style": "form"
+                },
+                "UpdateImage": {
+                  "style": "form"
+                },
+                "productImage": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1366,47 +1498,6 @@
         },
         "additionalProperties": false
       },
-      "CreateProductDto": {
-        "required": [
-          "categoryId",
-          "productName",
-          "productPrice",
-          "productStockQuantity"
-        ],
-        "type": "object",
-        "properties": {
-          "productName": {
-            "maxLength": 100,
-            "minLength": 3,
-            "type": "string"
-          },
-          "productDescription": {
-            "maxLength": 500,
-            "minLength": 10,
-            "type": "string",
-            "nullable": true
-          },
-          "productPrice": {
-            "maximum": 1000000,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "productStockQuantity": {
-            "maximum": 100000,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "categoryId": {
-            "maximum": 2147483647,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "LoginUserDto": {
         "required": [
           "userEmail",
@@ -1540,53 +1631,6 @@
           "userPhoneNumber": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateProductDto": {
-        "required": [
-          "categoryId",
-          "productId",
-          "productName",
-          "productPrice",
-          "productStockQuantity"
-        ],
-        "type": "object",
-        "properties": {
-          "productId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "productName": {
-            "maxLength": 100,
-            "minLength": 3,
-            "type": "string"
-          },
-          "productDescription": {
-            "maxLength": 500,
-            "minLength": 10,
-            "type": "string",
-            "nullable": true
-          },
-          "productPrice": {
-            "maximum": 1000000,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "productStockQuantity": {
-            "maximum": 100000,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "categoryId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "updateImage": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false

@@ -13,6 +13,35 @@ namespace E_Commerce.MVC.Services
             _httpClientFactory = httpClientFactory;
         }
 
+        private static JsonSerializerOptions CreateJsonOptions()
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            options.Converters.Add(new JsonStringEnumConverter());
+            return options;
+        }
+
+        public async Task<List<UserDto>> GetAllUsersAsync()
+        {
+            var client = _httpClientFactory.CreateClient("ECommerceApi");
+            var response = await client.GetAsync("Users/GetAllUsers");
+            if (!response.IsSuccessStatusCode)
+                return new List<UserDto>();
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<UserDto>>(content, CreateJsonOptions()) ?? new List<UserDto>();
+        }
+
+        public async Task<UserDto?> GetUserByIdAsync(int id)
+        {
+            var client = _httpClientFactory.CreateClient("ECommerceApi");
+            var response = await client.GetAsync($"Users/GetUserById/{id}");
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<UserDto>(content, CreateJsonOptions());
+        }
+
         public async Task<UserDto> GetUserByNameAsync(string userName)
         {
             var client = _httpClientFactory.CreateClient("ECommerceApi");
@@ -28,7 +57,6 @@ namespace E_Commerce.MVC.Services
                 return wantedUser!;
             }
             return new UserDto();
-
         }
 
         public async Task<LoginResponseDto> UpdateUserAsync(UserDto userDto)
@@ -48,6 +76,13 @@ namespace E_Commerce.MVC.Services
                 };
             }
             return new LoginResponseDto { IsAuthenticated = false, ErrorMessage = "Profile update failed. API returned error." };
+        }
+
+        public async Task<bool> DeleteUserAsync(int id)
+        {
+            var client = _httpClientFactory.CreateClient("ECommerceApi");
+            var response = await client.DeleteAsync($"Users/DeleteUser/{id}");
+            return response.IsSuccessStatusCode;
         }
     }
 }
