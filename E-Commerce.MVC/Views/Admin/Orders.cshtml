@@ -1,0 +1,354 @@
+﻿@model List<E_Commerce.MVC.DTOs.OrderDTOs.OrderProductDto>
+
+@{
+    ViewData["Title"] = "Manage Orders";
+    Layout = null;
+    var currentFilter = ViewBag.CurrentFilter as string ?? "all";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Orders</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/shared/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin/admin.css" />
+    <link rel="stylesheet" href="~/css/order/orders.css" />
+    <style>
+        .admin-orders-container {
+            padding: var(--space-xl);
+        }
+
+        .filter-tabs-admin {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .filter-tab-admin {
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: var(--font-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--duration) ease;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            color: var(--text-soft);
+            text-decoration: none;
+        }
+
+        .filter-tab-admin:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-white);
+        }
+
+        .filter-tab-admin.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: var(--text-white);
+        }
+
+        .order-card-admin {
+            background: var(--bg-glass);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-glass);
+            margin-bottom: var(--space-lg);
+            overflow: hidden;
+        }
+
+        .order-card-admin-header {
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .order-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .order-id-admin {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .order-customer {
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+        }
+
+        .order-date-admin {
+            font-size: var(--font-xs);
+            color: var(--text-ghost);
+        }
+
+        .order-card-admin-body {
+            padding: var(--space-lg);
+        }
+
+        .order-items-admin {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .order-item-admin {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-md);
+        }
+
+        .order-item-admin-img {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+        }
+
+        .order-item-admin-info {
+            font-size: var(--font-xs);
+        }
+
+        .order-item-admin-name {
+            color: var(--text-white);
+            font-weight: 500;
+        }
+
+        .order-item-admin-qty {
+            color: var(--text-muted);
+        }
+
+        .order-card-admin-footer {
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .order-total-admin {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .order-total-admin span {
+            color: var(--primary-light);
+        }
+
+        .order-actions-admin {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn-admin-action {
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--duration) ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+        }
+
+        .btn-admin-accept {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-admin-accept:hover {
+            background: rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-admin-reject {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-admin-reject:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-admin-view {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-soft);
+            border: 1px solid var(--border-glass);
+        }
+
+        .btn-admin-view:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-white);
+        }
+
+        .empty-orders-admin {
+            text-align: center;
+            padding: var(--space-2xl);
+            color: var(--text-muted);
+        }
+
+        .pending-badge {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: var(--font-xs);
+            margin-left: var(--space-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-page">
+        <div class="admin-wrapper">
+            <header class="admin-header">
+                <div>
+                    <h1>Orders Management</h1>
+                    <p>View, accept, or reject customer orders.</p>
+                </div>
+                <div class="admin-actions">
+                    <a asp-action="Index" class="btn-admin-ghost">Admin home</a>
+                </div>
+            </header>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs-admin">
+                <a asp-action="Orders" asp-route-filter="all" class="filter-tab-admin @(currentFilter == "all" ? "active" : "")">All Orders</a>
+                <a asp-action="Orders" asp-route-filter="pending" class="filter-tab-admin @(currentFilter == "pending" ? "active" : "")">
+                    Pending
+                    @if (Model?.Count(o => o.Status == OrderStatus.Pending) > 0)
+                    {
+                        <span class="pending-badge">@Model.Count(o => o.Status == OrderStatus.Pending)</span>
+                    }
+                </a>
+                <a asp-action="Orders" asp-route-filter="shipped" class="filter-tab-admin @(currentFilter == "shipped" ? "active" : "")">Shipped</a>
+                <a asp-action="Orders" asp-route-filter="delivered" class="filter-tab-admin @(currentFilter == "delivered" ? "active" : "")">Delivered</a>
+                <a asp-action="Orders" asp-route-filter="cancelled" class="filter-tab-admin @(currentFilter == "cancelled" ? "active" : "")">Cancelled</a>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="admin-alert admin-alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="admin-alert admin-alert-error">@TempData["ErrorMessage"]</div>
+            }
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="admin-card">
+                    <div class="empty-orders-admin">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                        <h3>No orders found</h3>
+                        <p>There are no orders matching this filter.</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                foreach (var order in Model.OrderByDescending(o => o.OrderDate))
+                {
+                    <div class="order-card-admin">
+                        <div class="order-card-admin-header">
+                            <div class="order-meta">
+                                <div class="order-id-admin">Order #@order.OrderId</div>
+                                <div class="order-customer">Customer ID: @order.UserId</div>
+                            </div>
+                            <span class="order-status @order.Status">@order.Status.ToString()</span>
+                        </div>
+
+                        <div class="order-card-admin-body">
+                            <div class="order-items-admin">
+                                @foreach (var item in order.OrderItems.Take(4))
+                                {
+                                    var imgSrc = item.ProductImage != null && item.ProductImage.Length > 0
+                                    ? $"data:{item.ProductImageContentType};base64,{Convert.ToBase64String(item.ProductImage)}"
+                                    : "https://placehold.co/400x300/1e1b4b/a855f7?text=No+Image";
+
+                                    <div class="order-item-admin">
+                                    <img src="@imgSrc" alt="@item.ProductName" class="order-item-admin-img" />
+                                    <div class="order-item-admin-info">
+                                        <div class="order-item-admin-name">@item.ProductName</div>
+                                        <div class="order-item-admin-qty">× @item.Quantity</div>
+                                    </div>
+                                    </div>
+                                }
+                                @if (order.OrderItems.Count > 4)
+                                {
+                                    <div class="order-item-admin" style="color: var(--text-muted);">
+                                        +@(order.OrderItems.Count - 4) more
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="order-card-admin-footer">
+                            <div class="order-total-admin">Total: <span>$@order.TotalAmount.ToString("0.00")</span></div>
+                            <div class="order-actions-admin">
+                                @if (order.Status == OrderStatus.Pending)
+                                {
+                                    <form asp-action="AcceptOrder" asp-route-id="@order.OrderId" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-admin-action btn-admin-accept">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                            Accept
+                                        </button>
+                                    </form>
+                                    <form asp-action="RejectOrder" asp-route-id="@order.OrderId" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-admin-action btn-admin-reject" onclick="return confirm('Are you sure you want to reject this order?');">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                            Reject
+                                        </button>
+                                    </form>
+                                }
+                                else if (order.Status == OrderStatus.Shipped)
+                                {
+                                    <form asp-action="MarkDelivered" asp-route-id="@order.OrderId" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-admin-action btn-admin-accept">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                            Mark Delivered
+                                        </button>
+                                    </form>
+                                }
+                                <a asp-action="OrderDetails" asp-route-id="@order.OrderId" class="btn-admin-action btn-admin-view">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</body>
+</html>

@@ -3,6 +3,7 @@ wwwroot\css\account\signup.css
 wwwroot\css\account\user-profile.css
 wwwroot\css\admin\admin.css
 wwwroot\css\cart\cart.css
+wwwroot\css\order\orders.css
 wwwroot\css\product\product-details.css
 wwwroot\css\shared\design-system.css
 wwwroot\css\shared\home.css
@@ -127,3 +128,4 @@ P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\product\product-details.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\home.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\site.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\cart\cart.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\order\orders.css

@@ -18,6 +18,6 @@ namespace E_Commerce.MVC.DTOs.OrderDTOs
 
         public decimal TotalAmount { get; set; }
 
-        public List<OrderWithProductsItemDto> OrderItems { get; set; } = [];
+        public List<OrderItemDto> OrderItems { get; set; } = [];
     }
 }

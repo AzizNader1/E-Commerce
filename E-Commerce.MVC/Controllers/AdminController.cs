@@ -1,6 +1,7 @@
 using E_Commerce.MVC.DTOs.CategoryDTOs;
 using E_Commerce.MVC.DTOs.ProductDTOs;
 using E_Commerce.MVC.DTOs.UserDTOs;
+using E_Commerce.MVC.Models;
 using E_Commerce.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +12,18 @@ namespace E_Commerce.MVC.Controllers
         private readonly IApiProductsService _productsService;
         private readonly IApiCategoriesService _categoriesService;
         private readonly IApiUsersService _usersService;
+        private readonly IApiOrdersService _apiOrdersService;
 
         public AdminController(
             IApiProductsService productsService,
             IApiCategoriesService categoriesService,
-            IApiUsersService usersService)
+            IApiUsersService usersService,
+            IApiOrdersService apiOrdersService)
         {
             _productsService = productsService;
             _categoriesService = categoriesService;
             _usersService = usersService;
+            _apiOrdersService = apiOrdersService;
         }
 
         [HttpGet]
@@ -337,6 +341,94 @@ namespace E_Commerce.MVC.Controllers
                 ok ? "User deleted successfully." : "Failed to delete user.";
 
             return RedirectToAction(nameof(Users));
+        }
+
+        // ───── Orders ─────
+
+        [HttpGet]
+        public async Task<IActionResult> Orders(string filter = "all")
+        {
+            var orders = await _apiOrdersService.GetAllOrdersAsync();
+
+            // Apply filter
+            orders = filter.ToLower() switch
+            {
+                "pending" => orders.Where(o => o.Status == OrderStatus.Pending).ToList(),
+                "shipped" => orders.Where(o => o.Status == OrderStatus.Shipped).ToList(),
+                "delivered" => orders.Where(o => o.Status == OrderStatus.Delivered).ToList(),
+                "cancelled" => orders.Where(o => o.Status == OrderStatus.Cancelled).ToList(),
+                _ => orders
+            };
+
+            ViewBag.CurrentFilter = filter;
+            return View(orders);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderDetails(int id)
+        {
+            var order = await _apiOrdersService.GetOrderByIdAsync(id);
+            if (order == null)
+            {
+                TempData["ErrorMessage"] = "Order not found.";
+                return RedirectToAction(nameof(Orders));
+            }
+
+            return View(order);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AcceptOrder(int id)
+        {
+            var success = await _apiOrdersService.UpdateOrderStatusAsync(id, OrderStatus.Shipped);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = $"Order #{id} has been accepted and marked as shipped.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to accept order. Please try again.";
+            }
+
+            return RedirectToAction(nameof(Orders));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectOrder(int id)
+        {
+            var success = await _apiOrdersService.UpdateOrderStatusAsync(id, OrderStatus.Cancelled);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = $"Order #{id} has been rejected and cancelled.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to reject order. Please try again.";
+            }
+
+            return RedirectToAction(nameof(Orders));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkDelivered(int id)
+        {
+            var success = await _apiOrdersService.UpdateOrderStatusAsync(id, OrderStatus.Delivered);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = $"Order #{id} has been marked as delivered.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to update order status. Please try again.";
+            }
+
+            return RedirectToAction(nameof(Orders));
         }
     }
 }

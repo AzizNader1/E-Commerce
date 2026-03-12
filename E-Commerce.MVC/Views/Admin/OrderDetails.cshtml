@@ -1,0 +1,390 @@
+﻿@model E_Commerce.MVC.DTOs.OrderDTOs.OrderProductDto
+
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Order #@Model.OrderId</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/shared/design-system.css" />
+    <link rel="stylesheet" href="~/css/admin/admin.css" />
+    <link rel="stylesheet" href="~/css/order/orders.css" />
+    <style>
+        .order-details-page {
+            padding: var(--space-xl);
+        }
+
+        .order-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+            gap: var(--space-lg);
+        }
+
+        .order-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+            .order-title h1 {
+                font-size: var(--font-2xl);
+                font-weight: 800;
+                margin: 0;
+            }
+
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-xl);
+        }
+
+        .order-section {
+            background: var(--bg-glass);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-glass);
+            overflow: hidden;
+        }
+
+        .order-section-header {
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border-glass);
+            font-weight: 600;
+            font-size: var(--font-base);
+        }
+
+        .order-section-body {
+            padding: var(--space-lg);
+        }
+
+        .order-item-detail {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+            .order-item-detail:last-child {
+                border-bottom: none;
+            }
+
+        .order-item-detail-img {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius-lg);
+            object-fit: cover;
+        }
+
+        .order-item-detail-info {
+            flex: 1;
+        }
+
+        .order-item-detail-name {
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 4px;
+        }
+
+        .order-item-detail-meta {
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+        }
+
+        .order-item-detail-price {
+            text-align: right;
+        }
+
+        .order-item-detail-unit {
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+        }
+
+        .order-item-detail-total {
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+            .info-row:last-child {
+                border-bottom: none;
+            }
+
+        .info-label {
+            color: var(--text-muted);
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--text-white);
+        }
+
+        .order-summary-admin {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 2px solid var(--border-glass);
+        }
+
+        .summary-row-admin {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+        }
+
+            .summary-row-admin.total {
+                font-size: var(--font-lg);
+                font-weight: 700;
+                margin-top: var(--space-md);
+                padding-top: var(--space-md);
+                border-top: 1px solid var(--border-glass);
+            }
+
+                .summary-row-admin.total .info-value {
+                    color: var(--primary-light);
+                }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-top: var(--space-xl);
+        }
+
+        .btn-admin-full {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--duration) ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+        }
+
+            .btn-admin-full.btn-accept {
+                background: rgba(16, 185, 129, 0.15);
+                color: #10b981;
+                border: 1px solid rgba(16, 185, 129, 0.3);
+            }
+
+                .btn-admin-full.btn-accept:hover {
+                    background: rgba(16, 185, 129, 0.25);
+                }
+
+            .btn-admin-full.btn-reject {
+                background: rgba(239, 68, 68, 0.15);
+                color: #ef4444;
+                border: 1px solid rgba(239, 68, 68, 0.3);
+            }
+
+                .btn-admin-full.btn-reject:hover {
+                    background: rgba(239, 68, 68, 0.25);
+                }
+
+            .btn-admin-full.btn-deliver {
+                background: rgba(59, 130, 246, 0.15);
+                color: #3b82f6;
+                border: 1px solid rgba(59, 130, 246, 0.3);
+            }
+
+                .btn-admin-full.btn-deliver:hover {
+                    background: rgba(59, 130, 246, 0.25);
+                }
+
+            .btn-admin-full.btn-ghost {
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--text-soft);
+                border: 1px solid var(--border-glass);
+            }
+
+                .btn-admin-full.btn-ghost:hover {
+                    background: rgba(255, 255, 255, 0.12);
+                }
+
+        .status-large {
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @@media (max-width: 992px) {
+            .order-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-page">
+        <div class="admin-wrapper">
+            <div class="order-details-page">
+                <div class="order-details-header">
+                    <div class="order-title">
+                        <a asp-action="Orders" class="btn-admin-ghost" style="padding: 8px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        </a>
+                        <h1>Order #@Model.OrderId</h1>
+                        <span class="status-large @Model.Status">@Model.Status.ToString()</span>
+                    </div>
+                </div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="admin-alert admin-alert-success">@TempData["SuccessMessage"]</div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="admin-alert admin-alert-error">@TempData["ErrorMessage"]</div>
+                }
+
+                <div class="order-details-grid">
+                    <!-- Main Content -->
+                    <div>
+                        <!-- Order Items -->
+                        <div class="order-section">
+                            <div class="order-section-header">Order Items (@Model.OrderItems.Count)</div>
+                            <div class="order-section-body">
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    var imgSrc = item.ProductImage != null && item.ProductImage.Length > 0
+                                    ? $"data:{item.ProductImageContentType};base64,{Convert.ToBase64String(item.ProductImage)}"
+                                    : "https://placehold.co/400x300/1e1b4b/a855f7?text=No+Image";
+
+                                    <div class="order-item-detail">
+                                    <img src="@imgSrc" alt="@item.ProductName" class="order-item-detail-img" />
+                                    <div class="order-item-detail-info">
+                                        <div class="order-item-detail-name">@item.ProductName</div>
+                                        <div class="order-item-detail-meta">Product ID: @item.ProductId</div>
+                                    </div>
+                                    <div class="order-item-detail-price">
+                                        <div class="order-item-detail-unit">$@item.UnitPrice.ToString("0.00") × @item.Quantity</div>
+                                        <div class="order-item-detail-total">$@item.TotalPrice.ToString("0.00")</div>
+                                    </div>
+                                    </div>
+                                }
+
+                                <div class="order-summary-admin">
+                                    <div class="summary-row-admin">
+                                        <span class="info-label">Subtotal</span>
+                                        <span class="info-value">$@Model.TotalAmount.ToString("0.00")</span>
+                                    </div>
+                                    <div class="summary-row-admin">
+                                        <span class="info-label">Shipping</span>
+                                        <span class="info-value">Free</span>
+                                    </div>
+                                    <div class="summary-row-admin">
+                                        <span class="info-label">Tax</span>
+                                        <span class="info-value">$0.00</span>
+                                    </div>
+                                    <div class="summary-row-admin total">
+                                        <span class="info-label">Total</span>
+                                        <span class="info-value">$@Model.TotalAmount.ToString("0.00")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div>
+                        <!-- Order Info -->
+                        <div class="order-section">
+                            <div class="order-section-header">Order Information</div>
+                            <div class="order-section-body">
+                                <div class="info-row">
+                                    <span class="info-label">Order ID</span>
+                                    <span class="info-value">#@Model.OrderId</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">User ID</span>
+                                    <span class="info-value">@Model.UserId</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Order Date</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Status</span>
+                                    <span class="info-value">@Model.Status.ToString()</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Total</span>
+                                    <span class="info-value">$@Model.TotalAmount.ToString("0.00")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="order-section" style="margin-top: var(--space-lg);">
+                            <div class="order-section-header">Actions</div>
+                            <div class="order-section-body">
+                                <div class="action-buttons">
+                                    @if (Model.Status == OrderStatus.Pending)
+                                    {
+                                        <form asp-action="AcceptOrder" asp-route-id="@Model.OrderId" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-admin-full btn-accept">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                Accept Order
+                                            </button>
+                                        </form>
+                                        <form asp-action="RejectOrder" asp-route-id="@Model.OrderId" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-admin-full btn-reject" onclick="return confirm('Are you sure you want to reject this order?');">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                Reject Order
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (Model.Status == OrderStatus.Shipped)
+                                    {
+                                        <form asp-action="MarkDelivered" asp-route-id="@Model.OrderId" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-admin-full btn-deliver">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                                Mark as Delivered
+                                            </button>
+                                        </form>
+                                    }
+
+                                    <a asp-action="Orders" class="btn-admin-full btn-ghost">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                        Back to Orders
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

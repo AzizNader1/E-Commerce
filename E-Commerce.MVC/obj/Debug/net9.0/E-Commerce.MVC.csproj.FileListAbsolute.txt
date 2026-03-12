@@ -231,3 +231,4 @@ P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Debug\net9.0\compressed\5lxisqnugb-
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Debug\net9.0\compressed\kv5si25mtz-{0}-jv7tdgfbk0-jv7tdgfbk0.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Debug\net9.0\compressed\4gmu5dnsj4-{0}-c2tiyv64ts-c2tiyv64ts.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Debug\net9.0\compressed\qwyf4j4f7j-{0}-rg5q1h6rw1-rg5q1h6rw1.gz
+P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Debug\net9.0\compressed\1bd79coms9-{0}-1mmanphrmp-1mmanphrmp.gz

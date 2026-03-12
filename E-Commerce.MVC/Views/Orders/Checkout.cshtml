@@ -1,0 +1,431 @@
+﻿@model E_Commerce.MVC.DTOs.OrderDTOs.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = null;
+    var userName = (string?)TempData["UserName"];
+    var user = Model.User;
+    var cart = Model.Cart;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — E-Commerce</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/shared/design-system.css" />
+    <link rel="stylesheet" href="~/css/shared/home.css" />
+
+    <style>
+        .checkout-page {
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        .checkout-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+            .checkout-header h1 {
+                font-size: var(--font-3xl);
+                font-weight: 700;
+                color: var(--text-white);
+                margin-bottom: var(--space-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-md);
+            }
+
+                .checkout-header h1 svg {
+                    color: var(--primary-light);
+                }
+
+            .checkout-header p {
+                color: var(--text-muted);
+                font-size: var(--font-lg);
+            }
+
+        .checkout-section {
+            background: var(--bg-glass);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-glass);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+            .checkout-section h2 {
+                font-size: var(--font-xl);
+                font-weight: 600;
+                color: var(--text-white);
+                margin-bottom: var(--space-lg);
+                display: flex;
+                align-items: center;
+                gap: var(--space-sm);
+            }
+
+                .checkout-section h2 svg {
+                    width: 20px;
+                    height: 20px;
+                    color: var(--primary-light);
+                }
+
+        .checkout-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+            .checkout-item:last-child {
+                border-bottom: none;
+            }
+
+        .checkout-item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .checkout-item-info {
+            flex: 1;
+        }
+
+        .checkout-item-name {
+            font-size: var(--font-base);
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 4px;
+        }
+
+        .checkout-item-description {
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .checkout-item-quantity {
+            font-size: var(--font-sm);
+            color: var(--text-soft);
+            margin-top: 4px;
+        }
+
+        .checkout-item-price {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        .checkout-summary {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            font-size: var(--font-base);
+        }
+
+            .summary-row.total {
+                font-size: var(--font-xl);
+                font-weight: 700;
+                color: var(--text-white);
+                border-top: 1px solid var(--border-glass);
+                margin-top: var(--space-sm);
+                padding-top: var(--space-md);
+            }
+
+        .summary-label {
+            color: var(--text-muted);
+        }
+
+        .summary-value {
+            color: var(--text-white);
+        }
+
+        .summary-row.total .summary-value {
+            color: var(--primary-light);
+        }
+
+        .checkout-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: space-between;
+            margin-top: var(--space-2xl);
+        }
+
+        .btn-checkout {
+            padding: 14px 28px;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--duration) ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-checkout-primary {
+            background: var(--gradient-primary);
+            color: var(--text-white);
+            flex: 1;
+            justify-content: center;
+        }
+
+            .btn-checkout-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+            }
+
+        .btn-checkout-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-soft);
+            border: 1px solid var(--border-glass);
+        }
+
+            .btn-checkout-secondary:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--text-white);
+            }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        .info-field {
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-glass);
+        }
+
+        .info-label {
+            font-size: var(--font-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: var(--font-base);
+            color: var(--text-white);
+            font-weight: 500;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: var(--space-3xl);
+            color: var(--text-muted);
+        }
+
+            .empty-cart svg {
+                width: 64px;
+                height: 64px;
+                margin-bottom: var(--space-lg);
+                opacity: 0.5;
+            }
+
+            .empty-cart h3 {
+                font-size: var(--font-xl);
+                color: var(--text-soft);
+                margin-bottom: var(--space-sm);
+            }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: var(--radius-md);
+            color: #10b981;
+            font-size: var(--font-sm);
+        }
+
+            .security-note svg {
+                width: 16px;
+                height: 16px;
+            }
+    </style>
+</head>
+<body>
+    <div class="landing-page checkout-page">
+        <!-- Background Orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <!-- NAVBAR -->
+        <nav class="landing-nav scrolled" id="navbar">
+            <a class="nav-logo" asp-controller="Home" asp-action="Index">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                </div>
+                <span class="logo-text">E-<span>Commerce</span></span>
+            </a>
+
+            <div class="nav-actions">
+                @if (userName != "")
+                {
+                    <a asp-controller="Carts" asp-action="Index" class="nav-btn nav-btn-ghost">Cart</a>
+                    <a asp-controller="Orders" asp-action="Index" class="nav-btn nav-btn-ghost">My Orders</a>
+                    <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
+                }
+                else
+                {
+                    <a asp-controller="Accounts" asp-action="Login" class="nav-btn nav-btn-ghost">Sign In</a>
+                    <a asp-controller="Accounts" asp-action="Register" class="nav-btn nav-btn-primary">Get Started</a>
+                }
+            </div>
+        </nav>
+
+        <div class="checkout-container">
+            <div class="checkout-header">
+                <h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    Checkout
+                </h1>
+                <p>Review your order before placing it</p>
+            </div>
+
+            @if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
+            {
+                <div class="checkout-section">
+                    <div class="empty-cart">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        <h3>Your cart is empty</h3>
+                        <p>Add some products to your cart before checking out.</p>
+                        <a asp-controller="Home" asp-action="Index" class="btn-checkout btn-checkout-primary" style="display: inline-flex; margin-top: var(--space-lg);">
+                            Browse Products
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Order Items -->
+                <div class="checkout-section">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                        Order Items (@cart.TotalItems)
+                    </h2>
+
+                    @foreach (var item in cart.CartItems)
+                    {
+                        <div class="checkout-item">
+                            <img src="@item.ImageSrc" alt="@item.ProductName" class="checkout-item-image" />
+                            <div class="checkout-item-info">
+                                <div class="checkout-item-name">@item.ProductName</div>
+                                <div class="checkout-item-description">@item.ProductDescription</div>
+                                <div class="checkout-item-quantity">Qty: @item.Quantity × $@item.ProductPrice.ToString("0.00")</div>
+                            </div>
+                            <div class="checkout-item-price">$@item.TotalPrice.ToString("0.00")</div>
+                        </div>
+                    }
+
+                    <div class="checkout-summary">
+                        <div class="summary-row">
+                            <span class="summary-label">Subtotal</span>
+                            <span class="summary-value">$@cart.TotalPrice.ToString("0.00")</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Shipping</span>
+                            <span class="summary-value">Free</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Tax</span>
+                            <span class="summary-value">$0.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span class="summary-label">Total</span>
+                            <span class="summary-value">$@cart.TotalPrice.ToString("0.00")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Info -->
+                <div class="checkout-section">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Customer Information
+                    </h2>
+
+                    <div class="user-info">
+                        <div class="info-field">
+                            <div class="info-label">Name</div>
+                            <div class="info-value">@user?.UserName</div>
+                        </div>
+                        <div class="info-field">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">@user?.UserEmail</div>
+                        </div>
+                        <div class="info-field">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">@(user?.UserPhoneNumber ?? "Not provided")</div>
+                        </div>
+                        <div class="info-field">
+                            <div class="info-label">Address</div>
+                            <div class="info-value">@(user?.UserAddress ?? "Not provided")</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <form asp-action="PlaceOrder" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="checkout-actions">
+                        <a asp-controller="Carts" asp-action="Index" class="btn-checkout btn-checkout-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            Back to Cart
+                        </a>
+                        <button type="submit" class="btn-checkout btn-checkout-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            Place Order
+                        </button>
+                    </div>
+                </form>
+
+                <div class="security-note">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Your order information is secure</span>
+                </div>
+            }
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="landing-footer">
+            <p>&copy; 2025 E-Commerce. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

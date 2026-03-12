@@ -1,8 +1,10 @@
-﻿@model E_Commerce.MVC.DTOs.OrderDTOs.OrderDto
+﻿@model E_Commerce.MVC.DTOs.OrderDTOs.OrderProductDto
 
 @{
     ViewData["Title"] = "Order Details";
     Layout = null;
+    var userName = (string?)TempData["UserName"];
+    var userRole = (string?)TempData["UserRole"];
 }
 
 <!DOCTYPE html>
@@ -10,377 +12,550 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin — Order #@Model.OrderId</title>
+    <title>Order #@Model?.OrderId — E-Commerce</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="~/css/design-system.css" />
-    <link rel="stylesheet" href="~/css/admin.css" />
-    <link rel="stylesheet" href="~/css/orders.css" />
+    <link rel="stylesheet" href="~/css/shared/design-system.css" />
+    <link rel="stylesheet" href="~/css/shared/home.css" />
+    <link rel="stylesheet" href="~/css/order.orders.css" />
+
     <style>
         .order-details-page {
-            padding: var(--space-xl);
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        .order-details-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
         }
 
         .order-details-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
-            gap: var(--space-lg);
-        }
-
-        .order-title {
-            display: flex;
             align-items: center;
-            gap: var(--space-md);
+            margin-bottom: var(--space-2xl);
         }
 
-            .order-title h1 {
-                font-size: var(--font-2xl);
-                font-weight: 800;
-                margin: 0;
+            .order-details-header h1 {
+                font-size: var(--font-3xl);
+                font-weight: 700;
+                color: var(--text-white);
+                display: flex;
+                align-items: center;
+                gap: var(--space-md);
             }
 
-        .order-details-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: var(--space-xl);
-        }
+                .order-details-header h1 svg {
+                    width: 32px;
+                    height: 32px;
+                    color: var(--primary-light);
+                }
 
-        .order-section {
-            background: var(--bg-glass);
-            border-radius: var(--radius-xl);
+        .back-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-glass);
-            overflow: hidden;
+            border-radius: var(--radius-md);
+            color: var(--text-white);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            transition: all var(--duration) ease;
         }
 
-        .order-section-header {
+            .back-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+        .order-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .order-info-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+            .order-info-card .label {
+                font-size: var(--font-sm);
+                color: var(--text-muted);
+                margin-bottom: var(--space-sm);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .order-info-card .value {
+                font-size: var(--font-xl);
+                font-weight: 700;
+                color: var(--text-white);
+            }
+
+                .order-info-card .value.status-pending {
+                    color: #fbbf24;
+                }
+
+                .order-info-card .value.status-shipped {
+                    color: #3b82f6;
+                }
+
+                .order-info-card .value.status-delivered {
+                    color: #10b981;
+                }
+
+                .order-info-card .value.status-cancelled {
+                    color: #ef4444;
+                }
+
+        .order-items-section {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .section-header {
             padding: var(--space-lg);
             background: rgba(255, 255, 255, 0.03);
             border-bottom: 1px solid var(--border-glass);
-            font-weight: 600;
-            font-size: var(--font-base);
         }
 
-        .order-section-body {
-            padding: var(--space-lg);
-        }
+            .section-header h2 {
+                font-size: var(--font-lg);
+                font-weight: 600;
+                color: var(--text-white);
+                display: flex;
+                align-items: center;
+                gap: var(--space-sm);
+            }
 
-        .order-item-detail {
+                .section-header h2 svg {
+                    width: 20px;
+                    height: 20px;
+                    color: var(--primary-light);
+                }
+
+        .order-item-row {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
-            padding: var(--space-md) 0;
+            gap: var(--space-lg);
+            padding: var(--space-lg);
             border-bottom: 1px solid var(--border-glass);
         }
 
-            .order-item-detail:last-child {
+            .order-item-row:last-child {
                 border-bottom: none;
             }
 
-        .order-item-detail-img {
-            width: 70px;
-            height: 70px;
-            border-radius: var(--radius-lg);
+        .order-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
             object-fit: cover;
+            background: rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
         }
 
-        .order-item-detail-info {
+        .order-item-details {
             flex: 1;
         }
 
-        .order-item-detail-name {
+        .order-item-name {
+            font-size: var(--font-base);
             font-weight: 600;
             color: var(--text-white);
             margin-bottom: 4px;
         }
 
-        .order-item-detail-meta {
+        .order-item-description {
             font-size: var(--font-sm);
             color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
         }
 
-        .order-item-detail-price {
-            text-align: right;
-        }
-
-        .order-item-detail-unit {
+        .order-item-price {
             font-size: var(--font-sm);
-            color: var(--text-muted);
+            color: var(--text-soft);
         }
 
-        .order-item-detail-total {
-            font-weight: 700;
-            color: var(--primary-light);
-        }
-
-        .info-row {
+        .order-item-quantity {
             display: flex;
-            justify-content: space-between;
-            padding: var(--space-sm) 0;
-            border-bottom: 1px solid var(--border-glass);
+            align-items: center;
+            gap: var(--space-md);
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
         }
 
-            .info-row:last-child {
-                border-bottom: none;
+            .order-item-quantity .qty-label {
+                font-size: var(--font-sm);
+                color: var(--text-muted);
             }
 
-        .info-label {
-            color: var(--text-muted);
-        }
-
-        .info-value {
-            font-weight: 500;
-            color: var(--text-white);
-        }
-
-        .order-summary-admin {
-            margin-top: var(--space-lg);
-            padding-top: var(--space-lg);
-            border-top: 2px solid var(--border-glass);
-        }
-
-        .summary-row-admin {
-            display: flex;
-            justify-content: space-between;
-            padding: var(--space-sm) 0;
-        }
-
-            .summary-row-admin.total {
+            .order-item-quantity .qty-value {
                 font-size: var(--font-lg);
-                font-weight: 700;
-                margin-top: var(--space-md);
-                padding-top: var(--space-md);
-                border-top: 1px solid var(--border-glass);
+                font-weight: 600;
+                color: var(--text-white);
             }
 
-                .summary-row-admin.total .info-value {
-                    color: var(--primary-light);
-                }
-
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
-            margin-top: var(--space-xl);
+        .order-item-total {
+            text-align: right;
+            min-width: 100px;
         }
 
-        .btn-admin-full {
-            width: 100%;
-            padding: 12px 20px;
-            border-radius: var(--radius-lg);
-            font-size: var(--font-sm);
+            .order-item-total .label {
+                font-size: var(--font-xs);
+                color: var(--text-muted);
+            }
+
+            .order-item-total .price {
+                font-size: var(--font-xl);
+                font-weight: 700;
+                color: var(--primary-light);
+            }
+
+        .order-total-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+            .order-total-section .label {
+                font-size: var(--font-lg);
+                color: var(--text-soft);
+            }
+
+            .order-total-section .amount {
+                font-size: var(--font-3xl);
+                font-weight: 800;
+                color: var(--text-white);
+            }
+
+        .order-actions {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            font-size: var(--font-base);
             font-weight: 600;
             cursor: pointer;
             transition: all var(--duration) ease;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: var(--space-sm);
             border: none;
         }
 
-            .btn-admin-full.btn-accept {
-                background: rgba(16, 185, 129, 0.15);
-                color: #10b981;
-                border: 1px solid rgba(16, 185, 129, 0.3);
+            .btn-action svg {
+                width: 18px;
+                height: 18px;
             }
 
-                .btn-admin-full.btn-accept:hover {
-                    background: rgba(16, 185, 129, 0.25);
-                }
-
-            .btn-admin-full.btn-reject {
-                background: rgba(239, 68, 68, 0.15);
-                color: #ef4444;
-                border: 1px solid rgba(239, 68, 68, 0.3);
-            }
-
-                .btn-admin-full.btn-reject:hover {
-                    background: rgba(239, 68, 68, 0.25);
-                }
-
-            .btn-admin-full.btn-deliver {
-                background: rgba(59, 130, 246, 0.15);
-                color: #3b82f6;
-                border: 1px solid rgba(59, 130, 246, 0.3);
-            }
-
-                .btn-admin-full.btn-deliver:hover {
-                    background: rgba(59, 130, 246, 0.25);
-                }
-
-            .btn-admin-full.btn-ghost {
-                background: rgba(255, 255, 255, 0.06);
-                color: var(--text-soft);
-                border: 1px solid var(--border-glass);
-            }
-
-                .btn-admin-full.btn-ghost:hover {
-                    background: rgba(255, 255, 255, 0.12);
-                }
-
-        .status-large {
-            padding: 8px 20px;
-            border-radius: 999px;
-            font-size: var(--font-sm);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--text-white);
         }
 
-        @@media (max-width: 992px) {
-            .order-details-grid {
-                grid-template-columns: 1fr;
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+            }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+            .btn-danger:hover {
+                background: rgba(239, 68, 68, 0.2);
+            }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-white);
+        }
+
+            .btn-ghost:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+        .status-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-xl);
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-lg);
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+            .timeline-step::before {
+                content: '';
+                position: absolute;
+                top: 20px;
+                left: calc(50% + 20px);
+                right: -20px;
+                height: 2px;
+                background: var(--border-glass);
+            }
+
+            .timeline-step:last-child::before {
+                display: none;
+            }
+
+            .timeline-step .step-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: var(--font-lg);
+                margin-bottom: var(--space-sm);
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px solid var(--border-glass);
+            }
+
+            .timeline-step.completed .step-icon {
+                background: var(--gradient-primary);
+                border-color: transparent;
+            }
+
+            .timeline-step .step-label {
+                font-size: var(--font-sm);
+                color: var(--text-muted);
+                text-align: center;
+            }
+
+            .timeline-step.completed .step-label {
+                color: var(--text-white);
+                font-weight: 500;
+            }
+
+        @@media (max-width: 768px) {
+            .order-item-row {
+                flex-wrap: wrap;
+            }
+
+            .order-item-image {
+                width: 60px;
+                height: 60px;
+            }
+
+            .order-item-total {
+                margin-top: var(--space-md);
+                width: 100%;
+                text-align: left;
+            }
+
+            .order-details-header {
+                flex-direction: column;
+                gap: var(--space-lg);
+            }
+
+            .status-timeline {
+                flex-wrap: wrap;
+                gap: var(--space-lg);
+            }
+
+            .timeline-step::before {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="admin-page">
-        <div class="admin-wrapper">
-            <div class="order-details-page">
-                <div class="order-details-header">
-                    <div class="order-title">
-                        <a asp-action="Orders" class="btn-admin-ghost" style="padding: 8px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                        </a>
-                        <h1>Order #@Model.OrderId</h1>
-                        <span class="status-large @Model.Status">@Model.Status.ToString()</span>
-                    </div>
+    <div class="landing-page order-details-page">
+        <!-- Background Orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <!-- NAVBAR -->
+        <nav class="landing-nav scrolled" id="navbar">
+            <a class="nav-logo" asp-controller="Home" asp-action="Index">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
                 </div>
+                <span class="logo-text">E-<span>Commerce</span></span>
+            </a>
 
-                @if (TempData["SuccessMessage"] != null)
+            <div class="nav-actions">
+                @if (userName != "")
                 {
-                    <div class="admin-alert admin-alert-success">@TempData["SuccessMessage"]</div>
+                    <a asp-controller="Carts" asp-action="Index" class="nav-btn nav-btn-ghost">Cart</a>
+                    <a asp-controller="Accounts" asp-action="UserProfile" asp-route-userName="@userName" class="nav-btn nav-btn-ghost">My Profile</a>
+                    <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
                 }
-
-                @if (TempData["ErrorMessage"] != null)
+                else
                 {
-                    <div class="admin-alert admin-alert-error">@TempData["ErrorMessage"]</div>
+                    <a asp-controller="Accounts" asp-action="Login" class="nav-btn nav-btn-ghost">Sign In</a>
+                    <a asp-controller="Accounts" asp-action="Register" class="nav-btn nav-btn-primary">Get Started</a>
                 }
+            </div>
+        </nav>
 
-                <div class="order-details-grid">
-                    <!-- Main Content -->
-                    <div>
-                        <!-- Order Items -->
-                        <div class="order-section">
-                            <div class="order-section-header">Order Items (@Model.OrderItems.Count)</div>
-                            <div class="order-section-body">
-                                @foreach (var item in Model.OrderItems)
-                                {
-                                    <div class="order-item-detail">
-                                        <img src="@item.ProductImage" alt="@item.ProductName" class="order-item-detail-img" />
-                                        <div class="order-item-detail-info">
-                                            <div class="order-item-detail-name">@item.ProductName</div>
-                                            <div class="order-item-detail-meta">Product ID: @item.ProductId</div>
-                                        </div>
-                                        <div class="order-item-detail-price">
-                                            <div class="order-item-detail-unit">$@item.UnitPrice.ToString("0.00") × @item.Quantity</div>
-                                            <div class="order-item-detail-total">$@item.TotalPrice.ToString("0.00")</div>
-                                        </div>
-                                    </div>
-                                }
+        <div class="order-details-container">
+            <div class="order-details-header">
+                <h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                    Order #@Model?.OrderId
+                </h1>
+                <a asp-action="Index" class="back-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Back to Orders
+                </a>
+            </div>
 
-                                <div class="order-summary-admin">
-                                    <div class="summary-row-admin">
-                                        <span class="info-label">Subtotal</span>
-                                        <span class="info-value">$@Model.TotalAmount.ToString("0.00")</span>
-                                    </div>
-                                    <div class="summary-row-admin">
-                                        <span class="info-label">Shipping</span>
-                                        <span class="info-value">Free</span>
-                                    </div>
-                                    <div class="summary-row-admin">
-                                        <span class="info-label">Tax</span>
-                                        <span class="info-value">$0.00</span>
-                                    </div>
-                                    <div class="summary-row-admin total">
-                                        <span class="info-label">Total</span>
-                                        <span class="info-value">$@Model.TotalAmount.ToString("0.00")</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: var(--space-md); border-radius: var(--radius-md); margin-bottom: var(--space-lg); color: #10b981;">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
 
-                    <!-- Sidebar -->
-                    <div>
-                        <!-- Order Info -->
-                        <div class="order-section">
-                            <div class="order-section-header">Order Information</div>
-                            <div class="order-section-body">
-                                <div class="info-row">
-                                    <span class="info-label">Order ID</span>
-                                    <span class="info-value">#@Model.OrderId</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">User ID</span>
-                                    <span class="info-value">@Model.UserId</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Order Date</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Status</span>
-                                    <span class="info-value">@Model.Status.ToString()</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Total</span>
-                                    <span class="info-value">$@Model.TotalAmount.ToString("0.00")</span>
-                                </div>
-                            </div>
-                        </div>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-error" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: var(--space-md); border-radius: var(--radius-md); margin-bottom: var(--space-lg); color: #ef4444;">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
 
-                        <!-- Actions -->
-                        <div class="order-section" style="margin-top: var(--space-lg);">
-                            <div class="order-section-header">Actions</div>
-                            <div class="order-section-body">
-                                <div class="action-buttons">
-                                    @if (Model.Status == OrderStatus.Pending)
-                                    {
-                                        <form asp-action="AcceptOrder" asp-route-id="@Model.OrderId" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn-admin-full btn-accept">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                                Accept Order
-                                            </button>
-                                        </form>
-                                        <form asp-action="RejectOrder" asp-route-id="@Model.OrderId" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn-admin-full btn-reject" onclick="return confirm('Are you sure you want to reject this order?');">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                Reject Order
-                                            </button>
-                                        </form>
-                                    }
-                                    else if (Model.Status == OrderStatus.Shipped)
-                                    {
-                                        <form asp-action="MarkDelivered" asp-route-id="@Model.OrderId" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn-admin-full btn-deliver">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                                Mark as Delivered
-                                            </button>
-                                        </form>
-                                    }
-
-                                    <a asp-action="Orders" class="btn-admin-full btn-ghost">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                                        Back to Orders
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Order Info Cards -->
+            <div class="order-info-grid">
+                <div class="order-info-card">
+                    <div class="label">Order Date</div>
+                </div>
+                <div class="order-info-card">
+                    <div class="label">Status</div>
+                    <div class="value status-@Model?.Status">@Model?.Status.ToString()</div>
+                </div>
+                <div class="order-info-card">
+                    <div class="label">Total Items</div>
+                    <div class="value">@Model?.OrderItems.Count()</div>
+                </div>
+                <div class="order-info-card">
+                    <div class="label">Total Amount</div>
+                    <div class="value" style="color: var(--primary-light);">$@Model?.TotalAmount.ToString("0.00")</div>
                 </div>
             </div>
+
+            <!-- Order Items -->
+            <div class="order-items-section">
+                <div class="section-header">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line></svg>
+                        Order Items (@Model?.OrderItems?.Count)
+                    </h2>
+                </div>
+
+                @if (Model?.OrderItems != null)
+                {
+                    foreach (var item in Model.OrderItems)
+                    {
+                        var imgSrc = item.ProductImage != null && item.ProductImage.Length > 0
+                        ? $"data:{item.ProductImageContentType};base64,{Convert.ToBase64String(item.ProductImage)}"
+                        : "https://placehold.co/400x300/1e1b4b/a855f7?text=No+Image";
+                        <div class="order-item-row">
+                            <img src="@imgSrc" alt="@item.ProductName" class="order-item-image" />
+                            <div class="order-item-details">
+                                <div class="order-item-name">@item.ProductName</div>
+                                <div class="order-item-description">@item.ProductDescription</div>
+                                <div class="order-item-price">$@item.UnitPrice.ToString("0.00") each</div>
+                            </div>
+                            <div class="order-item-quantity">
+                                <span class="qty-label">Qty:</span>
+                                <span class="qty-value">@item.Quantity</span>
+                            </div>
+                            <div class="order-item-total">
+                                <div class="label">Total</div>
+                                <div class="price">$@item.TotalPrice.ToString("0.00")</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Order Total -->
+            <div class="order-total-section">
+                <div class="label">Order Total</div>
+                <div class="amount">$@Model?.TotalAmount.ToString("0.00")</div>
+            </div>
+
+            <!-- Status Timeline -->
+            <div class="status-timeline">
+                <div class="timeline-step @((int)Model.Status >= 0 ? "completed" : "")">
+                    <div class="step-icon">📦</div>
+                    <div class="step-label">Placed</div>
+                </div>
+                <div class="timeline-step @((int)Model.Status >= 1 ? "completed" : "")">
+                    <div class="step-icon">🚚</div>
+                    <div class="step-label">Shipped</div>
+                </div>
+                <div class="timeline-step @((int)Model.Status >= 2 ? "completed" : "")">
+                    <div class="step-icon">✅</div>
+                    <div class="step-label">Delivered</div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="order-actions">
+                @if (Model?.Status.ToString() == OrderStatus.Pending.ToString())
+                {
+                    <form asp-action="CancelOrder" asp-route-orderId="@Model.OrderId" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-action btn-danger" onclick="return confirm('Are you sure you want to cancel this order?');">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            Cancel Order
+                        </button>
+                    </form>
+                }
+                <a asp-controller="Home" asp-action="Index" class="btn-action btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                    Continue Shopping
+                </a>
+            </div>
         </div>
+
+        <!-- FOOTER -->
+        <footer class="landing-footer">
+            <p>&copy; 2025 E-Commerce. All rights reserved.</p>
+        </footer>
     </div>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿@model List<E_Commerce.MVC.DTOs.OrderDTOs.OrderDto>
+﻿@model List<E_Commerce.MVC.DTOs.OrderDTOs.OrderProductDto>
 
 @{
     ViewData["Title"] = "My Orders";
@@ -17,10 +17,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="~/css/design-system.css" />
-    <link rel="stylesheet" href="~/css/home.css" />
-    <link rel="stylesheet" href="~/css/orders.css" />
-    <link rel="stylesheet" href="~/css/cart.css" />
+    <link rel="stylesheet" href="~/css/shared/design-system.css" />
+    <link rel="stylesheet" href="~/css/shared/home.css" />
+    <link rel="stylesheet" href="~/css/order/orders.css" />
+    <link rel="stylesheet" href="~/css/cart/cart.css" />
 </head>
 <body>
 
@@ -76,7 +76,7 @@
             </a>
 
             <div class="nav-actions">
-                @if (!string.IsNullOrEmpty(userName))
+                @if (userName != "")
                 {
                     <a asp-controller="Carts" asp-action="Index" class="nav-btn nav-btn-ghost">Cart</a>
                     <a asp-controller="Accounts" asp-action="UserProfile" asp-route-userName="@userName" class="nav-btn nav-btn-ghost">My Profile</a>
@@ -136,8 +136,11 @@
                         <div class="order-items">
                             @foreach (var item in order.OrderItems.Take(3))
                             {
+                                    var imgSrc = item.ProductImage != null && item.ProductImage.Length > 0
+                                    ? $"data:{item.ProductImageContentType};base64,{Convert.ToBase64String(item.ProductImage)}"
+                                    : "https://placehold.co/400x300/1e1b4b/a855f7?text=No+Image";
                                 <div class="order-item">
-                                    <img src="@item.ProductImage" alt="@item.ProductName" class="order-item-image" />
+                                    <img src="@imgSrc" alt="@item.ProductName" class="order-item-image" />
                                     <div class="order-item-info">
                                         <div class="order-item-name">@item.ProductName</div>
                                         <div class="order-item-qty">Qty: @item.Quantity</div>
