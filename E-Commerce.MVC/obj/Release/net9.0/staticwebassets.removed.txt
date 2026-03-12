@@ -1,8 +1,0 @@
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\home.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\user-profile.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\product-details.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\signup.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\site.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\login.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\design-system.css
-P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\admin.css

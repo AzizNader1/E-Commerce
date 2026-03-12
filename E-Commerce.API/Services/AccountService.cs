@@ -54,7 +54,7 @@ namespace E_Commerce.API.Services
 
 
             loginResponseDto.UserName = newUser.UserName;
-            loginResponseDto.UserRoles = [newUser.UserRole.ToString()];
+            loginResponseDto.UserRoles = newUser.UserRole.ToString();
             loginResponseDto.UserToken = GenerateToken(newUser);
             loginResponseDto.IsAuthenticated = true;
 
@@ -74,7 +74,7 @@ namespace E_Commerce.API.Services
                 {
                     loginResponseDto.IsAuthenticated = true;
                     loginResponseDto.UserName = user.UserName!;
-                    loginResponseDto.UserRoles = [user.UserRole.ToString()];
+                    loginResponseDto.UserRoles = user.UserRole.ToString();
                     loginResponseDto.UserToken = GenerateToken(user);
                     return loginResponseDto;
                 }

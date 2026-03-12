@@ -1,0 +1,191 @@
+﻿@model List<E_Commerce.MVC.DTOs.OrderDTOs.OrderDto>
+
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = null;
+    var userName = (string?)TempData["UserName"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Orders — E-Commerce</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/design-system.css" />
+    <link rel="stylesheet" href="~/css/home.css" />
+    <link rel="stylesheet" href="~/css/orders.css" />
+    <link rel="stylesheet" href="~/css/cart.css" />
+</head>
+<body>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer">
+        @if (TempData["SuccessMessage"] is string successMsg)
+        {
+            <div class="toast toast-success" role="alert">
+                <div class="toast-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">Success!</div>
+                    <div class="toast-message">@successMsg</div>
+                </div>
+                <button class="toast-close" onclick="closeToast(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <div class="toast-progress"></div>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] is string errorMsg)
+        {
+            <div class="toast toast-error" role="alert">
+                <div class="toast-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">Error!</div>
+                    <div class="toast-message">@errorMsg</div>
+                </div>
+                <button class="toast-close" onclick="closeToast(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <div class="toast-progress"></div>
+            </div>
+        }
+    </div>
+
+    <div class="landing-page orders-page">
+        <!-- Background Orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <!-- NAVBAR -->
+        <nav class="landing-nav scrolled" id="navbar">
+            <a class="nav-logo" asp-controller="Home" asp-action="Index">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                </div>
+                <span class="logo-text">E-<span>Commerce</span></span>
+            </a>
+
+            <div class="nav-actions">
+                @if (!string.IsNullOrEmpty(userName))
+                {
+                    <a asp-controller="Carts" asp-action="Index" class="nav-btn nav-btn-ghost">Cart</a>
+                    <a asp-controller="Accounts" asp-action="UserProfile" asp-route-userName="@userName" class="nav-btn nav-btn-ghost">My Profile</a>
+                    <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
+                }
+                else
+                {
+                    <a asp-controller="Accounts" asp-action="Login" class="nav-btn nav-btn-ghost">Sign In</a>
+                    <a asp-controller="Accounts" asp-action="Register" class="nav-btn nav-btn-primary">Get Started</a>
+                }
+            </div>
+        </nav>
+
+        <div class="orders-container">
+            <div class="orders-header">
+                <h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                    My Orders
+                </h1>
+                <a asp-controller="Home" asp-action="Index" class="btn-order btn-order-ghost">Continue Shopping</a>
+            </div>
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="empty-orders">
+                    <div class="empty-orders-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                    </div>
+                    <h2>No orders yet</h2>
+                    <p>You haven't placed any orders yet. Start shopping to see your orders here.</p>
+                    <a asp-controller="Home" asp-action="Index" class="btn-order btn-order-primary">
+                        Start Shopping
+                    </a>
+                </div>
+            }
+            else
+            {
+                <!-- Filter Tabs -->
+                <div class="filter-tabs">
+                    <a asp-action="MyOrders" class="filter-tab active">All Orders</a>
+                    <a asp-action="MyOrders" asp-route-filter="pending" class="filter-tab">Pending</a>
+                    <a asp-action="MyOrders" asp-route-filter="shipped" class="filter-tab">Shipped</a>
+                    <a asp-action="MyOrders" asp-route-filter="delivered" class="filter-tab">Delivered</a>
+                    <a asp-action="MyOrders" asp-route-filter="cancelled" class="filter-tab">Cancelled</a>
+                </div>
+
+                foreach (var order in Model.OrderByDescending(o => o.OrderDate))
+                {
+                    <div class="order-card">
+                        <div class="order-card-header">
+                            <div class="order-info">
+                                <div class="order-id">Order #@order.OrderId</div>
+                            </div>
+                            <span class="order-status @order.Status">@order.Status.ToString()</span>
+                        </div>
+
+                        <div class="order-items">
+                            @foreach (var item in order.OrderItems.Take(3))
+                            {
+                                <div class="order-item">
+                                    <img src="@item.ProductImage" alt="@item.ProductName" class="order-item-image" />
+                                    <div class="order-item-info">
+                                        <div class="order-item-name">@item.ProductName</div>
+                                        <div class="order-item-qty">Qty: @item.Quantity</div>
+                                    </div>
+                                    <div class="order-item-total">$@item.TotalPrice.ToString("0.00")</div>
+                                </div>
+                            }
+
+                            @if (order.OrderItems.Count > 3)
+                            {
+                                <div class="order-item" style="color: var(--text-muted); font-style: italic;">
+                                    And @(order.OrderItems.Count - 3) more item(s)...
+                                </div>
+                            }
+                        </div>
+
+                        <div class="order-card-footer">
+                            <div class="order-total">Total: <span>$@order.TotalAmount.ToString("0.00")</span></div>
+                            <div class="order-actions">
+                                <a asp-action="Details" asp-route-id="@order.OrderId" class="btn-order btn-order-ghost">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="landing-footer">
+            <p>&copy; 2025 E-Commerce. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        function closeToast(button) {
+            const toast = button.closest('.toast');
+            toast.classList.add('hiding');
+            setTimeout(() => toast.remove(), 300);
+        }
+
+        document.querySelectorAll('.toast').forEach(toast => {
+            setTimeout(() => {
+                if (toast && !toast.classList.contains('hiding')) {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
