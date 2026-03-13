@@ -1,11 +1,12 @@
-﻿using E_Commerce.MVC.DTOs.CartDTOs;
+﻿using E_Commerce.MVC.DTOs.ProductDTOs;
 using E_Commerce.MVC.DTOs.UserDTOs;
 
 namespace E_Commerce.MVC.DTOs.OrderDTOs
 {
     public class CheckoutViewModel
     {
-        public CartShoppingDto? Cart { get; set; }
+        public ProductDto? Product { get; set; }
         public UserDto? User { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

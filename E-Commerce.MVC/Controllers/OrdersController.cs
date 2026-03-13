@@ -33,16 +33,22 @@ namespace E_Commerce.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Checkout(int orderId)
+        public async Task<IActionResult> Checkout(int productId)
         {
             // Implement the logic to retrieve the cart items for the current user and pass it to the checkout view
-            var orderDetails = await _apiOrdersService.GetOrderByIdAsync(orderId);
-            if (orderDetails == null)
+            // inside this checkout get page the user already see the details of the product then we need to display to him the checkout page that his data and product detials to check first before confirme his order
+            // we need to get user data from his session
+            // we need to get product data by product id
+            var user = await _apiUsersService.GetUserByNameAsync(HttpContext.Session.GetString("UserName")!.ToString());
+            var product = await _apiProductsService.GetProductByIdAsync(productId);
+            var checkoutViewModel = new CheckoutViewModel
             {
-                TempData["ErrorMessage"] = "Order not found.";
-                return RedirectToAction("Index");
-            }
-            return View(orderDetails);
+                User = user,
+                Product = product,
+            };
+
+            return View(checkoutViewModel);
+
         }
 
         [HttpPost]
@@ -53,18 +59,18 @@ namespace E_Commerce.MVC.Controllers
             {
                 OrderDate = DateTime.Now,
                 UserId = checkoutViewModel.User!.UserId,
-                TotalAmount = checkoutViewModel.Cart!.TotalPrice
+                TotalAmount = checkoutViewModel.TotalPrice
             };
             var result = await _apiOrdersService.CreateOrderAsync(createOrderDto);
             if (result != null)
             {
-                TempData["SuccessMessage"] = "Order placed successfully.";
+                TempData["SuccessMessage"] = "Order placed successfully. You can see it inside your orders";
             }
             else
             {
                 TempData["ErrorMessage"] = "Failed to place the order. Please try again.";
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
