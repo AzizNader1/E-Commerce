@@ -246,9 +246,27 @@
                         <span class="pending-badge">@Model.Count(o => o.Status == OrderStatus.Pending)</span>
                     }
                 </a>
-                <a asp-action="Orders" asp-route-filter="shipped" class="filter-tab-admin @(currentFilter == "shipped" ? "active" : "")">Shipped</a>
-                <a asp-action="Orders" asp-route-filter="delivered" class="filter-tab-admin @(currentFilter == "delivered" ? "active" : "")">Delivered</a>
-                <a asp-action="Orders" asp-route-filter="cancelled" class="filter-tab-admin @(currentFilter == "cancelled" ? "active" : "")">Cancelled</a>
+                <a asp-action="Orders" asp-route-filter="shipped" class="filter-tab-admin @(currentFilter == "shipped" ? "active" : "")">
+                    Shipped
+                    @if (Model?.Count(o => o.Status == OrderStatus.Shipped) > 0)
+                    {
+                        <span class="pending-badge">@Model.Count(o => o.Status == OrderStatus.Shipped)</span>
+                    }
+                </a>
+                <a asp-action="Orders" asp-route-filter="delivered" class="filter-tab-admin @(currentFilter == "delivered" ? "active" : "")">
+                    Delivered
+                    @if (Model?.Count(o => o.Status == OrderStatus.Delivered) > 0)
+                    {
+                        <span class="pending-badge">@Model.Count(o => o.Status == OrderStatus.Delivered)</span>
+                    }
+                </a>
+                <a asp-action="Orders" asp-route-filter="cancelled" class="filter-tab-admin @(currentFilter == "cancelled" ? "active" : "")">
+                    Cancelled
+                    @if (Model?.Count(o => o.Status == OrderStatus.Cancelled) > 0)
+                    {
+                        <span class="pending-badge">@Model.Count(o => o.Status == OrderStatus.Cancelled)</span>
+                    }
+                </a>
             </div>
 
             @if (TempData["SuccessMessage"] != null)
@@ -296,7 +314,7 @@
                                     <img src="@imgSrc" alt="@item.ProductName" class="order-item-admin-img" />
                                     <div class="order-item-admin-info">
                                         <div class="order-item-admin-name">@item.ProductName</div>
-                                        <div class="order-item-admin-qty">× @item.Quantity</div>
+                                        <div class="order-item-admin-qty">× @item.OrderItemQuantity</div>
                                     </div>
                                     </div>
                                 }

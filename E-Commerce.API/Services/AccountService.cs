@@ -52,13 +52,19 @@ namespace E_Commerce.API.Services
                 UserRole = createUserDto.UserName.Contains("admin", StringComparison.OrdinalIgnoreCase) ? UserRoles.Admin : UserRoles.Customer
             };
 
+            _uow.UserRepository.AddModel(newUser);
 
             loginResponseDto.UserName = newUser.UserName;
             loginResponseDto.UserRoles = newUser.UserRole.ToString();
             loginResponseDto.UserToken = GenerateToken(newUser);
             loginResponseDto.IsAuthenticated = true;
+            loginResponseDto.UserId = _uow.UserRepository.GetAllModels().FirstOrDefault(u => u.UserEmail == newUser.UserEmail)?.UserId ?? 0;
 
-            _uow.UserRepository.AddModel(newUser);
+            _uow.CartRepository.AddModel(new Cart
+            {
+                UserId = newUser.UserId
+            });
+
             return loginResponseDto;
 
         }
@@ -76,6 +82,7 @@ namespace E_Commerce.API.Services
                     loginResponseDto.UserName = user.UserName!;
                     loginResponseDto.UserRoles = user.UserRole.ToString();
                     loginResponseDto.UserToken = GenerateToken(user);
+                    loginResponseDto.UserId = user.UserId;
                     return loginResponseDto;
                 }
             }

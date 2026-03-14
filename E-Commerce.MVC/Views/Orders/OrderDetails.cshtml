@@ -1,5 +1,4 @@
 ﻿@model E_Commerce.MVC.DTOs.OrderDTOs.OrderProductDto
-
 @{
     ViewData["Title"] = "Order Details";
     Layout = null;
@@ -418,7 +417,14 @@
             <div class="nav-actions">
                 @if (userName != "")
                 {
-                    <a asp-controller="Carts" asp-action="Index" class="nav-btn nav-btn-ghost">Cart</a>
+                    <a asp-controller="Carts" asp-action="Index" class="nav-btn nav-btn-ghost nav-btn-cart">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span>Cart</span>
+                    </a>
                     <a asp-controller="Accounts" asp-action="UserProfile" asp-route-userName="@userName" class="nav-btn nav-btn-ghost">My Profile</a>
                     <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
                 }
@@ -499,8 +505,8 @@
                                 <div class="order-item-price">$@item.UnitPrice.ToString("0.00") each</div>
                             </div>
                             <div class="order-item-quantity">
-                                <span class="qty-label">Qty:</span>
-                                <span class="qty-value">@item.Quantity</span>
+                                <span class="qty-label">Ordered Quantity:</span>
+                                <span class="qty-value">@item.OrderItemQuantity</span>
                             </div>
                             <div class="order-item-total">
                                 <div class="label">Total</div>
@@ -519,11 +525,11 @@
 
             <!-- Status Timeline -->
             <div class="status-timeline">
-                <div class="timeline-step @((int)Model.Status >= 0 ? "completed" : "")">
+                <div class="timeline-step @((int)Model.Status >= 0 ? "pending" : "")">
                     <div class="step-icon">📦</div>
                     <div class="step-label">Placed</div>
                 </div>
-                <div class="timeline-step @((int)Model.Status >= 1 ? "completed" : "")">
+                <div class="timeline-step @((int)Model.Status >= 1 ? "shipped" : "")">
                     <div class="step-icon">🚚</div>
                     <div class="step-label">Shipped</div>
                 </div>

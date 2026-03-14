@@ -129,25 +129,36 @@ namespace E_Commerce.MVC.Controllers
         {
             HttpContext.Session.SetString("UserName", loginResponseDto.UserName ?? "");
             TempData["UserName"] = loginResponseDto.UserName;
+
             HttpContext.Session.SetString("UserRole", loginResponseDto.UserRoles ?? "");
             TempData["UserRole"] = loginResponseDto.UserRoles;
+
             HttpContext.Session.SetString("UserToken", loginResponseDto.UserToken ?? "");
             TempData["UserToken"] = loginResponseDto.UserToken;
+
+            HttpContext.Session.SetInt32("UserId", loginResponseDto.UserId);
+            TempData["UserId"] = loginResponseDto.UserId;
         }
         private void RemoveUserCreadentials()
         {
             HttpContext.Session.SetString("UserName", "");
             TempData["UserName"] = "";
+
             HttpContext.Session.SetString("UserRole", "");
             TempData["UserRole"] = "";
+
             HttpContext.Session.SetString("UserToken", "");
             TempData["UserToken"] = "";
+
+            HttpContext.Session.SetInt32("UserId", 0);
+            TempData["UserId"] = 0;
         }
         private void GetUserCredentials()
         {
             TempData["UserName"] = HttpContext.Session.GetString("UserName");
             TempData["UserRole"] = HttpContext.Session.GetString("UserRole");
             TempData["UserToken"] = HttpContext.Session.GetString("UserToken");
+            TempData["UserId"] = HttpContext.Session.GetInt32("UserId");
         }
     }
 }

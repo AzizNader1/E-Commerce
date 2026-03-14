@@ -99,11 +99,35 @@ namespace E_Commerce.API.Controllers
         /// Returns an IActionResult containing the updated product details if the update is successful.
         /// </returns>
         [HttpPut]
-        public IActionResult UpdateProduct([FromForm] UpdateProductDto updateProductDto, IFormFile productImage)
+        public IActionResult UpdateProduct([FromForm] UpdateProductDto updateProductDto, IFormFile productImage = null)
         {
             try
             {
                 var updatedProduct = productService.UpdateProduct(updateProductDto, productImage);
+                return Ok(updatedProduct);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// updates the quantity of a specific product in the system.
+        /// </summary>
+        /// <remarks>
+        /// this method accepts an UpdateProductQunatityDto object containing the product ID and the new quantity. It updates the quantity of the specified product in the database based on the provided information. If the quantity is successfully updated, it returns the updated product details as a response. If any exceptions occur during the update process, a bad request response is returned with the error message.
+        /// </remarks>
+        /// <param name="updateProductQunatityDto"></param>
+        /// <returns>
+        /// An IActionResult containing the updated product details if the quantity update is successful. If any exceptions occur during the update process, it returns a BadRequest result with an error message.
+        /// </returns>
+        [HttpPut]
+        public IActionResult UpdateProductQuantity(int productId, int quantity)
+        {
+            try
+            {
+                var updatedProduct = productService.UpdateProductQuantity(productId, quantity);
                 return Ok(updatedProduct);
             }
             catch (Exception e)

@@ -19,21 +19,33 @@ namespace E_Commerce.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string filter)
         {
             // here user can see all his/her orders, and click on each order to see the details of it and if he wants to cancel it,
             // he can click on cancel button to cancel the order if it is not shipped yet
+
             var orderProductDto = await _apiOrdersService.GetOrdersByUserNameAsync(HttpContext.Session.GetString("UserName")!);
             if (orderProductDto == null)
             {
                 TempData["ErrorMessage"] = "No orders found for the current user.";
             }
 
+            orderProductDto = filter switch
+            {
+                "pending" => orderProductDto!.Where(o => o.Status == Models.OrderStatus.Pending).ToList(),
+                "shipped" => orderProductDto!.Where(o => o.Status == Models.OrderStatus.Shipped).ToList(),
+                "delivered" => orderProductDto!.Where(o => o.Status == Models.OrderStatus.Delivered).ToList(),
+                "cancelled" => orderProductDto!.Where(o => o.Status == Models.OrderStatus.Cancelled).ToList(),
+                _ => orderProductDto
+            };
+
+            ViewBag.CurrentFilter = filter;
+
             return View(orderProductDto);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Checkout(int productId)
+        public async Task<IActionResult> Checkout(int productId, int quntity = 1)
         {
             // Implement the logic to retrieve the cart items for the current user and pass it to the checkout view
             // inside this checkout get page the user already see the details of the product then we need to display to him the checkout page that his data and product detials to check first before confirme his order
@@ -41,10 +53,12 @@ namespace E_Commerce.MVC.Controllers
             // we need to get product data by product id
             var user = await _apiUsersService.GetUserByNameAsync(HttpContext.Session.GetString("UserName")!.ToString());
             var product = await _apiProductsService.GetProductByIdAsync(productId);
+
             var checkoutViewModel = new CheckoutViewModel
             {
                 User = user,
                 Product = product,
+                OrderQuantity = quntity
             };
 
             return View(checkoutViewModel);
@@ -61,7 +75,7 @@ namespace E_Commerce.MVC.Controllers
                 UserId = checkoutViewModel.User!.UserId,
                 TotalAmount = checkoutViewModel.TotalPrice
             };
-            var result = await _apiOrdersService.CreateOrderAsync(createOrderDto);
+            var result = await _apiOrdersService.CreateOrderAsync(checkoutViewModel);
             if (result != null)
             {
                 TempData["SuccessMessage"] = "Order placed successfully. You can see it inside your orders";
@@ -103,6 +117,18 @@ namespace E_Commerce.MVC.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckoutFromCart()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckoutFromCart(CheckoutFromCartViewModel checkoutFromCartViewModel)
+        {
+            return View();
         }
     }
 }

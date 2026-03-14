@@ -712,6 +712,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "E_Commerce.API.Controllers.ProductsController",
+    "Method": "UpdateProductQuantity",
+    "RelativePath": "api/Products/UpdateProductQuantity",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "updateProductQunatityDto",
+        "Type": "E_Commerce.API.DTOs.ProductDTOs.UpdateProductQunatityDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "E_Commerce.API.Controllers.UsersController",
     "Method": "AddUser",
     "RelativePath": "api/Users/AddUser",

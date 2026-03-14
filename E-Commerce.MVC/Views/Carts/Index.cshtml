@@ -86,6 +86,7 @@
                             <span class="cart-badge" id="navCartBadge">@Model.TotalItems</span>
                         }
                     </a>
+                    <a asp-controller="Orders" asp-action="Index" class="nav-btn nav-btn-ghost">My Orders</a>
                     <a asp-controller="Accounts" asp-action="UserProfile" asp-route-userName="@userName" class="nav-btn nav-btn-ghost">My Profile</a>
                     <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
                 }
@@ -196,7 +197,7 @@
                             <span class="summary-value" id="totalPrice">$@Model.TotalPrice.ToString("0.00")</span>
                         </div>
 
-                        <form asp-controller="Orders" asp-action="Checkout" method="get">
+                        <form asp-controller="Orders" asp-action="CheckoutFromCart" method="get">
                             <button type="submit" class="checkout-btn enabled" id="checkoutBtn">
                                 Proceed to Checkout
                             </button>

@@ -130,7 +130,7 @@ namespace E_Commerce.MVC.Controllers
             }
 
             // If a new image is uploaded, set the flag
-            dto.UpdateImage = productImage != null;
+            dto.UpdateImage = productImage == null ? false : true;
 
             var updated = await _productsService.UpdateProductAsync(dto, productImage);
             if (updated == null)

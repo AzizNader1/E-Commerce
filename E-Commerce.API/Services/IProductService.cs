@@ -13,6 +13,7 @@ namespace E_Commerce.API.Services
         List<ProductDto> GetAllProductsByCategoryName(string categoryName);
         ProductDto AddProduct(CreateProductDto createProductDto, IFormFile productImage);
         ProductDto UpdateProduct(UpdateProductDto updateProductDto, IFormFile productImage);
+        ProductDto UpdateProductQuantity(int productId, int qunatity);
         void DeleteProduct(int productId);
     }
 }

@@ -9,8 +9,8 @@
         public string? ProductDescription { get; set; }
         public byte[]? ProductImage { get; set; }
         public string? ProductImageContentType { get; set; }
-        public int Quantity { get; set; }
+        public int OrderItemQuantity { get; set; }
         public decimal UnitPrice { get; set; }
-        public decimal TotalPrice => UnitPrice * Quantity;
+        public decimal TotalPrice => UnitPrice * OrderItemQuantity;
     }
 }

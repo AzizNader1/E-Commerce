@@ -49,16 +49,23 @@ namespace E_Commerce.MVC.Services
             using var content = new MultipartFormDataContent();
 
             // Add product data as JSON
-            var jsonContent = JsonContent.Create(dto);
-            content.Add(jsonContent, "createProductDto");
+
+            content.Add(new StringContent(dto.ProductName ?? string.Empty), "createProductDto.ProductName");
+            content.Add(new StringContent(dto.ProductDescription ?? string.Empty), "createProductDto.ProductDescription");
+            content.Add(new StringContent(dto.ProductPrice.ToString()), "createProductDto.ProductPrice");
+            content.Add(new StringContent(dto.ProductStockQuantity.ToString()), "createProductDto.ProductStockQuantity");
+            content.Add(new StringContent(dto.CategoryId.ToString()), "createProductDto.CategoryId");
 
             // Add image file if provided
-            if (productImage != null)
+            if (productImage != null && productImage.Length > 0)
             {
-                var fileStream = productImage.OpenReadStream();
-                var streamContent = new StreamContent(fileStream);
-                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(productImage.ContentType);
-                content.Add(streamContent, "productImage", productImage.FileName);
+                using var memoryStream = new MemoryStream();
+                await productImage.CopyToAsync(memoryStream);
+                var fileBytes = memoryStream.ToArray();
+
+                var fileContent = new ByteArrayContent(fileBytes);
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(productImage.ContentType);
+                content.Add(fileContent, "productImage", productImage.FileName);
             }
 
             var response = await client.PostAsync("Products/AddProduct", content);
@@ -76,16 +83,23 @@ namespace E_Commerce.MVC.Services
             using var content = new MultipartFormDataContent();
 
             // Add product data as JSON
-            var jsonContent = JsonContent.Create(dto);
-            content.Add(jsonContent, "updateProductDto");
+
+            content.Add(new StringContent(dto.ProductName ?? string.Empty), "createProductDto.ProductName");
+            content.Add(new StringContent(dto.ProductDescription ?? string.Empty), "createProductDto.ProductDescription");
+            content.Add(new StringContent(dto.ProductPrice.ToString()), "createProductDto.ProductPrice");
+            content.Add(new StringContent(dto.ProductStockQuantity.ToString()), "createProductDto.ProductStockQuantity");
+            content.Add(new StringContent(dto.CategoryId.ToString()), "createProductDto.CategoryId");
 
             // Add image file if provided
-            if (productImage != null)
+            if (productImage != null && productImage.Length > 0)
             {
-                var fileStream = productImage.OpenReadStream();
-                var streamContent = new StreamContent(fileStream);
-                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(productImage.ContentType);
-                content.Add(streamContent, "productImage", productImage.FileName);
+                using var memoryStream = new MemoryStream();
+                await productImage.CopyToAsync(memoryStream);
+                var fileBytes = memoryStream.ToArray();
+
+                var fileContent = new ByteArrayContent(fileBytes);
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(productImage.ContentType);
+                content.Add(fileContent, "productImage", productImage.FileName);
             }
 
             var response = await client.PutAsync("Products/UpdateProduct", content);

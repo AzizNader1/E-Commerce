@@ -49,8 +49,8 @@
             <span class="logo-text">E-<span>Commerce</span></span>
         </a>
             <div class="nav-actions">
-                @if (userName != "")
-                {
+                @if (!string.IsNullOrEmpty(userName))
+                    {
                     <a asp-controller="Accounts" asp-action="UserProfile" asp-route-userName="@userName" class="nav-btn nav-btn-ghost">My Profile</a>
                     <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
                 }

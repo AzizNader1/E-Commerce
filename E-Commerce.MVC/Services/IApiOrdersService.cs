@@ -9,7 +9,7 @@ namespace E_Commerce.MVC.Services
         Task<OrderProductDto?> GetOrderByIdAsync(int orderId);
         Task<List<OrderProductDto>> GetOrdersByUserIdAsync(int userId);
         Task<List<OrderProductDto>> GetOrdersByUserNameAsync(string userName);
-        Task<OrderProductDto?> CreateOrderAsync(CreateOrderDto dto);
+        Task<OrderProductDto?> CreateOrderAsync(CheckoutViewModel checkoutViewModel);
         Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status);
         Task<bool> DeleteOrderAsync(int orderId);
     }

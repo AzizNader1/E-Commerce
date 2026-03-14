@@ -78,15 +78,14 @@ namespace E_Commerce.API.Services
             if (selectedUser == null)
                 throw new ArgumentNullException(nameof(selectedUser), "there is no user exists for that specific data you send");
 
-            _uow.UserRepository.UpdateModel(new User
-            {
-                UserFullName = userDto.UserFullName,
-                UserEmail = userDto.UserEmail,
-                UserAddress = userDto.UserAddress,
-                UserPhoneNumber = userDto.UserPhoneNumber,
-                UserName = userDto.UserName,
-                UserPassword = userDto.UserPassword
-            });
+            selectedUser.UserFullName = userDto.UserFullName;
+            selectedUser.UserEmail = userDto.UserEmail;
+            selectedUser.UserAddress = userDto.UserAddress;
+            selectedUser.UserPhoneNumber = userDto.UserPhoneNumber;
+            selectedUser.UserName = userDto.UserName;
+            selectedUser.UserPassword = userDto.UserPassword;
+
+            _uow.UserRepository.UpdateModel(selectedUser);
         }
 
         private UserDto MapModelToDto(User user)

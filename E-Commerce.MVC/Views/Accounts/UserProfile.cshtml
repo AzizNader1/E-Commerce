@@ -54,7 +54,7 @@
                 <div class="profile-header">
                     <div class="profile-avatar">
                         <span>
-                            @{
+                            @* @{
                                 var initials = string.Empty;
                                 if (!string.IsNullOrWhiteSpace(Model.UserFullName))
                                 {
@@ -67,7 +67,7 @@
                                     initials = char.ToUpper(Model.UserName[0]).ToString();
                                 }
                             }
-                            @initials
+                            @initials *@
                         </span>
                     </div>
                     <div class="profile-title">

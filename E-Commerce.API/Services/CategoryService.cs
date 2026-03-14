@@ -85,14 +85,14 @@ namespace E_Commerce.API.Services
             if (categoryDto == null)
                 throw new ArgumentNullException(nameof(categoryDto), "the data of the category can not be empty");
 
-            if (_uow.CategoryRepository.GetModelById(categoryDto.CategoryId) == null)
+            var existingCategory = _uow.CategoryRepository.GetModelById(categoryDto.CategoryId);
+            if (existingCategory == null)
                 throw new ArgumentNullException("there is no category exists in the database for that id");
 
-            _uow.CategoryRepository.UpdateModel(new Category
-            {
-                CategoryName = categoryDto.CategoryName,
-                CategoryDescription = categoryDto.CategoryDescription
-            });
+            existingCategory.CategoryName = categoryDto.CategoryName;
+            existingCategory.CategoryDescription = categoryDto.CategoryDescription;
+
+            _uow.CategoryRepository.UpdateModel(existingCategory);
         }
 
         private CategoryDto MapModelToDto(Category category)

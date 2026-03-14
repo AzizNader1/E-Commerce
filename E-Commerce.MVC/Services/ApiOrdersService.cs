@@ -57,7 +57,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            Quantity = product.ProductStockQuantity,
+                            OrderItemQuantity = product.ProductStockQuantity,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -115,7 +115,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            Quantity = product.ProductStockQuantity,
+                            OrderItemQuantity = product.ProductStockQuantity,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -167,7 +167,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            Quantity = product.ProductStockQuantity,
+                            OrderItemQuantity = product.ProductStockQuantity,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -224,7 +224,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            Quantity = product.ProductStockQuantity,
+                            OrderItemQuantity = product.ProductStockQuantity,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -249,21 +249,79 @@ namespace E_Commerce.MVC.Services
             return productsOfOrder;
         }
 
-        public async Task<OrderProductDto?> CreateOrderAsync(CreateOrderDto dto)
+        public async Task<OrderProductDto?> CreateOrderAsync(CheckoutViewModel checkoutViewModel)
         {
             var client = _httpClientFactory.CreateClient("ECommerceApi");
+            var dto = new CreateOrderDto
+            {
+                UserId = checkoutViewModel.User!.UserId,
+                OrderDate = DateTime.UtcNow,
+                Status = OrderStatus.Pending,
+                TotalAmount = checkoutViewModel.TotalPrice
+            };
             var response = await client.PostAsJsonAsync("Orders/AddOrder", dto);
 
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            // Return a basic order DTO with the created info
+            // get the id of the order that just created to add the items which related to it
+
+            var ordersResponse = await client.GetAsync("Orders/GetAllOrders");
+            if (!ordersResponse.IsSuccessStatusCode)
+                return null;
+
+            var ordersContent = await ordersResponse.Content.ReadAsStringAsync();
+            var orders = JsonSerializer.Deserialize<List<OrderDto>>(ordersContent, CreateJsonOptions()) ?? new List<OrderDto>();
+            var createdOrder = orders.LastOrDefault(o => o.UserId == checkoutViewModel.User.UserId);
+
+            // add order items to the order
+
+            var orderItemDto = new CreateOrderItemDto
+            {
+                OrderId = createdOrder!.OrderId,
+                ProductId = checkoutViewModel.Product!.ProductId,
+                OrderItemQuantity = checkoutViewModel.OrderQuantity,
+                UnitPrice = checkoutViewModel.Product.ProductPrice
+            };
+
+            var orderItemResponse = await client.PostAsJsonAsync("OrderItems/AddOrderItem", orderItemDto);
+            if (!orderItemResponse.IsSuccessStatusCode)
+            {
+                var deleteResponse = await client.DeleteAsync($"Orders/DeleteOrder/{createdOrder.OrderId}");
+                return null;
+            }
+
+            // get the id of the order item that just created to add the items which related to it
+            var orderItemsResponse = await client.GetAsync("OrderItems/GetAllOrderItems");
+            if (!orderItemsResponse.IsSuccessStatusCode)
+                return null;
+
+            var orderItemsContent = await orderItemsResponse.Content.ReadAsStringAsync();
+            var orderItems = JsonSerializer.Deserialize<List<OrderItemDto>>(orderItemsContent, CreateJsonOptions()) ?? new List<OrderItemDto>();
+            var createdOrderItem = orderItems.LastOrDefault(oi => oi.OrderId == createdOrder.OrderId && oi.ProductId == checkoutViewModel.Product.ProductId);
+
+            // update product quantity in stock
+            var updateQuantityResponse = await client.PutAsync(
+                    $"Products/UpdateProductQuantity?productId={checkoutViewModel.Product.ProductId}&quantity={checkoutViewModel.OrderQuantity}", null);
+
+            if (!updateQuantityResponse.IsSuccessStatusCode)
+            {
+                var deleteResponse = await client.DeleteAsync($"Orders/DeleteOrder/{createdOrder.OrderId}");
+                var deleteOrderItemResponse = await client.DeleteAsync($"OrderItems/DeleteOrderItem/{createdOrderItem!.OrderItemId}");
+                return null;
+            }
+
+            var updateProductContent = await updateQuantityResponse.Content.ReadAsStringAsync();
+            var updateProductResult = JsonSerializer.Deserialize<ProductDto>(updateProductContent, CreateJsonOptions());
+
+
             return new OrderProductDto
             {
-                UserId = dto.UserId,
-                OrderDate = dto.OrderDate,
-                Status = dto.Status,
-                TotalAmount = dto.TotalAmount
+                OrderDate = DateTime.UtcNow,
+                Status = OrderStatus.Pending,
+                TotalAmount = checkoutViewModel.TotalPrice,
+                OrderId = createdOrder.OrderId,
+                UserId = checkoutViewModel.User.UserId
             };
         }
 
@@ -277,13 +335,21 @@ namespace E_Commerce.MVC.Services
                 return false;
 
             // Update with new status - create update object matching API expectations
-            var updateDto = new
+            var updateDto = new OrderDto
             {
                 OrderId = orderId,
                 UserId = order.UserId,
                 OrderDate = order.OrderDate,
                 TotalAmount = order.TotalAmount,
-                Status = status
+                Status = status,
+                OrderItems = order.OrderItems.Select(oi => new OrderItemDto
+                {
+                    OrderItemId = oi.OrderItemId,
+                    OrderId = oi.OrderId,
+                    ProductId = oi.ProductId,
+                    Quantity = oi.OrderItemQuantity,
+                    UnitPrice = oi.UnitPrice
+                }).ToList()
             };
 
             var json = JsonSerializer.Serialize(updateDto, CreateJsonOptions());

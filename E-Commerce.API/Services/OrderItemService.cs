@@ -27,17 +27,17 @@ namespace E_Commerce.API.Services
             if (product == null)
                 throw new ArgumentException("No product found for the given product ID", nameof(createOrderItemDto.ProductId));
 
-            if (createOrderItemDto.Quantity <= 0)
-                throw new ArgumentException("Quantity must be greater than zero", nameof(createOrderItemDto.Quantity));
+            if (createOrderItemDto.OrderItemQuantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero", nameof(createOrderItemDto.OrderItemQuantity));
 
-            if (createOrderItemDto.Quantity > product.ProductStockQuantity)
-                throw new ArgumentException("Quantity exceeds available stock", nameof(createOrderItemDto.Quantity));
+            if (createOrderItemDto.OrderItemQuantity > product.ProductStockQuantity)
+                throw new ArgumentException("Quantity exceeds available stock", nameof(createOrderItemDto.OrderItemQuantity));
 
             _uow.OrderItemRepository.AddModel(new OrderItem
             {
                 OrderId = createOrderItemDto.OrderId,
                 ProductId = createOrderItemDto.ProductId,
-                Quantity = createOrderItemDto.Quantity,
+                Quantity = createOrderItemDto.OrderItemQuantity,
                 UnitPrice = createOrderItemDto.UnitPrice
             });
         }
@@ -135,11 +135,10 @@ namespace E_Commerce.API.Services
             if (existingOrderItem == null)
                 throw new ArgumentNullException(nameof(existingOrderItem), "No order item found for the given ID");
 
-            _uow.OrderItemRepository.UpdateModel(new OrderItem
-            {
-                Quantity = orderItemDto.Quantity,
-                UnitPrice = orderItemDto.UnitPrice
-            });
+            existingOrderItem.Quantity = orderItemDto.Quantity;
+            existingOrderItem.UnitPrice = orderItemDto.UnitPrice;
+
+            _uow.OrderItemRepository.UpdateModel(existingOrderItem);
         }
     }
 }

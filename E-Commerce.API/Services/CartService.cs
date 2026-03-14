@@ -204,7 +204,7 @@ namespace E_Commerce.API.Services
             if (cartDto == null)
                 throw new ArgumentNullException(nameof(cartDto), "Cart data cannot be null");
 
-            Cart existingCart = _uow.CartRepository.GetModelById(cartDto.CartId);
+            var existingCart = _uow.CartRepository.GetModelById(cartDto.CartId);
             if (existingCart == null)
                 throw new ArgumentNullException(nameof(existingCart), "No cart found for the given ID");
 

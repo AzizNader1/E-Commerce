@@ -171,28 +171,52 @@ namespace E_Commerce.API.Services
 
             byte[]? imageData = null;
             string? imageContentType = null;
+            var updatedProduct = new Product();
 
             if (productImage != null) // he need to update the image of the product because he upload a new image here
             {
                 ValidateImage(productImage);
                 (imageData, imageContentType) = ConvertImageToByteArray(productImage).Result;
+
+                updatedProduct.ProductId = updateProductDto.ProductId;
+                updatedProduct.ProductName = updateProductDto.ProductName;
+                updatedProduct.ProductDescription = updateProductDto.ProductDescription;
+                updatedProduct.ProductPrice = updateProductDto.ProductPrice;
+                updatedProduct.ProductStockQuantity = updateProductDto.ProductStockQuantity;
+                updatedProduct.CategoryId = updateProductDto.CategoryId;
+                updatedProduct.ProductImageData = imageData ?? selectedProduct.ProductImageData;
+                updatedProduct.ProductImageContentType = imageContentType ?? selectedProduct.ProductImageContentType;
+
+                _uow.ProductRepository.UpdateModel(updatedProduct);
+                return MapModelToDto(updatedProduct);
             }
 
-            var updatedProduct = new Product
-            {
-                ProductName = updateProductDto.ProductName,
-                ProductDescription = updateProductDto.ProductDescription,
-                ProductPrice = updateProductDto.ProductPrice,
-                ProductStockQuantity = updateProductDto.ProductStockQuantity,
-                CategoryId = updateProductDto.CategoryId,
-                ProductImageData = imageData ?? selectedProduct.ProductImageData,
-                ProductImageContentType = imageContentType ?? selectedProduct.ProductImageContentType
-            };
+            selectedProduct.ProductPrice = updateProductDto.ProductPrice;
+            selectedProduct.ProductName = updateProductDto.ProductName;
+            selectedProduct.ProductStockQuantity = updateProductDto.ProductStockQuantity;
+            selectedProduct.ProductDescription = updateProductDto.ProductDescription;
+            selectedProduct.CategoryId = updateProductDto.CategoryId;
 
-            _uow.ProductRepository.UpdateModel(updatedProduct);
-            return MapModelToDto(updatedProduct);
+            _uow.ProductRepository.UpdateModel(selectedProduct);
+            return MapModelToDto(selectedProduct);
+
         }
 
+        public ProductDto UpdateProductQuantity(int productId, int quantity)
+        {
+            var existingProduct = _uow.ProductRepository.GetModelById(productId);
+            if (existingProduct == null)
+                throw new ArgumentNullException(nameof(productId), "there is no avaliable product for this id");
+
+            if (quantity > existingProduct.ProductStockQuantity)
+                throw new ArgumentNullException(nameof(quantity), "the quantity that you asked for are not avaliable in the stock at this time");
+
+            existingProduct.ProductStockQuantity -= quantity;
+
+            _uow.ProductRepository.UpdateModel(existingProduct);
+            return MapModelToDto(existingProduct);
+
+        }
         private void ValidateImage(IFormFile productImage)
         {
             if (productImage == null)
@@ -228,6 +252,5 @@ namespace E_Commerce.API.Services
                 ProductImage = product.ProductImageData
             };
         }
-
     }
 }

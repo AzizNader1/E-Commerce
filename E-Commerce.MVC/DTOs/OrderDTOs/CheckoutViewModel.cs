@@ -8,5 +8,6 @@ namespace E_Commerce.MVC.DTOs.OrderDTOs
         public ProductDto? Product { get; set; }
         public UserDto? User { get; set; }
         public decimal TotalPrice { get; set; }
+        public int OrderQuantity { get; set; }
     }
 }

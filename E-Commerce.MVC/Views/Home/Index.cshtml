@@ -11,33 +11,33 @@
                             .ToList();
 
     // Category display names mapping
-    var categoryDisplayNames = new Dictionary<int, string>
+    var categoryDisplayNames = new Dictionary<string, string>
     {
-        { 1, "Electronics" },
-        { 2, "Clothing" },
-        { 3, "Home Appliances" },
-        { 4, "Books" },
-        { 5, "Beauty" },
-        { 6, "Sports" },
-        { 7, "Toys & Games" },
-        { 8, "Automotive" },
-        { 9, "Health Care" },
-        { 10, "Office Supplies" }
+        { "Electronics", "Electronics" },
+        { "Clothing", "Clothing" },
+        { "HomeAppliances", "Home Appliances" },
+        { "Books", "Books" },
+        { "BeautyProducts", "Beauty" },
+        { "SportsEquipment", "Sports" },
+        { "ToysAndGames", "Toys & Games" },
+        { "AutomotiveParts", "Automotive" },
+        { "HealthAndPersonalCare", "Health Care" },
+        { "OfficeSupplies", "Office Supplies" }
     };
 
     // Category emojis mapping
-    var categoryEmojis = new Dictionary<int, string>
+    var categoryEmojis = new Dictionary<string, string>
     {
-        { 1, "💻" },
-        { 2, "👕" },
-        { 3, "🏠" },
-        { 4, "📚" },
-        { 5, "💄" },
-        { 6, "⚽" },
-        { 7, "🎮" },
-        { 8, "🚗" },
-        { 9, "💊" },
-        { 10, "🖊️" }
+        { "Electronics", "💻" },
+        { "Clothing", "👕" },
+        { "HomeAppliances", "🏠" },
+        { "Books", "📚" },
+        { "BeautyProducts", "💄" },
+        { "SportsEquipment", "⚽" },
+        { "ToysAndGames", "🎮" },
+        { "AutomotiveParts", "🚗" },
+        { "HealthAndPersonalCare", "💊" },
+        { "OfficeSupplies", "🖊️" }
     };
 }
 
@@ -448,9 +448,10 @@
                     </button>
                     @foreach (var category in allCategories)
                     {
+                        var categoryName = category.ToString();
                         var categoryId = (int)category;
-                        var emoji = categoryEmojis.ContainsKey(categoryId) ? categoryEmojis[categoryId] : "📦";
-                        var displayName = categoryDisplayNames.ContainsKey(categoryId) ? categoryDisplayNames[categoryId] : category.ToString();
+                        var emoji = categoryEmojis.ContainsKey(categoryName) ? categoryEmojis[categoryName] : "📦";
+                        var displayName = categoryDisplayNames.ContainsKey(categoryName) ? categoryDisplayNames[categoryName] : category.ToString();
 
                         <button class="category-pill" data-category="@categoryId" onclick="filterProducts(@categoryId)">
                             <span class="cat-emoji">@emoji</span>
@@ -647,8 +648,9 @@
                     @foreach (var category in allCategories)
                     {
                         var categoryId = (int)category;
-                        var emoji = categoryEmojis.ContainsKey(categoryId) ? categoryEmojis[categoryId] : "📦";
-                        var displayName = categoryDisplayNames.ContainsKey(categoryId) ? categoryDisplayNames[categoryId] : category.ToString();
+                        var categoryName = category.ToString();
+                        var emoji = categoryEmojis.ContainsKey(categoryName) ? categoryEmojis[categoryName] : "📦";
+                        var displayName = categoryDisplayNames.ContainsKey(categoryName) ? categoryDisplayNames[categoryName] : category.ToString();
 
                         <div class="category-pill" style="cursor: pointer;" onclick="scrollToProductsAndFilter(@categoryId)">
                             <span class="cat-emoji">@emoji</span>

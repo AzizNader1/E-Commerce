@@ -130,10 +130,9 @@ namespace E_Commerce.API.Services
             if (existingCartItem == null)
                 throw new ArgumentNullException(nameof(existingCartItem), "No cart item found for the given ID");
 
-            _uow.CartItemRepository.UpdateModel(new CartItem
-            {
-                Quantity = cartItemDto.Quantity
-            });
+            existingCartItem.Quantity = cartItemDto.Quantity;
+
+            _uow.CartItemRepository.UpdateModel(existingCartItem);
         }
     }
 }

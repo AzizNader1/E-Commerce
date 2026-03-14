@@ -230,16 +230,13 @@ namespace E_Commerce.API.Services
             if (orderDto == null)
                 throw new ArgumentNullException(nameof(orderDto), "invalid data entried");
 
-            Order selectedOrder = _uow.OrderRepository.GetModelById(orderDto.OrderId);
+            var selectedOrder = _uow.OrderRepository.GetModelById(orderDto.OrderId);
             if (selectedOrder == null)
                 throw new ArgumentNullException(nameof(selectedOrder), "there is no orders exists for that id");
 
-            _uow.OrderRepository.UpdateModel(new Order
-            {
-                OrderDate = orderDto.OrderDate,
-                TotalAmount = orderDto.TotalAmount,
-                Status = orderDto.Status
-            });
+            selectedOrder.Status = orderDto.Status;
+
+            _uow.OrderRepository.UpdateModel(selectedOrder);
         }
     }
 }

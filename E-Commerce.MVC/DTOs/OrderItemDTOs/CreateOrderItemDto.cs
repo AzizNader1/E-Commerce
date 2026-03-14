@@ -20,7 +20,7 @@ namespace E_Commerce.MVC.DTOs.OrderItemDTOs
         [Required(ErrorMessage = "Quantity Is Required Field And You Can Not Left It Empty")]
         [Range(1, 1000,
             ErrorMessage = "Quantity Must Be Between 1 And 1000")]
-        public int Quantity { get; set; }
+        public int OrderItemQuantity { get; set; }
 
         [Required(ErrorMessage = "Unit Price Is Required Field And You Can Not Left It Empty")]
         [Range(0.01, 1000000,
