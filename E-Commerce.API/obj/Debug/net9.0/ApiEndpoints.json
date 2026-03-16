@@ -662,6 +662,27 @@
   },
   {
     "ContainingType": "E_Commerce.API.Controllers.ProductsController",
+    "Method": "IncreaseProductStock",
+    "RelativePath": "api/Products/IncreaseProductStock",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "productId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "quantity",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "E_Commerce.API.Controllers.ProductsController",
     "Method": "UpdateProduct",
     "RelativePath": "api/Products/UpdateProduct",
     "HttpMethod": "PUT",
@@ -720,9 +741,14 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "updateProductQunatityDto",
-        "Type": "E_Commerce.API.DTOs.ProductDTOs.UpdateProductQunatityDto",
-        "IsRequired": true
+        "Name": "productId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "quantity",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

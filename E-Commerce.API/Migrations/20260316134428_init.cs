@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace E_Commerce.API.Migrations
 {
     /// <inheritdoc />
@@ -17,8 +19,8 @@ namespace E_Commerce.API.Migrations
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<int>(type: "int", nullable: true),
-                    CategoryDescription = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CategoryDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryName = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -163,6 +165,23 @@ namespace E_Commerce.API.Migrations
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryDescription", "CategoryName" },
+                values: new object[,]
+                {
+                    { 1, "Electronic devices, gadgets, and accessories including smartphones, laptops, tablets, cameras, and audio equipment.", 1 },
+                    { 2, "Apparel and fashion items for men, women, and children including shirts, pants, dresses, shoes, and accessories.", 2 },
+                    { 3, "Household appliances and equipment for daily use including refrigerators, washing machines, vacuum cleaners, and kitchen appliances.", 3 },
+                    { 4, "Printed and digital books covering various genres including fiction, non-fiction, educational, self-help, and children's literature.", 4 },
+                    { 5, "Cosmetics, skincare, haircare, and personal grooming products including makeup, lotions, shampoos, and fragrances.", 5 },
+                    { 6, "Sports and fitness equipment including gym gear, outdoor sports items, athletic wear, and exercise accessories.", 6 },
+                    { 7, "Toys, games, and entertainment products for all ages including action figures, board games, puzzles, and video games.", 7 },
+                    { 8, "Automotive parts, accessories, and tools for vehicle maintenance and customization including tires, batteries, and car care products.", 8 },
+                    { 9, "Health and wellness products including vitamins, supplements, first aid supplies, and personal hygiene items.", 9 },
+                    { 10, "Office equipment and supplies including stationery, furniture, organizers, and technology accessories for workplace productivity.", 10 }
                 });
 
             migrationBuilder.CreateIndex(

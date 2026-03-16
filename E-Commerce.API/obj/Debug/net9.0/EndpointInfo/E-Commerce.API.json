@@ -1093,25 +1093,54 @@
         "tags": [
           "Products"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateProductQunatityDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateProductQunatityDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateProductQunatityDto"
-              }
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "quantity",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Products/IncreaseProductStock": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "quantity",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1496,8 +1525,8 @@
       "CreateOrderItemDto": {
         "required": [
           "orderId",
+          "orderItemQuantity",
           "productId",
-          "quantity",
           "unitPrice"
         ],
         "type": "object",
@@ -1514,7 +1543,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "quantity": {
+          "orderItemQuantity": {
             "maximum": 1000,
             "minimum": 1,
             "type": "integer",
@@ -1662,20 +1691,6 @@
           "userPhoneNumber": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateProductQunatityDto": {
-        "type": "object",
-        "properties": {
-          "productId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "newQuantity": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false

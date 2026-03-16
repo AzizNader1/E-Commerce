@@ -14,6 +14,7 @@ namespace E_Commerce.API.Services
         ProductDto AddProduct(CreateProductDto createProductDto, IFormFile productImage);
         ProductDto UpdateProduct(UpdateProductDto updateProductDto, IFormFile productImage);
         ProductDto UpdateProductQuantity(int productId, int qunatity);
+        ProductDto IncreaseStockQuantity(int productId, int qunatity);
         void DeleteProduct(int productId);
     }
 }

@@ -217,6 +217,20 @@ namespace E_Commerce.API.Services
             return MapModelToDto(existingProduct);
 
         }
+
+        public ProductDto IncreaseStockQuantity(int productId, int quantity)
+        {
+            var existingProduct = _uow.ProductRepository.GetModelById(productId);
+            if (existingProduct == null)
+                throw new ArgumentNullException(nameof(productId), "there is no avaliable product for this id");
+
+            existingProduct.ProductStockQuantity += quantity;
+
+            _uow.ProductRepository.UpdateModel(existingProduct);
+            return MapModelToDto(existingProduct);
+
+        }
+
         private void ValidateImage(IFormFile productImage)
         {
             if (productImage == null)

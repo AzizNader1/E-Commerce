@@ -137,6 +137,31 @@ namespace E_Commerce.API.Controllers
         }
 
         /// <summary>
+        /// updates the quantity of a specific product in the system by increasing it with the provided quantity.
+        /// </summary>
+        /// <remarks>
+        /// this method accepts an UpdateProductQunatityDto object containing the product ID and the quantity to be added. It increases the quantity of the specified product in the database based on the provided information. If the quantity is successfully updated, it returns the updated product details as a response. If any exceptions occur during the update process, a bad request response is returned with the error message.
+        /// </remarks>
+        /// <param name="productId"></param>
+        /// <param name="quantity"></param>
+        /// <returns>
+        /// An IActionResult containing the updated product details if the quantity update is successful. If any exceptions occur during the update process, it returns a BadRequest result with an error message.
+        /// </returns>
+        [HttpPut]
+        public IActionResult IncreaseProductStock(int productId, int quantity)
+        {
+            try
+            {
+                var updatedProduct = productService.IncreaseStockQuantity(productId, quantity);
+                return Ok(updatedProduct);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Deletes a product from the system based on the provided ID.
         /// </summary>
         /// <remarks>

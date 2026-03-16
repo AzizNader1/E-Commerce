@@ -16,8 +16,8 @@
     public class Category
     {
         public int CategoryId { get; set; }
-        public CategoriesCollections? CategoryName { get; set; }
         public string? CategoryDescription { get; set; }
+        public CategoriesCollections? CategoryName { get; set; }
 
 
         // Navigation properties

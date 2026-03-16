@@ -84,6 +84,68 @@ namespace E_Commerce.API.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryDescription = "Electronic devices, gadgets, and accessories including smartphones, laptops, tablets, cameras, and audio equipment.",
+                            CategoryName = 1
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryDescription = "Apparel and fashion items for men, women, and children including shirts, pants, dresses, shoes, and accessories.",
+                            CategoryName = 2
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryDescription = "Household appliances and equipment for daily use including refrigerators, washing machines, vacuum cleaners, and kitchen appliances.",
+                            CategoryName = 3
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryDescription = "Printed and digital books covering various genres including fiction, non-fiction, educational, self-help, and children's literature.",
+                            CategoryName = 4
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryDescription = "Cosmetics, skincare, haircare, and personal grooming products including makeup, lotions, shampoos, and fragrances.",
+                            CategoryName = 5
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryDescription = "Sports and fitness equipment including gym gear, outdoor sports items, athletic wear, and exercise accessories.",
+                            CategoryName = 6
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryDescription = "Toys, games, and entertainment products for all ages including action figures, board games, puzzles, and video games.",
+                            CategoryName = 7
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            CategoryDescription = "Automotive parts, accessories, and tools for vehicle maintenance and customization including tires, batteries, and car care products.",
+                            CategoryName = 8
+                        },
+                        new
+                        {
+                            CategoryId = 9,
+                            CategoryDescription = "Health and wellness products including vitamins, supplements, first aid supplies, and personal hygiene items.",
+                            CategoryName = 9
+                        },
+                        new
+                        {
+                            CategoryId = 10,
+                            CategoryDescription = "Office equipment and supplies including stationery, furniture, organizers, and technology accessories for workplace productivity.",
+                            CategoryName = 10
+                        });
                 });
 
             modelBuilder.Entity("E_Commerce.API.Models.Order", b =>
