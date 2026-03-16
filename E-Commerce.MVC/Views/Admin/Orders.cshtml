@@ -297,7 +297,7 @@
                         <div class="order-card-admin-header">
                             <div class="order-meta">
                                 <div class="order-id-admin">Order #@order.OrderId</div>
-                                <div class="order-customer">Customer ID: @order.UserId</div>
+                                <div class="order-customer">Customer Name: @order.User.UserFullName</div>
                             </div>
                             <span class="order-status @order.Status">@order.Status.ToString()</span>
                         </div>
@@ -314,7 +314,8 @@
                                     <img src="@imgSrc" alt="@item.ProductName" class="order-item-admin-img" />
                                     <div class="order-item-admin-info">
                                         <div class="order-item-admin-name">@item.ProductName</div>
-                                        <div class="order-item-admin-qty">× @item.OrderItemQuantity</div>
+                                        <div class="order-item-admin-qty">price per item: @item.UnitPrice</div>
+                                        <div class="order-item-admin-qty">Ordered Quantity: @item.OrderItemQuantity</div>
                                     </div>
                                     </div>
                                 }

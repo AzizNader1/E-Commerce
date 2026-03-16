@@ -1,4 +1,5 @@
 ﻿using E_Commerce.MVC.DTOs.OrderItemDTOs;
+using E_Commerce.MVC.DTOs.UserDTOs;
 using E_Commerce.MVC.Models;
 
 namespace E_Commerce.MVC.DTOs.OrderDTOs
@@ -7,7 +8,7 @@ namespace E_Commerce.MVC.DTOs.OrderDTOs
     {
         public int OrderId { get; set; }
 
-        public int UserId { get; set; }
+        public UserDto User { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 

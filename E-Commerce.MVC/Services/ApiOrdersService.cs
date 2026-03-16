@@ -1,6 +1,7 @@
 ﻿using E_Commerce.MVC.DTOs.OrderDTOs;
 using E_Commerce.MVC.DTOs.OrderItemDTOs;
 using E_Commerce.MVC.DTOs.ProductDTOs;
+using E_Commerce.MVC.DTOs.UserDTOs;
 using E_Commerce.MVC.Models;
 using System.Text;
 using System.Text.Json;
@@ -57,7 +58,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            OrderItemQuantity = product.ProductStockQuantity,
+                            OrderItemQuantity = orderDtos.SelectMany(o => o.OrderItems).FirstOrDefault(oi => oi.ProductId == product.ProductId)?.Quantity ?? 0,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -65,12 +66,19 @@ namespace E_Commerce.MVC.Services
                 }
             }
 
+            var userResponse = await client.GetAsync("Users/GetAllUsers");
+            if (!userResponse.IsSuccessStatusCode)
+                return null;
+
+            var userContent = await userResponse.Content.ReadAsStringAsync();
+            var userDtos = JsonSerializer.Deserialize<List<UserDto>>(userContent, CreateJsonOptions()) ?? new List<UserDto>();
+
             foreach (var order in orderDtos)
             {
                 var orderProductDto = new OrderProductDto
                 {
                     OrderId = order.OrderId,
-                    UserId = order.UserId,
+                    User = userDtos.FirstOrDefault(u => u.UserId == order.UserId)!,
                     OrderDate = order.OrderDate,
                     Status = order.Status,
                     TotalAmount = order.TotalAmount,
@@ -88,7 +96,7 @@ namespace E_Commerce.MVC.Services
             var itemsDataForEachProductOrder = new List<OrderWithProductsItemDto>();
 
             var client = _httpClientFactory.CreateClient("ECommerceApi");
-            var response = await client.GetAsync("Orders/GetOrderById");
+            var response = await client.GetAsync($"Orders/GetOrderById/{orderId}");
 
             if (!response.IsSuccessStatusCode)
                 return null;
@@ -115,7 +123,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            OrderItemQuantity = product.ProductStockQuantity,
+                            OrderItemQuantity = orderDtos.OrderItems.FirstOrDefault(oi => oi.ProductId == product.ProductId)?.Quantity ?? 0,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -123,10 +131,17 @@ namespace E_Commerce.MVC.Services
                 }
             }
 
+            var userResponse = await client.GetAsync("Users/GetAllUsers");
+            if (!userResponse.IsSuccessStatusCode)
+                return null;
+
+            var userContent = await userResponse.Content.ReadAsStringAsync();
+            var userDtos = JsonSerializer.Deserialize<List<UserDto>>(userContent, CreateJsonOptions()) ?? new List<UserDto>();
+
             return new OrderProductDto
             {
                 OrderId = orderDtos.OrderId,
-                UserId = orderDtos.UserId,
+                User = userDtos.FirstOrDefault(u => u.UserId == orderDtos.UserId)!,
                 OrderDate = orderDtos.OrderDate,
                 Status = orderDtos.Status,
                 TotalAmount = orderDtos.TotalAmount,
@@ -167,7 +182,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            OrderItemQuantity = product.ProductStockQuantity,
+                            OrderItemQuantity = orderDtos.SelectMany(o => o.OrderItems).FirstOrDefault(oi => oi.ProductId == product.ProductId)?.Quantity ?? 0,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -175,12 +190,19 @@ namespace E_Commerce.MVC.Services
                 }
             }
 
+            var userResponse = await client.GetAsync("Users/GetAllUsers");
+            if (!userResponse.IsSuccessStatusCode)
+                return null;
+
+            var userContent = await userResponse.Content.ReadAsStringAsync();
+            var userDtos = JsonSerializer.Deserialize<List<UserDto>>(userContent, CreateJsonOptions()) ?? new List<UserDto>();
+
             foreach (var order in orderDtos)
             {
                 var orderProductDto = new OrderProductDto
                 {
                     OrderId = order.OrderId,
-                    UserId = order.UserId,
+                    User = userDtos.FirstOrDefault(u => u.UserId == order.UserId)!,
                     OrderDate = order.OrderDate,
                     Status = order.Status,
                     TotalAmount = order.TotalAmount,
@@ -224,7 +246,7 @@ namespace E_Commerce.MVC.Services
                             ProductName = product.ProductName,
                             ProductDescription = product.ProductDescription,
                             UnitPrice = product.ProductPrice,
-                            OrderItemQuantity = product.ProductStockQuantity,
+                            OrderItemQuantity = orderDtos.SelectMany(o => o.OrderItems).FirstOrDefault(oi => oi.ProductId == product.ProductId)?.Quantity ?? 0,
                             ProductImage = product.ProductImage,
                             ProductImageContentType = product.ProductImageContentType
                         });
@@ -232,12 +254,19 @@ namespace E_Commerce.MVC.Services
                 }
             }
 
+            var userResponse = await client.GetAsync("Users/GetAllUsers");
+            if (!userResponse.IsSuccessStatusCode)
+                return null;
+
+            var userContent = await userResponse.Content.ReadAsStringAsync();
+            var userDtos = JsonSerializer.Deserialize<List<UserDto>>(userContent, CreateJsonOptions()) ?? new List<UserDto>();
+
             foreach (var order in orderDtos)
             {
                 var orderProductDto = new OrderProductDto
                 {
                     OrderId = order.OrderId,
-                    UserId = order.UserId,
+                    User = userDtos.FirstOrDefault(u => u.UserId == order.UserId)!,
                     OrderDate = order.OrderDate,
                     Status = order.Status,
                     TotalAmount = order.TotalAmount,
@@ -314,6 +343,13 @@ namespace E_Commerce.MVC.Services
             var updateProductContent = await updateQuantityResponse.Content.ReadAsStringAsync();
             var updateProductResult = JsonSerializer.Deserialize<ProductDto>(updateProductContent, CreateJsonOptions());
 
+            var userResponse = await client.GetAsync("Users/GetAllUsers");
+            if (!userResponse.IsSuccessStatusCode)
+                return null;
+
+            var userContent = await userResponse.Content.ReadAsStringAsync();
+            var userDtos = JsonSerializer.Deserialize<List<UserDto>>(userContent, CreateJsonOptions()) ?? new List<UserDto>();
+
 
             return new OrderProductDto
             {
@@ -321,7 +357,7 @@ namespace E_Commerce.MVC.Services
                 Status = OrderStatus.Pending,
                 TotalAmount = checkoutViewModel.TotalPrice,
                 OrderId = createdOrder.OrderId,
-                UserId = checkoutViewModel.User.UserId
+                User = userDtos.FirstOrDefault(u => u.UserId == createdOrder.UserId)!,
             };
         }
 
@@ -338,7 +374,7 @@ namespace E_Commerce.MVC.Services
             var updateDto = new OrderDto
             {
                 OrderId = orderId,
-                UserId = order.UserId,
+                UserId = order.User.UserId,
                 OrderDate = order.OrderDate,
                 TotalAmount = order.TotalAmount,
                 Status = status,
@@ -356,7 +392,12 @@ namespace E_Commerce.MVC.Services
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await client.PutAsync("Orders/UpdateOrder", content);
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            return true;
         }
 
         public async Task<bool> DeleteOrderAsync(int orderId)
@@ -364,6 +405,75 @@ namespace E_Commerce.MVC.Services
             var client = _httpClientFactory.CreateClient("ECommerceApi");
             var response = await client.DeleteAsync($"Orders/DeleteOrder/{orderId}");
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CancleOrRejectAndRevertQuantity(int orderId, OrderStatus status)
+        {
+            var client = _httpClientFactory.CreateClient("ECommerceApi");
+
+            // First get the existing order
+            var order = await GetOrderByIdAsync(orderId);
+            if (order == null)
+                return false;
+
+            // Update with new status - create update object matching API expectations
+            var updateDto = new OrderDto
+            {
+                OrderId = orderId,
+                UserId = order.User.UserId,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
+                Status = status,
+                OrderItems = order.OrderItems.Select(oi => new OrderItemDto
+                {
+                    OrderItemId = oi.OrderItemId,
+                    OrderId = oi.OrderId,
+                    ProductId = oi.ProductId,
+                    Quantity = oi.OrderItemQuantity,
+                    UnitPrice = oi.UnitPrice
+                }).ToList()
+            };
+
+            var json = JsonSerializer.Serialize(updateDto, CreateJsonOptions());
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync("Orders/UpdateOrder", content);
+            if (response.IsSuccessStatusCode)
+            {
+                foreach (var item in order.OrderItems)
+                {
+                    var updateQuantityResponse = await client.PutAsync(
+                       $"Products/IncreaseProductStock?productId={item.ProductId}&quantity={item.OrderItemQuantity}", null);
+
+                    if (!updateQuantityResponse.IsSuccessStatusCode)
+                    {
+                        var revertUpdateDto = new OrderDto
+                        {
+                            OrderId = orderId,
+                            UserId = order.User.UserId,
+                            OrderDate = order.OrderDate,
+                            TotalAmount = order.TotalAmount,
+                            Status = OrderStatus.Pending,
+                            OrderItems = order.OrderItems.Select(oi => new OrderItemDto
+                            {
+                                OrderItemId = oi.OrderItemId,
+                                OrderId = oi.OrderId,
+                                ProductId = oi.ProductId,
+                                Quantity = oi.OrderItemQuantity,
+                                UnitPrice = oi.UnitPrice
+                            }).ToList()
+                        };
+                        var revertUpdateJson = JsonSerializer.Serialize(updateDto, CreateJsonOptions());
+                        var revertUpdateContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        var revertUpdateResponse = await client.PutAsync("Orders/UpdateOrder", revertUpdateContent);
+                        return false;
+                    }
+                    continue;
+                }
+            }
+
+            return true;
         }
     }
 }

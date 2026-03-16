@@ -11,6 +11,7 @@ namespace E_Commerce.MVC.Services
         Task<List<OrderProductDto>> GetOrdersByUserNameAsync(string userName);
         Task<OrderProductDto?> CreateOrderAsync(CheckoutViewModel checkoutViewModel);
         Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status);
+        Task<bool> CancleOrRejectAndRevertQuantity(int orderId, OrderStatus status);
         Task<bool> DeleteOrderAsync(int orderId);
     }
 }

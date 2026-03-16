@@ -285,7 +285,8 @@
                                         <div class="order-item-detail-meta">Product ID: @item.ProductId</div>
                                     </div>
                                     <div class="order-item-detail-price">
-                                        <div class="order-item-detail-unit">$@item.UnitPrice.ToString("0.00") × @item.OrderItemQuantity</div>
+                                        <div class="order-item-detail-unit">item price: $@item.UnitPrice.ToString("0.00")</div>
+                                        <div class="order-item-detail-unit">Ordered Quantity: @item.OrderItemQuantity</div>
                                         <div class="order-item-detail-total">$@item.TotalPrice.ToString("0.00")</div>
                                     </div>
                                     </div>
@@ -293,7 +294,7 @@
 
                                 <div class="order-summary-admin">
                                     <div class="summary-row-admin">
-                                        <span class="info-label">Subtotal</span>
+                                        <span class="info-label">Order Total</span>
                                         <span class="info-value">$@Model.TotalAmount.ToString("0.00")</span>
                                     </div>
                                     <div class="summary-row-admin">
@@ -324,11 +325,12 @@
                                     <span class="info-value">#@Model.OrderId</span>
                                 </div>
                                 <div class="info-row">
-                                    <span class="info-label">User ID</span>
-                                    <span class="info-value">@Model.UserId</span>
+                                    <span class="info-label">User Name</span>
+                                    <span class="info-value">@Model.User.UserFullName</span>
                                 </div>
                                 <div class="info-row">
                                     <span class="info-label">Order Date</span>
+                                    <span class="info-value">@Model.OrderDate.ToString("yyyy-MM-dd")</span>
                                 </div>
                                 <div class="info-row">
                                     <span class="info-label">Status</span>
@@ -348,16 +350,19 @@
                                 <div class="action-buttons">
                                     @if (Model.Status == OrderStatus.Pending)
                                     {
-                                        <form asp-action="AcceptOrder" asp-route-id="@Model.OrderId" method="post">
+                                        <form asp-action="AcceptOrder" method="post">
+                                            <input hidden asp-for="@Model.OrderId" name="OrderId" id="OrderId" />
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn-admin-full btn-accept">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                                 Accept Order
                                             </button>
                                         </form>
-                                        <form asp-action="RejectOrder" asp-route-id="@Model.OrderId" method="post">
+                                        <form asp-action="RejectOrder" method="post">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn-admin-full btn-reject" onclick="return confirm('Are you sure you want to reject this order?');">
+                                            <input hidden asp-for="@Model.OrderId" name="OrderId" id="OrderId" />
+
+                                            <button type="submit" class="btn-admin-full btn-reject">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                                 Reject Order
                                             </button>
@@ -365,7 +370,8 @@
                                     }
                                     else if (Model.Status == OrderStatus.Shipped)
                                     {
-                                        <form asp-action="MarkDelivered" asp-route-id="@Model.OrderId" method="post">
+                                        <form asp-action="MarkDelivered" method="post">
+                                            <input hidden asp-for="@Model.OrderId" name="OrderId" id="OrderId" />
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn-admin-full btn-deliver">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>

@@ -43,13 +43,7 @@
 
                     <div class="admin-field field-full">
                         <label asp-for="CategoryName"></label>
-                        <select asp-for="CategoryName">
-                            <option value="">Select category name</option>
-                            @foreach (var value in Enum.GetValues(typeof(E_Commerce.MVC.Models.CategoriesCollections)))
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
+                       <input asp-for="CategoryName"/>
                         <span asp-validation-for="CategoryName" class="field-validation-error"></span>
                     </div>
 

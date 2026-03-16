@@ -399,7 +399,7 @@ namespace E_Commerce.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RejectOrder(int id)
         {
-            var success = await _apiOrdersService.UpdateOrderStatusAsync(id, OrderStatus.Cancelled);
+            var success = await _apiOrdersService.CancleOrRejectAndRevertQuantity(id, OrderStatus.Cancelled);
 
             if (success)
             {

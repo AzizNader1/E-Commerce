@@ -356,7 +356,12 @@
             </a>
 
             <div class="nav-actions">
-                @if (!string.IsNullOrEmpty(userName))
+                @if (string.IsNullOrEmpty(userName) || userName == "admin")
+                {
+                    <a asp-controller="Accounts" asp-action="Login" class="nav-btn nav-btn-ghost">Sign In</a>
+                    <a asp-controller="Accounts" asp-action="Register" class="nav-btn nav-btn-primary">Get Started</a>
+                }
+                else
                 {
                     <!-- Cart Button -->
                     <a asp-controller="Carts" asp-action="Index" class="nav-btn nav-btn-ghost nav-btn-cart">
@@ -370,11 +375,6 @@
                     <a asp-controller="Orders" asp-action="Index" class="nav-btn nav-btn-ghost">My Orders</a>
                     <a asp-controller="Accounts" asp-action="UserProfile" asp-route-userName="@userName" class="nav-btn nav-btn-ghost">My Profile</a>
                     <a asp-controller="Accounts" asp-action="Logout" class="nav-btn nav-btn-ghost">Logout</a>
-                }
-                else
-                {
-                    <a asp-controller="Accounts" asp-action="Login" class="nav-btn nav-btn-ghost">Sign In</a>
-                    <a asp-controller="Accounts" asp-action="Register" class="nav-btn nav-btn-primary">Get Started</a>
                 }
             </div>
         </nav>

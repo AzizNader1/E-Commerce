@@ -466,6 +466,7 @@
             <div class="order-info-grid">
                 <div class="order-info-card">
                     <div class="label">Order Date</div>
+                    <div class="value">@Model?.OrderDate.ToString("yyyy-MM-dd")</div>
                 </div>
                 <div class="order-info-card">
                     <div class="label">Status</div>
@@ -519,13 +520,13 @@
 
             <!-- Order Total -->
             <div class="order-total-section">
-                <div class="label">Order Total</div>
+                <div class="label">Product Items Total</div>
                 <div class="amount">$@Model?.TotalAmount.ToString("0.00")</div>
             </div>
 
             <!-- Status Timeline -->
             <div class="status-timeline">
-                <div class="timeline-step @((int)Model.Status >= 0 ? "pending" : "")">
+                <div class="timeline-step @((int)Model!.Status >= 0 ? "pending" : "")">
                     <div class="step-icon">📦</div>
                     <div class="step-label">Placed</div>
                 </div>
@@ -539,13 +540,15 @@
                 </div>
             </div>
 
+            <br />
             <!-- Actions -->
             <div class="order-actions">
                 @if (Model?.Status.ToString() == OrderStatus.Pending.ToString())
                 {
-                    <form asp-action="CancelOrder" asp-route-orderId="@Model.OrderId" method="post" style="display: inline;">
+                    <form asp-action="CancleOrder" method="post" style="display: inline;">
+                        <input hidden asp-for="@Model.OrderId" name="OrderId" id="OrderId"/>
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn-action btn-danger" onclick="return confirm('Are you sure you want to cancel this order?');">
+                        <button type="submit" class="btn-action btn-danger">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             Cancel Order
                         </button>
@@ -556,6 +559,7 @@
                     Continue Shopping
                 </a>
             </div>
+            <br />
         </div>
 
         <!-- FOOTER -->

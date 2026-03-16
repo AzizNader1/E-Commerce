@@ -19,7 +19,7 @@ namespace E_Commerce.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string filter)
+        public async Task<IActionResult> Index(string filter = "all")
         {
             // here user can see all his/her orders, and click on each order to see the details of it and if he wants to cancel it,
             // he can click on cancel button to cancel the order if it is not shipped yet
@@ -105,18 +105,17 @@ namespace E_Commerce.MVC.Controllers
         public async Task<IActionResult> CancleOrder(int orderId)
         {
             // Implement the logic to cancel the order with the given orderId
-            var result = await _apiOrdersService.UpdateOrderStatusAsync(orderId, Models.OrderStatus.Cancelled);
+            var result = await _apiOrdersService.CancleOrRejectAndRevertQuantity(orderId, Models.OrderStatus.Cancelled);
             if (result)
             {
                 TempData["SuccessMessage"] = "Order cancelled successfully.";
-
+                return RedirectToAction("Index");
             }
             else
             {
                 TempData["ErrorMessage"] = "Failed to cancel the order. Please try again.";
+                return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Index");
         }
 
         [HttpGet]
