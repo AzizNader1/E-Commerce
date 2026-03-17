@@ -1,7 +1,7 @@
 ﻿using E_Commerce.MVC.DTOs.ProductDTOs;
 using E_Commerce.MVC.DTOs.UserDTOs;
 
-namespace E_Commerce.MVC.DTOs.OrderDTOs
+namespace E_Commerce.MVC.DTOs.CheckoutDTOs
 {
     public class CheckoutViewModel
     {

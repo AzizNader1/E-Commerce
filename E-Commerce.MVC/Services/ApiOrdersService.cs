@@ -1,4 +1,6 @@
-﻿using E_Commerce.MVC.DTOs.OrderDTOs;
+﻿using E_Commerce.MVC.DTOs.CartDTOs;
+using E_Commerce.MVC.DTOs.CheckoutDTOs;
+using E_Commerce.MVC.DTOs.OrderDTOs;
 using E_Commerce.MVC.DTOs.OrderItemDTOs;
 using E_Commerce.MVC.DTOs.ProductDTOs;
 using E_Commerce.MVC.DTOs.UserDTOs;
@@ -12,10 +14,19 @@ namespace E_Commerce.MVC.Services
     public class ApiOrdersService : IApiOrdersService
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IApiUsersService _apiUsersService;
+        private readonly IApiProductsService _apiProductsService;
+        private readonly IApiCartsService _apiCartsService;
 
-        public ApiOrdersService(IHttpClientFactory httpClientFactory)
+        public ApiOrdersService(IHttpClientFactory httpClientFactory,
+            IApiUsersService apiUserService,
+            IApiProductsService apiProductsService,
+            IApiCartsService apiCartsService)
         {
             _httpClientFactory = httpClientFactory;
+            _apiUsersService = apiUserService;
+            _apiProductsService = apiProductsService;
+            _apiCartsService = apiCartsService;
         }
 
         private static JsonSerializerOptions CreateJsonOptions()
@@ -474,6 +485,139 @@ namespace E_Commerce.MVC.Services
             }
 
             return true;
+        }
+
+        public async Task<CheckoutViewModel?> GetSingleProductCheckoutAsync(string userName, int productId, int quantity = 1)
+        {
+            var user = await _apiUsersService.GetUserByNameAsync(userName);
+            var product = await _apiProductsService.GetProductByIdAsync(productId);
+
+            if (user == null || product == null)
+                return null;
+
+            // Validate quantity
+            if (quantity < 1) quantity = 1;
+            if (quantity > product.ProductStockQuantity)
+                quantity = product.ProductStockQuantity;
+
+            return new CheckoutViewModel
+            {
+                Product = product,
+                User = user,
+                OrderQuantity = quantity,
+                TotalPrice = product.ProductPrice * quantity
+            };
+        }
+
+        public async Task<CartCheckoutViewModel?> GetCartCheckoutAsync(string userName, string selectedItems)
+        {
+            if (string.IsNullOrEmpty(selectedItems))
+                return null;
+
+            // Parse selected cart item IDs
+            var selectedItemIds = selectedItems.Split(',')
+                .Where(s => int.TryParse(s.Trim(), out _))
+                .Select(s => int.Parse(s.Trim()))
+                .ToList();
+
+            if (!selectedItemIds.Any())
+                return null;
+
+            // Get user
+            var user = await _apiUsersService.GetUserByNameAsync(userName);
+
+            // Get cart
+            var cart = await _apiCartsService.GetCartByUserNameAsync(userName);
+
+            // Filter selected items
+            var selectedCartItems = cart?.CartItems?
+                .Where(item => selectedItemIds.Contains(item.CartItemId))
+                .ToList() ?? new List<CartWithProductDto>();
+
+            if (!selectedCartItems.Any())
+                return null;
+
+            // Map to checkout items
+            var checkoutItems = selectedCartItems.Select(item => new CartItemCheckoutDto
+            {
+                CartItemId = item.CartItemId,
+                ProductId = item.ProductId,
+                ProductName = item.ProductName,
+                ProductDescription = item.ProductDescription,
+                ProductPrice = item.ProductPrice,
+                Quantity = item.Quantity,
+                ProductImage = item.ProductImage,
+                ProductImageContentType = item.ProductImageContentType,
+                CategoryName = item.CategoryName
+            }).ToList();
+
+            return new CartCheckoutViewModel
+            {
+                User = user,
+                SelectedItems = checkoutItems
+            };
+        }
+
+        public async Task<(bool Success, string Message, int ItemsCount)> PlaceOrderFromCartAsync(string userName, string selectedItems)
+        {
+            var client = _httpClientFactory.CreateClient("ECommerceApi");
+
+            if (string.IsNullOrEmpty(selectedItems) || string.IsNullOrEmpty(userName))
+                return (false, "Checkout session expired. Please try again.", 0);
+
+            // Parse selected cart item IDs
+            var selectedItemIds = selectedItems.Split(',')
+                .Where(s => int.TryParse(s.Trim(), out _))
+                .Select(s => int.Parse(s.Trim()))
+                .ToList();
+
+            if (!selectedItemIds.Any())
+                return (false, "No valid items selected.", 0);
+
+            // Get user
+            var user = await _apiUsersService.GetUserByNameAsync(userName);
+            if (user == null)
+                return (false, "User not found.", 0);
+
+            // Get cart
+            var cart = await _apiCartsService.GetCartByUserNameAsync(userName);
+
+            // Filter selected items
+            var selectedCartItems = cart?.CartItems?
+                .Where(item => selectedItemIds.Contains(item.CartItemId))
+                .ToList() ?? new List<CartWithProductDto>();
+
+            if (!selectedCartItems.Any())
+                return (false, "Selected items not found.", 0);
+
+            // Calculate total
+            var totalAmount = selectedCartItems.Sum(item => item.TotalPrice);
+
+            foreach (var item in selectedCartItems)
+            {
+                var checkoutViewModel = new CheckoutViewModel()
+                {
+                    User = user,
+                    OrderQuantity = item.Quantity,
+                    TotalPrice = totalAmount,
+                    Product = await _apiProductsService.GetProductByIdAsync(item.ProductId)
+                };
+                var result = await CreateOrderAsync(checkoutViewModel);
+
+                if (result != null)
+                {
+                    // Remove ordered items from cart
+                    foreach (var item2 in selectedCartItems)
+                    {
+                        await _apiCartsService.DeleteCartItemAsync(item.CartItemId);
+                    }
+
+                    return (true, $"Order placed successfully! {selectedCartItems.Count} item(s) will be delivered to you.", selectedCartItems.Count);
+                }
+            }
+
+
+            return (false, "Failed to place the order. Please try again.", 0);
         }
     }
 }

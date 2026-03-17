@@ -63,6 +63,7 @@ wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\css\shared\site.css
+wwwroot\css\order\orders.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\product\product-details.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\account\login.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\admin\admin.css
@@ -127,3 +128,4 @@ P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery\dist\jquery.min.js
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery\dist\jquery.min.map
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\lib\jquery\LICENSE.txt
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\shared\site.css
+P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\order\orders.css

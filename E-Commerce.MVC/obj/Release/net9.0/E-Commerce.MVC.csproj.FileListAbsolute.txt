@@ -225,9 +225,10 @@ P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\ref\E-Commerce.MVC.d
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\bmjoprcm70-{0}-l5rbj8mag9-l5rbj8mag9.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\s73sbh465i-{0}-77zk77ey2w-77zk77ey2w.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\e5lm6oujqf-{0}-pgj2om6ifd-pgj2om6ifd.gz
-P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\f8h8nsifz7-{0}-icx0j9g8a7-icx0j9g8a7.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\qwyf4j4f7j-{0}-rg5q1h6rw1-rg5q1h6rw1.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\4o1hvnms73-{0}-u3qu1rfvyj-u3qu1rfvyj.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\5lxisqnugb-{0}-cc2rlhtbql-cc2rlhtbql.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\kv5si25mtz-{0}-jv7tdgfbk0-jv7tdgfbk0.gz
 P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\4gmu5dnsj4-{0}-c2tiyv64ts-c2tiyv64ts.gz
+P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\f8h8nsifz7-{0}-69h7gw2ks2-69h7gw2ks2.gz
+P:\My Projects\E-Commerce\E-Commerce.MVC\obj\Release\net9.0\compressed\1bd79coms9-{0}-1mmanphrmp-1mmanphrmp.gz

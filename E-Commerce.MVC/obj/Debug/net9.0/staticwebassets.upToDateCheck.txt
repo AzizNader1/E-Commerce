@@ -1,15 +1,6 @@
-wwwroot\css\account\login.css
-wwwroot\css\account\signup.css
-wwwroot\css\account\user-profile.css
-wwwroot\css\admin\admin.css
-wwwroot\css\cart\cart.css
-wwwroot\css\order\orders.css
-wwwroot\css\product\product-details.css
-wwwroot\css\shared\design-system.css
-wwwroot\css\shared\home.css
-wwwroot\css\shared\site.css
-wwwroot\favicon.ico
 wwwroot\js\site.js
+wwwroot\favicon.ico
+wwwroot\css\shared\site.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
@@ -64,6 +55,15 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\css\shared\home.css
+wwwroot\css\account\signup.css
+wwwroot\css\product\product-details.css
+wwwroot\css\account\login.css
+wwwroot\css\shared\design-system.css
+wwwroot\css\account\user-profile.css
+wwwroot\css\admin\admin.css
+wwwroot\css\cart\cart.css
+wwwroot\css\order\orders.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\css\account\signup.css
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\favicon.ico
 P:\My Projects\E-Commerce\E-Commerce.MVC\wwwroot\js\site.js

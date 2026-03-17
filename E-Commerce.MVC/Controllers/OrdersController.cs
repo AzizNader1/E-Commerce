@@ -1,4 +1,5 @@
-﻿using E_Commerce.MVC.DTOs.OrderDTOs;
+﻿using E_Commerce.MVC.DTOs.CheckoutDTOs;
+using E_Commerce.MVC.DTOs.OrderDTOs;
 using E_Commerce.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -119,15 +120,43 @@ namespace E_Commerce.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CheckoutFromCart()
+        public async Task<IActionResult> CheckoutCart(string selectedItems)
         {
-            return View();
+            var userName = HttpContext.Session.GetString("UserName");
+            var viewModel = await _apiOrdersService.GetCartCheckoutAsync(userName!, selectedItems);
+
+            if (viewModel == null)
+            {
+                TempData["ErrorMessage"] = "Unable to load checkout. Please try again.";
+                return RedirectToAction("Index", "Carts");
+            }
+
+            HttpContext.Session.SetString("Checkout_SelectedItems", selectedItems);
+            TempData["UserName"] = userName;
+            TempData["UserRole"] = HttpContext.Session.GetString("UserRole");
+
+            return View("CartCheckout", viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CheckoutFromCart(CheckoutFromCartViewModel checkoutFromCartViewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PlaceOrderFromCart()
         {
-            return View();
+            var selectedItems = HttpContext.Session.GetString("Checkout_SelectedItems");
+            var userName = HttpContext.Session.GetString("UserName");
+
+            var (success, message, _) = await _apiOrdersService.PlaceOrderFromCartAsync(userName!, selectedItems!);
+
+            if (success)
+            {
+                HttpContext.Session.Remove("Checkout_SelectedItems");
+                TempData["SuccessMessage"] = message;
+                return RedirectToAction("Index", "Home");
+            }
+
+            TempData["ErrorMessage"] = message;
+            return RedirectToAction("Index", "Carts");
         }
     }
+
 }
