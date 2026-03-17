@@ -156,7 +156,7 @@ namespace E_Commerce.MVC.Services
                 OrderDate = orderDtos.OrderDate,
                 Status = orderDtos.Status,
                 TotalAmount = orderDtos.TotalAmount,
-                OrderItems = itemsDataForEachProductOrder
+                OrderItems = itemsDataForEachProductOrder.Where(i => i.OrderId == orderDtos.OrderId).ToList()
             };
 
         }
