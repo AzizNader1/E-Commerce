@@ -181,7 +181,7 @@ namespace E_Commerce.API.Services
                         OrderDate = order.OrderDate,
                         TotalAmount = order.TotalAmount,
                         Status = order.Status,
-                        OrderItems = orderItemsDto
+                        OrderItems = orderItemsDto.Where(o => o.OrderId == order.OrderId).ToList()
                     });
                 }
             }
@@ -221,7 +221,7 @@ namespace E_Commerce.API.Services
                 OrderDate = selectedOrder.OrderDate,
                 TotalAmount = selectedOrder.TotalAmount,
                 Status = selectedOrder.Status,
-                OrderItems = orderItemsDto
+                OrderItems = orderItemsDto.Where(o => o.OrderId == selectedOrder.OrderId).ToList()
             };
         }
 

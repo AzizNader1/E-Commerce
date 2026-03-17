@@ -195,7 +195,7 @@ namespace E_Commerce.API.Services
             {
                 CartId = cart.CartId,
                 UserId = cart.UserId,
-                CartItems = cartItemsDto
+                CartItems = cartItemsDto.Where(ci => ci.CartId == cart.CartId).ToList()
             };
         }
 
